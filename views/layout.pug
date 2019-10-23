@@ -1,0 +1,37 @@
+// Copyright (C) 2019 Ryan Bester
+doctype html
+html(lang='en-gb')
+    head
+        if title
+            title #{title} | #{app.settings.title}
+        else
+            title #{app.settings.title}
+        link(rel='stylesheet' href='/stylesheets/style.css' type='text/css')
+        link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+        meta(charset='UTF-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        meta(name='mobile-web-app-capable' content='yes')
+        meta(name='manifest' href='/manifest.json')
+        meta(name='icon' href='https://static.besterintranet.com/assets/images/logo48x48.png' type='image/png' sizes='48x48')
+        meta(name='icon' href='https://static.besterintranet.com/assets/images/logo192x192.png' type='image/png' sizes='192x192')
+        meta(name='author' content='Ryan Bester')
+        meta(name='keywords' content='bester intranet home')
+        meta(name='description' content='Bester Intranet')
+        meta(property='og:description' content='Bester Intranet')
+        meta(property='og:title' content='Bester Intranet')
+        meta(property='og:type' content='website')
+        meta(property='og:image' content='https://static.besterintranet.com/assets/images/logo512x512.png')
+        meta(property='og:url' content='https://www.besterintranet.com')
+        meta(name='theme-color' content='#FFFFFF')
+        meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+        meta(name='application-name' content='Bester Intranet')
+        meta(name='msapplication-tooltip' content='Bester Intranet')
+        meta(name='msapplication-window' content='width=1024;height=768')
+        meta(name='msapplication-starturl' content='/')
+        script(src='/scripts/main.js' async)
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
+    body
+        .container
+            block content

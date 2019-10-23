@@ -1,0 +1,9 @@
+//- Copyright (C) 2019 Ryan Bester
+extends layout
+
+block content
+    h1 #{error.status}
+    if env.NODE_ENV == 'development'
+        p #{error.stack}
+    else
+        p #{error.message}

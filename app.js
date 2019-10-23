@@ -14,7 +14,7 @@ const argon2 = require('argon2');
 const cookieParser = require('cookie-parser');
 
 const routes = require('./routes/index');
-//const { User, AccessToken} = require('./core/auth');
+const { User, AccessToken} = require('./core/auth');
 
 const app = module.exports = express();
 
