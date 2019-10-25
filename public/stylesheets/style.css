@@ -1,0 +1,144 @@
+* {
+    font-family: 'Arial', sans-serif;
+}
+
+.basic-container {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+body:not(#basic-header) {
+    padding: 15px;
+}
+
+pre {
+    font-family: 'Consolas', 'Courier New', 'monospace';
+}
+
+#basic-header table tr td h1 {
+    padding-left: 15px;
+}
+
+input {
+    margin-bottom: 15px;
+    border: 1px solid #666666;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 7px;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid #000000;
+    background-color: #CFDBFF;
+}
+
+input:hover {
+    border: 1px solid #000000;
+    background-color: #CFDBFF;
+}
+
+input[type="submit"] {
+    background-color: #002DB3;
+    color: #FFFFFF;
+}
+
+input[type="text"], input[type="password"] {
+
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-form input:not([type="checkbox"]) {
+    width: calc(500px - 20px);
+}
+
+.login-form input[type="submit"] {
+    width: 500px;
+}
+
+#login-form-input-username {
+    display: inline-block;
+    width: 280px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#login-form-input-email-domain {
+    width: 180px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    margin-bottom: 0;
+}
+
+.login-form-email-domain-dropdown {
+    display: inline-block;
+    width: 200px;
+    position: absolute;
+}
+
+.login-form-email-domain-dropdown-image {
+    position: absolute;
+    top: 14px;
+    right: 8px;
+}
+
+.login-form-email-domain-dropdown-image:hover + #login-form-input-email-domain {
+    border-color: #000000;
+    background-color: #DDDDDD;
+}
+
+.login-form-email-domain-dropdown-content {
+    background-color: #FFFFFF;
+    display: none;
+    border: 1px solid #000000;
+}
+
+.login-form-email-domain-dropdown-content ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form-email-domain-dropdown-content ul li {
+    padding: 7px;
+}
+
+.login-form-email-domain-dropdown-content ul li:hover, .domain-dropdown-active {
+    background-color: #CFDBFF;
+}
+
+@media screen and (max-width: 840px) {
+    .basic-container {
+        padding-left: 7%;
+        padding-right: 7%;;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .login-form-container {
+        width: 100%;
+    }
+
+    .login-form input:not([type="checkbox"]) {
+        width: calc(100% - 20px)
+    }
+    
+    .login-form input[type="submit"] {
+        width: 100%;
+    }
+
+    #login-form-input-username {
+        width: calc(100% - 220px);
+    }
+    
+    #login-form-input-email-domain {
+        width: 180px;
+    }
+}

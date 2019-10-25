@@ -9,12 +9,12 @@ const argon2 = require('argon2');
 const path = require('path');
 
 const app = require('../app');
-//const authRoutes = require('../routes/authRoutes');
-//const { AccessToken, Nonce, User } = require('../core/auth');
-const { Auth, AccessToken, Nonce, User } = require('../core/auth');
+const Util = require("../core/util");
+const accountsRoutes = require('../routes/accounts');
+const { AccessToken, Nonce, User } = require('../core/auth');
 
 const showHomePage = (req, res, next) => {
-    const username = "ryan@ryanbester.com";
+    /*const username = "ryan@ryanbester.com";
     const password = "Password1";
 
     Auth.readPasswordFromDatabase(username).then(result => {
@@ -29,9 +29,16 @@ const showHomePage = (req, res, next) => {
                 console.log("Success");
             }
         }, err => console.log(err));
-    }, err => console.log(err));
+    }, err => console.log(err));*/
+
+    let tld = Util.get_tld();
+
+    res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
 }
 
 router.get('/', showHomePage);
+
+router.get('/accounts/login/', accountsRoutes.showLoginPage);
+router.post('/accounts/login/', accountsRoutes.login);
 
 module.exports = router;

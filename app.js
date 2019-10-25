@@ -15,6 +15,7 @@ const cookieParser = require('cookie-parser');
 
 const routes = require('./routes/index');
 const { User, AccessToken} = require('./core/auth');
+const Util = require('./core/util');
 
 const app = module.exports = express();
 
@@ -39,6 +40,13 @@ const options = {
 	key: fs.readFileSync("/etc/nginx/certs/*.besterintranet.com.key", 'utf8'),
 	cert: fs.readFileSync("/etc/nginx/certs/*.besterintranet.com.crt", 'utf8')
 };
+
+app.use(function(req, res, next){
+	res.locals.tld = Util.get_tld();
+	res.locals.useBootstrap = true;
+	res.locals.app = app;
+	next();
+});
 
 app.use('/', routes);
 
