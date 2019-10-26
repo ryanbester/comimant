@@ -2,21 +2,12 @@
     font-family: 'Arial', sans-serif;
 }
 
-.basic-container {
-    padding-left: 10%;
-    padding-right: 10%;
-}
-
 body:not(#basic-header) {
     padding: 15px;
 }
 
 pre {
     font-family: 'Consolas', 'Courier New', 'monospace';
-}
-
-#basic-header table tr td h1 {
-    padding-left: 15px;
 }
 
 input {
@@ -47,7 +38,77 @@ input[type="text"], input[type="password"] {
 
 }
 
-.login-container {
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 0;
+    margin-top: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-container:hover .checkbox-checkmark {
+    border: 1px solid #000000;
+    background-color: #CFDBFF;
+}
+
+.checkbox-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #FFFFFF;
+    border: 1px solid #666666;
+    border-radius: 7px;
+    font-size: 20px;
+}
+
+.checkbox-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #FFFFFF;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkbox-checkmark {
+    background-color: #002DB3;
+}
+
+.checkbox-container input:checked ~ .checkbox-checkmark:after {
+    display: block;
+}
+
+.basic-container {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+#basic-header table tr td h1 {
+    padding-left: 15px;
+}
+
+.container--center {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -62,14 +123,22 @@ input[type="text"], input[type="password"] {
     width: 500px;
 }
 
-#login-form-input-username {
+#login-form__error-message {
+    color: #721C24;
+    background-color: #F8D7DA;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+#login-form__input-username {
     display: inline-block;
     width: 280px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-#login-form-input-email-domain {
+#login-form__input-email-domain {
     width: 180px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -77,41 +146,87 @@ input[type="text"], input[type="password"] {
     margin-bottom: 0;
 }
 
-.login-form-email-domain-dropdown {
+.login-form__email-domain-dropdown {
     display: inline-block;
     width: 200px;
     position: absolute;
 }
 
-.login-form-email-domain-dropdown-image {
+.login-form__email-domain-dropdown__image {
     position: absolute;
     top: 14px;
     right: 8px;
 }
 
-.login-form-email-domain-dropdown-image:hover + #login-form-input-email-domain {
+.login-form__email-domain-dropdown__image:hover + #login-form__input-email-domain {
     border-color: #000000;
     background-color: #DDDDDD;
 }
 
-.login-form-email-domain-dropdown-content {
+.login-form__email-domain-dropdown__content {
     background-color: #FFFFFF;
     display: none;
     border: 1px solid #000000;
+    border-top: none;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
-.login-form-email-domain-dropdown-content ul {
+.login-form__email-domain-dropdown-content__list {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-.login-form-email-domain-dropdown-content ul li {
+.login-form__email-domain-dropdown__item {
     padding: 7px;
 }
 
-.login-form-email-domain-dropdown-content ul li:hover, .domain-dropdown-active {
+.login-form__email-domain-dropdown__item:last-child {
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.login-form__email-domain-dropdown__item:hover, .login-form__email-domain-dropdown__item--active {
     background-color: #CFDBFF;
+}
+
+.navigation-bar--center {
+    background-color: #FFFFFF;
+    border: 1px solid #666666;
+    border-radius: 7px;
+}
+
+.navigation-bar--center__list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.navigation-bar--center__item {
+    display: inline-block;
+    margin: 15px 5px 14px 5px;
+}
+
+.navigation-bar--center__item:first-child {
+    margin-left: 0;
+}
+
+.navigation-bar--center__item:last-child {
+    margin-right: 0;
+}
+
+.navigation-bar--center__link {
+    color: #000000;
+    padding: 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.navigation-bar--center__link:hover, .navigation-bar--center__link--active {
+    background-color: #002DB3;
+    color: #FFFFFF;
 }
 
 @media screen and (max-width: 840px) {
@@ -134,11 +249,11 @@ input[type="text"], input[type="password"] {
         width: 100%;
     }
 
-    #login-form-input-username {
+    #login-form__input-username {
         width: calc(100% - 220px);
     }
     
-    #login-form-input-email-domain {
+    #login-form__input-email-domain {
         width: 180px;
     }
 }

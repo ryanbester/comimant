@@ -1,32 +1,46 @@
 $(function(){
-    $('#login-form-input-username').focus();
+    $('#login-form__input-username').focus();
 
     var currentFocus;
 
-    $('#login-form-input-email-domain').focus(function(){
+    const openMenu = function(){
         currentFocus = -1;
-        $('.login-form-email-domain-dropdown-content').css('display', 'block');
-        $('#login-form-input-email-domain').css('border-bottom-right-radius', '0');
+        $('.login-form__email-domain-dropdown__content').css('display', 'block');
+        $('#login-form__input-email-domain').css('border-bottom-right-radius', '0');
+    }
+
+    const closeMenu = function(){
+        $('.login-form__email-domain-dropdown__content').css('display', 'none');
+        $('#login-form__input-email-domain').css('border-bottom-right-radius', '7px');
+    }
+
+    $('#login-form__input-email-domain').focus(function(){
+        openMenu();
     });
 
-    $('#login-form-input-email-domain').blur(function(){
-        $('.login-form-email-domain-dropdown-content').css('display', 'none');
-        $('#login-form-input-email-domain').css('border-bottom-right-radius', '7px');
+    $('#login-form__input-email-domain').blur(function(){
+        closeMenu();
     });
 
-    $('.login-form-email-domain-dropdown-image').click(function(){
-        $('#login-form-input-email-domain').focus();
+    $('.login-form-email__domain-dropdown__image').click(function(){
+        $('#login-form__input-email-domain').focus();
     });
 
-    $('.login-form-email-domain-dropdown-content-list li').on('mousedown', function(event){
+    $('.login-form__email-domain-dropdown-content__list li').on('mousedown', function(event){
         event.preventDefault();
     }).click(function(e){
-        $('#login-form-input-email-domain').val($(this).text());
-        $('#login-form-input-email-domain').blur();
+        $('#login-form__input-email-domain').val($(this).text());
+        $('#login-form__input-email-domain').blur();
     });
 
-    document.getElementById('login-form-input-email-domain').addEventListener("keydown", function (e) {
-        var x = document.getElementById('login-form-email-dropdown-content-list');
+    document.getElementById('login-form__input-username').addEventListener("keyup", function(e){
+        if(e.keyCode == 39){
+            $('#login-form__input-email-domain').focus();
+        }
+    });
+
+    document.getElementById('login-form__input-email-domain').addEventListener("keydown", function (e) {
+        var x = document.getElementById('login-form__email-dropdown-content__list');
         if (x) {
             x = x.getElementsByTagName("li");
             if (e.keyCode == 40) {
@@ -58,12 +72,12 @@ $(function(){
             currentFocus = (x.length - 1);
         }
 
-        x[currentFocus].classList.add("domain-dropdown-active");
+        x[currentFocus].classList.add("login-form__email-domain-dropdown__item--active");
     }
 
     function removeActive(x) {
         for (var i = 0; i < x.length; i++) {
-            x[i].classList.remove("domain-dropdown-active");
+            x[i].classList.remove("login-form__email-domain-dropdown__item--active");
         }
     }
 });

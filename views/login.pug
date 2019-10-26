@@ -10,45 +10,48 @@ block content
                         img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
                     td
                         h1 Bester Intranet
-        .login-container.basic-header-body-container
+        .container--center.basic-header-body-container
             h1= message
             .login-form-container
-                h2#login-form-error-message= error
+                if error
+                    h2#login-form__error-message= error
                 form.login-form(method='POST' action='')
-                    input.login-form-input#login-form-input-username(
+                    input.login-form__input#login-form__input-username(
                         type='text'
                         name='username'
                         placeholder='Username'
                         value= username
                     )
-                    .login-form-email-domain-dropdown
-                        img.login-form-email-domain-dropdown-image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
-                        input.login-form-input#login-form-input-email-domain(
+                    .login-form__email-domain-dropdown
+                        img.login-form__email-domain-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
+                        input.login-form__input#login-form__input-email-domain(
                             type='text'
-                            name='domain'
+                            name='emailDomain'
                             tabindex='-1'
                             value= (emailDomain != null ? emailDomain : '@ryanbester.com')
                         )
-                        .login-form-email-domain-dropdown-content
-                            ul.login-form-email-domain-dropdown-content-list#login-form-email-dropdown-content-list
-                                li.login-form-email-dropdown-item= '@ryanbester.com'
-                                li.login-form-email-dropdown-item= '@gmail.com'
+                        .login-form__email-domain-dropdown__content
+                            ul.login-form__email-domain-dropdown-content__list#login-form__email-dropdown-content__list
+                                li.login-form__email-domain-dropdown__item= '@ryanbester.com'
+                                li.login-form__email-domain-dropdown__item= '@gmail.com'
                     br
-                    input.login-form-input#login-form-input-password(
+                    input.login-form__input#login-form__input-password(
                         type='password'
                         name='password'
                         placeholder='Password'
                     )
                     br
-                    input.login-form-checkbox#login-form-checkbox-remember(
-                        type='checkbox'
-                        name='remember_me'
-                        value='true'
-                        tabindex='-1'
-                    )
-                    label(for='login-form-checkbox-remember') Remember me
+                    label.login-form__checkbox.checkbox-container Remember me
+                        input#login-form__checkbox-remember(
+                            type="checkbox"
+                            name='remember_me'
+                            checked
+                            tabindex='-1'
+                        )
+                        span.checkbox-checkmark
+                    input(type='hidden' name='nonce' value=nonce)
                     br
-                    input.login-form-button#login-form-button-login(
+                    input.login-form__button#login-form__button-login(
                         type='submit'
                         value='Login'
                     )

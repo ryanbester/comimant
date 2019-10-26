@@ -10,6 +10,20 @@ const get_tld = () => {
     }
 }
 
+const url_rewrite = (host, url) => {
+    var newUrl;
+
+    if(url.startsWith('/accounts/')){
+        if(host == 'accounts.besterintranet.' + get_tld()){
+            url = url.replace('/accounts', '');
+            newUrl = host + url;
+        }
+    }
+
+    return newUrl;
+}
+
 module.exports = {
     get_tld: get_tld,
+    url_rewrite: url_rewrite
 };

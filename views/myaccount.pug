@@ -1,0 +1,22 @@
+//- Copyright (C) 2019 Ryan Bester
+extends layout
+
+block content
+    .basic-container
+        #basic-header
+            table
+                tr
+                    td
+                        img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
+                    td
+                        h1 Bester Intranet
+        .container--center.basic-header-body-container
+            h1= message
+            .navigation-bar--center.my-account-navigation
+                ul.navigation-bar--center__list
+                    li.navigation-bar--center__item
+                        a.navigation-bar--center__link(class=(activeItem === "home" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/') Home
+                    li.navigation-bar--center__item
+                        a.navigation-bar--center__link(class=(activeItem === "information" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/information/') Information
+                    li.navigation-bar--center__item
+                        a.navigation-bar--center__link(class=(activeItem === "security" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/security/') Security
