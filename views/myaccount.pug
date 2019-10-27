@@ -4,19 +4,37 @@ extends layout
 block content
     .basic-container
         #basic-header
-            table
-                tr
-                    td
-                        img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
-                    td
-                        h1 Bester Intranet
+            .basic-header-left
+                table
+                    tr
+                        td
+                            img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
+                        td
+                            h1 Bester Intranet
+            if user
+                .basic-header-right
+                    .user-dropdown
+                        h1.user-dropdown__header#user-dropdown-header #{user.first_name} #{user.last_name}
+                        img.user-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
+                        .user-dropdown__content
+                            ul.user-dropdown-content__list
+                                li.user-dropdown__item
+                                    a(href="/logout/?nonce=" + logoutNonce) Logout
         .container--center.basic-header-body-container
-            h1= message
-            .navigation-bar--center.my-account-navigation
-                ul.navigation-bar--center__list
-                    li.navigation-bar--center__item
-                        a.navigation-bar--center__link(class=(activeItem === "home" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/') Home
-                    li.navigation-bar--center__item
-                        a.navigation-bar--center__link(class=(activeItem === "information" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/information/') Information
-                    li.navigation-bar--center__item
-                        a.navigation-bar--center__link(class=(activeItem === "security" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/security/') Security
+            h1 My Account
+            .myaccount-container
+                .navigation-bar--center.my-account-navigation
+                    ul.navigation-bar--center__list
+                        li.navigation-bar--center__item
+                            a.navigation-bar--center__link(class=(activeItem === "home" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/') Home
+                        li.navigation-bar--center__item
+                            a.navigation-bar--center__link(class=(activeItem === "my-info" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/my-info/') My Information
+                        li.navigation-bar--center__item
+                            a.navigation-bar--center__link(class=(activeItem === "security" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/security/') Security
+                        li.navigation-bar--center__item
+                            a.navigation-bar--center__link(class=(activeItem === "services" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/services/') Services
+                        li.navigation-bar--center__item
+                            a.navigation-bar--center__link(class=(activeItem === "data" ? "navigation-bar--center__link--active" : undefined) href='/myaccount/data/') Data
+                if subtitle
+                    h2= subtitle
+                block myaccount-content

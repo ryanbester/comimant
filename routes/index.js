@@ -72,10 +72,14 @@ router.get('/', showHomePage);
 router.get('/accounts/login/', accountsRoutes.showLoginPage);
 router.post('/accounts/login/', accountsRoutes.login);
 
+router.get('/accounts/logout/', accountsRoutes.logout);
+
 router.all('/accounts/myaccount*', accountsRoutes.userCheck);
 
 router.get('/accounts/myaccount/', accountsRoutes.showMyAccountPage);
-router.get('/accounts/myaccount/information/', accountsRoutes.showMyAccountInformationPage);
+router.get('/accounts/myaccount/my-info/', accountsRoutes.showMyAccountMyInfoPage);
 router.get('/accounts/myaccount/security/', accountsRoutes.showMyAccountSecurityPage);
+router.get('/accounts/myaccount/services/', accountsRoutes.showMyAccountServicesPage);
+router.get('/accounts/myaccount/data/', accountsRoutes.showMyAccountDataPage);
 
 module.exports = router;

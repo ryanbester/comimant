@@ -166,6 +166,35 @@ exports.login = (req, res, next) => {
     });
 }
 
+exports.logout = (req, res, next) => {
+    Nonce.verifyNonce('user-logout', req.query.nonce, req.path).then(result => {
+        if(result == true){
+            if(req.signedCookies['AUTHTOKEN'] === undefined){
+                res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+            } else {
+                const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
+                accessToken.deleteToken().then(result => {
+                    res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
+                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                }, err => {
+                    res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
+                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                })
+            }
+        } else {
+            res.render('error-custom', {title: "Error", error: {
+                title: "Cannot log you out",
+                message: "The nonce verification has failed"
+            }});
+        }
+    }, err => {
+        res.render('error-custom', {title: "Error", error: {
+            title: "Cannot log you out",
+            message: "The nonce verification has failed"
+        }});
+    });    
+}
+
 exports.userCheck = (req, res, next) => {
     // Disable cache
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -203,31 +232,75 @@ exports.userCheck = (req, res, next) => {
 }
 
 exports.showMyAccountPage = (req, res, next) => {
-    res.render('myaccount', {
-        useBootstrap: false,
-        scripts: [],
-        title: 'My Account',
-        message: 'My Account',
-        activeItem: 'home'
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+        res.render('myaccount-home', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'My Account',
+            logoutNonce: result,
+            activeItem: 'home',
+        });
     });
 }
 
-exports.showMyAccountInformationPage = (req, res, next) => {
-    res.render('myaccount', {
-        useBootstrap: false,
-        scripts: [],
-        title: 'My Account',
-        message: 'My Account',
-        activeItem: 'information'
+exports.showMyAccountMyInfoPage = (req, res, next) => {
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+        res.render('myaccount-my-info', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'My Information | My Account',
+            logoutNonce: result,
+            activeItem: 'my-info',
+            subtitle: 'My Information'
+        });
     });
 }
 
 exports.showMyAccountSecurityPage = (req, res, next) => {
-    res.render('myaccount', {
-        useBootstrap: false,
-        scripts: [],
-        title: 'My Account',
-        message: 'My Account',
-        activeItem: 'security'
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+        res.render('myaccount-security', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Security | My Account',
+            logoutNonce: result,
+            activeItem: 'security',
+            subtitle: 'Security'
+        });
+    });
+}
+
+exports.showMyAccountServicesPage = (req, res, next) => {
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+        res.render('myaccount-services', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Services | My Account',
+            logoutNonce: result,
+            activeItem: 'services',
+            subtitle: 'Services'
+        });
+    });
+}
+
+exports.showMyAccountDataPage = (req, res, next) => {
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+        res.render('myaccount-data', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Data | My Account',
+            logoutNonce: result,
+            activeItem: 'data',
+            subtitle: 'Data'
+        });
     });
 }
