@@ -78,8 +78,18 @@ router.all('/accounts/myaccount*', accountsRoutes.userCheck);
 
 router.get('/accounts/myaccount/', accountsRoutes.showMyAccountPage);
 router.get('/accounts/myaccount/my-info/', accountsRoutes.showMyAccountMyInfoPage);
+
+router.get('/accounts/myaccount/my-info/name/', accountsRoutes.showMyAccountMyInfoNamePage);
+router.post('/accounts/myaccount/my-info/name/', accountsRoutes.performMyAccountSaveName);
+
 router.get('/accounts/myaccount/security/', accountsRoutes.showMyAccountSecurityPage);
 router.get('/accounts/myaccount/services/', accountsRoutes.showMyAccountServicesPage);
 router.get('/accounts/myaccount/data/', accountsRoutes.showMyAccountDataPage);
+
+router.get('/accounts/myaccount/test/', accountsRoutes.showPasswordConfirmationPage);
+router.post('/accounts/myaccount/test/', accountsRoutes.checkPassword);
+router.get('/accounts/myaccount/test/', (req, res, next) => {
+    res.send("Success").end();
+});
 
 module.exports = router;

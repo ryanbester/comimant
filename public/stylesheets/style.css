@@ -24,9 +24,13 @@ input:focus {
     background-color: #CFDBFF;
 }
 
-input:hover {
+input:hover:not(:disabled) {
     border: 1px solid #000000;
     background-color: #CFDBFF;
+}
+
+input:disabled {
+    background-color: #DDDDDD;
 }
 
 input[type="submit"] {
@@ -36,6 +40,28 @@ input[type="submit"] {
 
 input[type="text"], input[type="password"] {
 
+}
+
+input.is-invalid {
+    border-color: #721C24;
+    background-color: #F8D7DA;
+}
+
+input.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #721C24;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+label {
+    display: inline-block;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .checkbox-container {
@@ -101,6 +127,22 @@ input[type="text"], input[type="password"] {
 
 .clear {
     clear: both;
+}
+
+.error {
+    color: #721C24;
+    background-color: #F8D7DA;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
 }
 
 .basic-container {
@@ -264,21 +306,63 @@ input[type="text"], input[type="password"] {
 }
 
 .myaccount-stack-view__box {
-    display: block;
+    display: flex;
     border: 1px solid #666666;
     border-radius: 7px;
     margin-bottom: 15px;
     padding: 15px;
     color: #000000;
     text-decoration: none;
+    flex-wrap: wrap;
 }
 
 .myaccount-stack_view__box:last-child {
     margin-bottom: 0;
 }
 
+.myaccount-stack-view__box:hover {
+    background-color: #CFDBFF;
+}
+
 .myaccount-stack-view__box span {
     margin: 0;
+    margin-right: 15px;
+}
+
+.myaccount-stack-view__box span:first-child {
+    flex-grow: 1;
+}
+
+.myaccount-stack-view__box-value {
+    color: #666666;
+}
+
+.myaccount-stack-view__box-container {
+    flex: 0 0 100%;
+}
+
+.myaccount-stack-view__box--related {
+    margin: 0;
+}
+
+.myaccount-stack-view__box--related:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+
+.myaccount-stack-view__box--related:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.myaccount-form input[type='text'],
+.myaccount-form input[type='password'] {
+    width: calc(100% - 20px);
+}
+
+.myaccount-form input {
+    width: 100%;
 }
 
 .user-dropdown {
@@ -344,6 +428,22 @@ input[type="text"], input[type="password"] {
     padding: 7px;
     text-decoration: none;
     color: #000000;
+}
+
+#myaccount-data-usage-bar {
+    height: 20px;
+    position: relative;
+    margin-top: 15px;
+    background-color: #BBBBBB;
+    border-radius: 7px;
+}
+
+.myaccount-data-usage-bar__used {
+    position: absolute;
+    height: 100%;
+    background-color: #002DB3;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
 }
 
 @media screen and (max-width: 840px) {

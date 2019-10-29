@@ -70,7 +70,7 @@ app.use(function(err, req, res, next){
 
 	res.locals.title = err.message;
 	res.status(err.status || 500);
-	res.render('error', {title: "Error"});
+	res.render('error', {useBootstrap: false, title: "Error"});
 });
 
 var httpsServer = https.createServer(options, app);

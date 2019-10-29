@@ -166,6 +166,108 @@ exports.login = (req, res, next) => {
     });
 }
 
+exports.showPasswordConfirmationPage = (req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+
+    const renderPasswordConfirmationPage = () => {
+        Nonce.createNonce('user-password-confirm', req.path).then(result => {
+            res.render('password-confirm', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
+                ],
+                title: 'Confirm it\'s you',
+                message: 'Confirm it\'s you',
+                email: res.locals.user.email_address,
+                nonce: result
+            });
+        });
+    }
+
+    if(req.signedCookies['SATOKEN'] !== undefined){
+        const accessToken = new AccessToken(null, null, req.signedCookies['SATOKEN']);
+        accessToken.table = 'sudo_access_tokens';
+        accessToken.checkToken().then(result => {
+            if(result == true){
+                next();
+            } else {
+                renderPasswordConfirmationPage();
+            }
+        }, err => {
+            renderPasswordConfirmationPage();
+        });
+    } else {
+        renderPasswordConfirmationPage();
+    }
+}
+
+exports.checkPassword = (req, res, next) => {
+    const user = res.locals.user;
+
+    const renderError = (error) => {
+        Nonce.createNonce('user-password-confirm', req.path).then(result => {
+            res.render('password-confirm', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
+                ],
+                title: 'Confirm it\'s you',
+                message: 'Confirm it\'s you',
+                error: error,
+                email: user.email_address,
+                nonce: result
+            });
+        });
+    }
+
+    const password = req.body.password;
+
+    if(password === undefined || password == ''){
+        renderError("Your password is incorrect");
+    }
+
+    const nonce = req.body.nonce;
+    Nonce.verifyNonce('user-password-confirm', nonce, req.path).then(result => {
+        if(result == true){
+            Auth.readPasswordFromDatabase(user.email_address).then(result => {
+                // Verify the password
+                Auth.verifyPassword(password, {
+                    all: result
+                }).then(result => {
+                    if(result == false){
+                        renderError("Your password is incorrect");
+                    } else {
+                        const accessToken = new AccessToken(user.user_id, 30);
+                        accessToken.table = 'sudo_access_tokens';
+
+                        accessToken.saveTokenToDatabase().then(result => {
+                            res.cookie('SATOKEN', accessToken.id, {
+                                domain: 'accounts.besterintranet.' + Util.get_tld(),
+                                httpOnly: true,
+                                secure: true,
+                                signed: true
+                            });
+
+                            const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
+                            res.redirect(301, fullUrl);
+                        }, err => {
+                            renderError("Error confirming your identity. Please try again.")
+                        });
+                    }
+                }, err => {
+                    renderError("Your username or password is incorrect");
+                });
+            }, err => {
+                renderError("Your username or password is incorrect");
+            });
+        } else {
+            renderError("Error logging you in. Please try again");
+        }
+    }, err => {
+        renderError("Error logging you in. Please try again");
+    });
+}
+
 exports.logout = (req, res, next) => {
     Nonce.verifyNonce('user-logout', req.query.nonce, req.path).then(result => {
         if(result == true){
@@ -182,13 +284,13 @@ exports.logout = (req, res, next) => {
                 })
             }
         } else {
-            res.render('error-custom', {title: "Error", error: {
+            res.render('error-custom', {useBootstrap: false, title: "Error", error: {
                 title: "Cannot log you out",
                 message: "The nonce verification has failed"
             }});
         }
     }, err => {
-        res.render('error-custom', {title: "Error", error: {
+        res.render('error-custom', {useBootstrap: false, title: "Error", error: {
             title: "Cannot log you out",
             message: "The nonce verification has failed"
         }});
@@ -302,5 +404,133 @@ exports.showMyAccountDataPage = (req, res, next) => {
             activeItem: 'data',
             subtitle: 'Data'
         });
+    });
+}
+
+exports.showMyAccountMyInfoNamePage = (req, res, next) => {
+    let user = res.locals.user;
+
+    let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    let formNoncePromise = Nonce.createNonce('myaccount-my-info-name-form', '/accounts/myaccount/my-info/name/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('myaccount-my-info-name', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Name | My Information | My Account',
+            logoutNonce: results[0],
+            activeItem: 'my-info',
+            subtitle: 'Name',
+            firstName: user.first_name,
+            lastName: user.last_name,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performMyAccountSaveName = (req, res, next) => {
+    let user = res.locals.user;
+
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
+
+    const showError = (error, invalidFields) => {
+        let firstNameInvalid = false;
+        let lastNameInvalid = false;
+
+        if(invalidFields != undefined){
+            if(invalidFields.includes('firstName')){
+                firstNameInvalid = true;
+            }
+            if(invalidFields.includes('lastName')){
+                lastNameInvalid = true;
+            }
+        }
+
+        let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        let formNoncePromise = Nonce.createNonce('myaccount-my-info-name-form', '/accounts/myaccount/my-info/name/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('myaccount-my-info-name', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Name | My Information | My Account',
+                logoutNonce: results[0],
+                activeItem: 'my-info',
+                subtitle: 'Name',
+                firstName: firstName,
+                lastName: lastName,
+                formNonce: results[1],
+                firstNameInvalid: firstNameInvalid,
+                lastNameInvalid: lastNameInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        let formNoncePromise = Nonce.createNonce('myaccount-my-info-name-form', '/accounts/myaccount/my-info/name/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('myaccount-my-info-name', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Name | My Information | My Account',
+                logoutNonce: results[0],
+                activeItem: 'my-info',
+                subtitle: 'Name',
+                firstName: firstName,
+                lastName: lastName,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('myaccount-my-info-name-form', req.body.nonce, req.path).then(result => {
+        if(result == true){
+            // Validate fields
+            invalidFields = [];
+
+            if(firstName.length < 1){
+                invalidFields.push('firstName');
+            }
+
+            if(lastName.length < 1){
+                invalidFields.push('lastName');
+            }
+
+            if(invalidFields.length > 0){
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    user.first_name = firstName;
+                    user.last_name = lastName;
+
+                    user.saveUser().then(result => {
+                        if(result == true){
+                            showSuccess("Successfully saved your details");
+                        } else {
+                            showError("Error saving your details. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error saving your details. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error saving your details. Please try again.");
+        }
+    }, err => {
+        showError("Error saving your details. Please try again.");
     });
 }

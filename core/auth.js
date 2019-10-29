@@ -361,6 +361,7 @@ module.exports.User = class User {
 
             // Create a connection to the database
             const connection = db.getConnection();
+            db.getConnection();
 
             // Open the connection
             connection.connect();
@@ -434,7 +435,7 @@ module.exports.User = class User {
             + "first_name = " + connection.escape(this.first_name) + ", "
             + "last_name = " + connection.escape(this.last_name) + ", "
             + "email_address = " + connection.escape(this.email_address) + ", "
-            + "privileges = " + connection.escape(JSON.stringify(this.privileges)) +  
+            + "privileges = " + connection.escape(JSON.stringify(this.privileges)) 
             + " WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
             (error, results, fields) => {
                 // Close the connection
@@ -488,6 +489,8 @@ module.exports.AccessToken = class AccessToken {
         } else {
             this.id = id;
         }
+
+        this.table = 'access_tokens';
     }
 
     saveTokenToDatabase() {
@@ -502,7 +505,7 @@ module.exports.AccessToken = class AccessToken {
                     connection.connect();
 
                     // Execute the query to check for the ID
-                    connection.query("SELECT COUNT(*) AS IDCount FROM access_tokens WHERE access_token = UNHEX(" + connection.escape(this.id) + ")",
+                    connection.query("SELECT COUNT(*) AS IDCount FROM " + this.table + " WHERE access_token = UNHEX(" + connection.escape(this.id) + ")",
                     (error, results, fields) => {
                         // Close the connection
                         connection.end();
@@ -545,7 +548,7 @@ module.exports.AccessToken = class AccessToken {
                 connection.connect();
 
                 // Execute the query to insert the access token into the database
-                connection.query("INSERT INTO access_tokens VALUES("
+                connection.query("INSERT INTO " + this.table + " VALUES("
                 + "UNHEX(" + connection.escape(hash) + "), "
                 + "UNHEX(" + connection.escape(this.user_id) + "), "
                 + connection.escape(expiryDateTime) + ")",
@@ -573,7 +576,7 @@ module.exports.AccessToken = class AccessToken {
             connection.connect();
 
             // Check if the access token is in the database
-            connection.query("SELECT HEX(user_id) AS user_id, expires FROM access_tokens WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
+            connection.query("SELECT HEX(user_id) AS user_id, expires FROM " + this.table + " WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
             (error, results, fields) => {
                 // Close the connection
                 connection.end();
@@ -608,7 +611,7 @@ module.exports.AccessToken = class AccessToken {
             connection.connect();
 
             // Check if the access token exists
-            connection.query("SELECT * FROM access_tokens WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
+            connection.query("SELECT * FROM " + this.table + " WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
             (error, results, fields) => {
                 // Close the connection
                 connection.end();
@@ -625,7 +628,7 @@ module.exports.AccessToken = class AccessToken {
                     connection.connect();
 
                     // Execute the delete query
-                    connection.query("DELETE FROM access_tokens WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
+                    connection.query("DELETE FROM " + this.table + " WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
                     (error, results, fields) => {
                         // Close the connection
                         connection.end();

@@ -2,4 +2,15 @@
 extends myaccount
 
 block myaccount-content
-    p Security
+    .myaccount-stack-view
+        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/security/passwords/")
+            span Passwords
+            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/security/twofa/")
+            span 2 Factor Authentication
+            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+    h3 Tasks
+    .myaccount-stack-view
+        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/security/")
+            span Logout of all devices
+            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")

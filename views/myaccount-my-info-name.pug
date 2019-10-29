@@ -1,0 +1,34 @@
+//- Copyright (C) 2019 Ryan Bester
+extends myaccount
+
+block myaccount-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='myaccount-name-form-first-name') First name
+        input#myaccount-name-form-first-name(
+            class=(firstNameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='firstName'
+            placeholder='First name'
+            value= firstName
+        )
+        .invalid-feedback Enter a valid first name
+        br
+        label(for='myaccount-name-form-last-name') Last name
+        input#myaccount-name-form-last-name(
+            class=(lastNameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='lastName'
+            placeholder='Last name'
+            value= lastName
+        )
+        .invalid-feedback Enter a valid last name
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

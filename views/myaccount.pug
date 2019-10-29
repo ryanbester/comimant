@@ -19,6 +19,8 @@ block content
                         .user-dropdown__content
                             ul.user-dropdown-content__list
                                 li.user-dropdown__item
+                                    a(href="") Help
+                                li.user-dropdown__item
                                     a(href="/logout/?nonce=" + logoutNonce) Logout
         .container--center.basic-header-body-container
             h1 My Account
@@ -38,3 +40,4 @@ block content
                 if subtitle
                     h2= subtitle
                 block myaccount-content
+                p &copy; 2017&ndash;#{(new Date()).getFullYear()} Bester Intranet
