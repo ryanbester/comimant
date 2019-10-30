@@ -13,5 +13,5 @@ block myaccount-content
             img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
         a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/dob/")
             span Date of Birth
-            span.myaccount-stack-view__box-value
+            span.myaccount-stack-view__box-value #{user.dob.getDate()}/#{user.dob.getMonth() + 1}/#{user.dob.getFullYear()}
             img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")

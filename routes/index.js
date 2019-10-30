@@ -82,6 +82,12 @@ router.get('/accounts/myaccount/my-info/', accountsRoutes.showMyAccountMyInfoPag
 router.get('/accounts/myaccount/my-info/name/', accountsRoutes.showMyAccountMyInfoNamePage);
 router.post('/accounts/myaccount/my-info/name/', accountsRoutes.performMyAccountSaveName);
 
+router.get('/accounts/myaccount/my-info/username/', accountsRoutes.showMyAccountMyInfoUsernamePage);
+router.post('/accounts/myaccount/my-info/username/', accountsRoutes.performMyAccountSaveUsername);
+
+router.get('/accounts/myaccount/my-info/dob/', accountsRoutes.showMyAccountMyInfoDobPage);
+router.post('/accounts/myaccount/my-info/dob/', accountsRoutes.performMyAccountSaveDob);
+
 router.get('/accounts/myaccount/security/', accountsRoutes.showMyAccountSecurityPage);
 router.get('/accounts/myaccount/services/', accountsRoutes.showMyAccountServicesPage);
 router.get('/accounts/myaccount/data/', accountsRoutes.showMyAccountDataPage);

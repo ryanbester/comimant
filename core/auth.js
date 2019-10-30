@@ -343,12 +343,13 @@ module.exports.Auth = class Auth {
 }
 
 module.exports.User = class User {
-    constructor(user_id, username, first_name, last_name, email_address, privileges){
+    constructor(user_id, username, first_name, last_name, email_address, dob, privileges){
         this.user_id = user_id;
         this.username = username;
         this.first_name = first_name;
         this.last_name = last_name;
         this.email_address = email_address;
+        this.dob = dob;
         this.privileges = privileges;
     }
 
@@ -381,6 +382,7 @@ module.exports.User = class User {
                     this.first_name = results[0].first_name;
                     this.last_name = results[0].last_name;
                     this.email_address = results[0].email_address;
+                    this.dob = new Date(results[0].dob);
                     this.privileges = JSON.parse(results[0].privileges);
 
                     resolve(true);
@@ -429,12 +431,16 @@ module.exports.User = class User {
             // Open the connection
             connection.connect();
 
+            // Prepare dob
+            var dob = this.dob.getFullYear() + '-' + ("0" + (this.dob.getMonth() + 1)).slice(-2) + '-' + ("0" + this.dob.getDate()).slice(-2) ;
+
             // Execute the query to update the user information
             connection.query("UPDATE users "
             + "SET username = " + connection.escape(this.username) + ", "
             + "first_name = " + connection.escape(this.first_name) + ", "
             + "last_name = " + connection.escape(this.last_name) + ", "
             + "email_address = " + connection.escape(this.email_address) + ", "
+            + "dob = " + connection.escape(dob) + ", "
             + "privileges = " + connection.escape(JSON.stringify(this.privileges)) 
             + " WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
             (error, results, fields) => {

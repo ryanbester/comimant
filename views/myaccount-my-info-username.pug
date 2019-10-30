@@ -1,0 +1,24 @@
+//- Copyright (C) 2019 Ryan Bester
+extends myaccount
+
+block myaccount-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='myaccount-name-form-username') Username
+        input#myaccount-name-form-username(
+            class=(usernameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='username'
+            placeholder='Username'
+            value= username
+        )
+        .invalid-feedback This username has been taken
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

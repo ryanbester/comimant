@@ -51,6 +51,30 @@ input.is-invalid ~ .invalid-feedback {
     display: block;
 }
 
+select {
+    background-color: #FFFFFF;
+    margin-bottom: 15px;
+    border: 1px solid #666666;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 7px;
+}
+
+select:focus {
+    outline: none;
+    border: 1px solid #000000;
+    background-color: #CFDBFF;
+}
+
+select:hover:not(:disabled){
+    border: 1px solid #000000;
+    background-color: #CFDBFF;
+}
+
+select:disabled {
+    background-color: #DDDDDD;
+}
+
 .invalid-feedback {
     display: none;
     color: #721C24;
@@ -444,6 +468,25 @@ label {
     background-color: #002DB3;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
+}
+
+#myaccount-name-form-day {
+    width: 25%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#myaccount-name-form-month {
+    width: 50%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
+#myaccount-name-form-year {
+    width: 25%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 @media screen and (max-width: 840px) {
