@@ -1,0 +1,15 @@
+//- Copyright (C) 2019 Bester Intranet
+extends layout
+
+block content
+    .main-container
+        h1 Bester Intranet
+        if user
+            h2 Welcome, #{user.first_name} #{user.last_name}
+            p
+                a(href="https://accounts.besterintranet." + tld + "/myaccount/") My Account
+        else
+            h2 Login to customise your Dashboard
+            p
+                a(href="https://accounts.besterintranet." + tld + "/login/") Login
+        block home-content

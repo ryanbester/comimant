@@ -453,6 +453,52 @@ module.exports.User = class User {
         });
     }
 
+    hasPrivilege(privilege){
+        if(this.user_id === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        if(this.privileges.hasOwnProperty(privilege)){
+            if(this.privileges[privilege] == 1){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    addPrivilege(privilege){
+        if(this.user_id === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        this.privileges[privilege] = 1;
+
+        return true;
+    }
+
+    deletePrivilege(privilege){
+        if(this.user_id === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        delete this.privileges[privilege];
+
+        return true;
+    }
+
     static usernameTaken(username) {
         return new Promise((resolve, reject) => {
             // Create a connection to the database
@@ -481,7 +527,7 @@ module.exports.User = class User {
 }
 
 module.exports.AccessToken = class AccessToken {
-    constructor(user_id, lifetime = 43200, id) {
+    constructor(user_id, lifetime = 525600, id) {
         this.user_id = user_id;
         this.lifetime = lifetime;
 
@@ -646,6 +692,88 @@ module.exports.AccessToken = class AccessToken {
             });
         });
     }
+
+    deleteUserTokens(exceptions){
+        return new Promise((resolve, reject) => {
+            if(this.user_id === undefined){
+                reject("User ID not set");
+            }
+
+            var exceptionSubQuery = '';
+
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            if (exceptions !== undefined){
+                var hashedExceptions = [];
+
+                // SHA-256 every exception
+                exceptions.forEach((exception) => {
+                    const hash = crypto.createHash('sha256').update(exception).digest('hex');
+
+                    hashedExceptions.push(hash);
+                });
+
+                var i = 0;
+                hashedExceptions.forEach((exception) => {
+                    exceptionSubQuery += " AND access_token != UNHEX(" + connection.escape(exception) + ")";
+                });
+            }
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM " + this.table + " WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")" + exceptionSubQuery,
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
+        });
+    }
+
+    static deleteExpiredTokens(table = 'access_tokens'){
+        return new Promise((resolve, reject) => {
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM " + table + " WHERE expires < NOW()",
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
+        });
+    }
+
+    static deleteAllTokens(table = 'access_tokens'){
+        return new Promise((resolve, reject) => {
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM " + table,
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
+        });
+    }
 }
 
 module.exports.Nonce = class Nonce {
@@ -778,6 +906,48 @@ module.exports.Nonce = class Nonce {
                         }
                     }
                 }
+            });
+        });
+    }
+
+    static deleteAllNonces(){
+        return new Promise((resolve, reject) => {
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            // Execute the delete query
+            connection.query("DELETE FROM nonces",
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
+        });
+    }
+
+    static deleteExpiredNonces(){
+        return new Promise((resolve, reject) => {
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            // Execute the delete query
+            connection.query("DELETE FROM nonces WHERE expires < NOW()",
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
             });
         });
     }

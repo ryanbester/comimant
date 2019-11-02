@@ -117,7 +117,7 @@ exports.login = (req, res, next) => {
                                 const accessToken = new AccessToken(user.user_id);
 
                                 accessToken.saveTokenToDatabase().then(result => {
-                                    if(rememberMe == 'true'){
+                                    if(rememberMe == 'on'){
                                         // Make the cookie last longer if the remember me option was checked
                                         var maxAge = accessToken.lifetime * 60 * 1000;
                                         var expires = accessToken.expiry;

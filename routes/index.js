@@ -18,55 +18,44 @@ const myAccountDataRoutes = require('../routes/myaccount/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
 const showHomePage = (req, res, next) => {
+    const renderHomePage = () => {
+        res.render('home', {
+            useBootstrap: false,
+            tld: Util.get_tld()
+        });
+    }
+
+    // Disable cache
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
 
-    if(req.signedCookies['AUTHTOKEN'] === undefined){
-        let tld = Util.get_tld();
+    const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
 
-        res.send('<p>Not logged in</p>');
-        res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+    if(req.signedCookies['AUTHTOKEN'] === undefined){
+        renderHomePage();
     } else {
         const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
         accessToken.checkToken().then(result => {
             if(result == true){
                 const user = new User(accessToken.user_id);
                 user.verifyUser().then(result => {
-                    if(result == true){
+                    if (result == true) {
                         user.loadInfo().then(result => {
                             res.locals.user = user;
-                            let tld = Util.get_tld();
-
-                            res.send('<p>Logged in as ' + user.first_name + ' ' + user.last_name + '</p>');
-                            res.send('<a href="https://accounts.besterintranet.' + tld + '/logout/">Login</a>').end();
+                            renderHomePage();
                         }, err => {
-                            let tld = Util.get_tld();
-
-                            res.send('<p>Not logged in</p>');
-                            res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+                            renderHomePage();
                         });
                     } else {
-                        let tld = Util.get_tld();
-
-                        res.send('<p>Not logged in</p>');
-                        res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+                        renderHomePage();
                     }
                 }, err => {
-                    let tld = Util.get_tld();
-
-                    res.send('<p>Not logged in</p>');
-                    res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+                    renderHomePage();
                 });
             } else {
-                let tld = Util.get_tld();
-
-                res.send('<p>Not logged in</p>');
-                res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+                renderHomePage();
             }
         }, err => {
-            let tld = Util.get_tld();
-
-            res.send('<p>Not logged in</p>');
-            res.send('<a href="https://accounts.besterintranet.' + tld + '/login/">Login</a>').end();
+            renderHomePage();
         });
     }
 }
@@ -107,6 +96,13 @@ router.post(myAccountPath + 'my-info/dob/', myAccountMyInfoRoutes.performMyAccou
 
 router.get(myAccountPath + 'security/', myAccountSecurityRoutes.showMyAccountSecurityPage);
 router.get(myAccountPath + 'security/passwords/', myAccountSecurityRoutes.showMyAccountPasswordsPage);
+
+router.get(myAccountPath + 'security/passwords/change-password/', myAccountSecurityRoutes.showChangePasswordPage);
+router.post(myAccountPath + 'security/passwords/change-password/', myAccountSecurityRoutes.performChangePassword);
+
+router.get(myAccountPath + 'security/logout-everywhere/', myAccountSecurityRoutes.showLogoutEverywhereConfirmation);
+router.get(myAccountPath + 'security/logout-everywhere/all-devices/', myAccountSecurityRoutes.performLogoutEverywhereAll);
+router.get(myAccountPath + 'security/logout-everywhere/other-devices/', myAccountSecurityRoutes.performLogoutEverywhereOther)
 
 router.get(myAccountPath + 'services/', myAccountServicesRoutes.showMyAccountServicesPage);
 

@@ -3,15 +3,18 @@ extends myaccount
 
 block myaccount-content
     .myaccount-stack-view
-        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/name/")
-            span Name
-            span.myaccount-stack-view__box-value #{user.first_name} #{user.last_name}
-            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
-        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/username/")
-            span Username
-            span.myaccount-stack-view__box-value #{user.username}
-            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
-        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/dob/")
-            span Date of Birth
-            span.myaccount-stack-view__box-value #{user.dob.getDate()}/#{user.dob.getMonth() + 1}/#{user.dob.getFullYear()}
-            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        if user.hasPrivilege('change_name')
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/name/")
+                span Name
+                span.myaccount-stack-view__box-value #{user.first_name} #{user.last_name}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        if user.hasPrivilege('change_username')
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/username/")
+                span Username
+                span.myaccount-stack-view__box-value #{user.username}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        if user.hasPrivilege('change_dob')
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/my-info/dob/")
+                span Date of Birth
+                span.myaccount-stack-view__box-value #{user.dob.getDate()}/#{user.dob.getMonth() + 1}/#{user.dob.getFullYear()}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")

@@ -30,6 +30,17 @@ exports.showMyAccountMyInfoPage = (req, res, next) => {
 exports.showMyAccountMyInfoNamePage = (req, res, next) => {
     let user = res.locals.user;
 
+    if(!user.hasPrivilege('change_name')){
+        res.render('error-custom', {
+            useBootstrap: false,
+            title: "Permission Denied",
+            error: {
+                title: "Permission Denied",
+                message: "You do not have permission to change your name. Please contact your administrator."
+            }
+        });
+    }
+
     let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
     let formNoncePromise = Nonce.createNonce('myaccount-my-info-name-form', '/accounts/myaccount/my-info/name/');
 
@@ -116,6 +127,10 @@ exports.performMyAccountSaveName = (req, res, next) => {
 
     Nonce.verifyNonce('myaccount-my-info-name-form', req.body.nonce, req.path).then(result => {
         if(result == true){
+            if(!user.hasPrivilege('change_name')){
+                showError("You do not have permission to change your name. Contact your administrator.");
+            }
+
             // Validate fields
             invalidFields = [];
 
@@ -157,6 +172,17 @@ exports.performMyAccountSaveName = (req, res, next) => {
 
 exports.showMyAccountMyInfoUsernamePage = (req, res, next) => {
     let user = res.locals.user;
+
+    if(!user.hasPrivilege('change_username')){
+        res.render('error-custom', {
+            useBootstrap: false,
+            title: "Permission Denied",
+            error: {
+                title: "Permission Denied",
+                message: "You do not have permission to change your username. Please contact your administrator."
+            }
+        });
+    }
 
     let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
     let formNoncePromise = Nonce.createNonce('myaccount-my-info-username-form', '/accounts/myaccount/my-info/username/');
@@ -235,6 +261,10 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
 
     Nonce.verifyNonce('myaccount-my-info-username-form', req.body.nonce, req.path).then(result => {
         if(result == true){
+            if(!user.hasPrivilege('change_username')){
+                showError("You do not have permission to change your username. Contact your administrator.");
+            }
+
             // Validate fields
             invalidFields = [];
 
@@ -283,6 +313,17 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
 
 exports.showMyAccountMyInfoDobPage = (req, res, next) => {
     let user = res.locals.user;
+
+    if(!user.hasPrivilege('change_dob')){
+        res.render('error-custom', {
+            useBootstrap: false,
+            title: "Permission Denied",
+            error: {
+                title: "Permission Denied",
+                message: "You do not have permission to change your date of birth. Please contact your administrator."
+            }
+        });
+    }
 
     let logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
     let formNoncePromise = Nonce.createNonce('myaccount-my-info-dob-form', '/accounts/myaccount/my-info/dob/');
@@ -379,6 +420,10 @@ exports.performMyAccountSaveDob = (req, res, next) => {
 
     Nonce.verifyNonce('myaccount-my-info-dob-form', req.body.nonce, req.path).then(result => {
         if(result == true){
+            if(!user.hasPrivilege('change_dob')){
+                showError("You do not have permission to change your date of birth. Contact your administrator.");
+            }
+
             // Validate fields
             invalidFields = [];
 
