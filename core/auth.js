@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019 Ryan Bester
+Copyright (C) 2019 Bester Intranet
 */
 
 const crypto = require('crypto');
@@ -362,7 +362,6 @@ module.exports.User = class User {
 
             // Create a connection to the database
             const connection = db.getConnection();
-            db.getConnection();
 
             // Open the connection
             connection.connect();
@@ -375,7 +374,7 @@ module.exports.User = class User {
 
                 if (error) reject(error);
 
-                // IF the user ID matches a record
+                // If the user ID matches a record
                 if (results.length > 0) {
                     // Get the user details
                     this.username = results[0].username;

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019 Ryan Bester
+Copyright (C) 2019 Bester Intranet
 */
 
 const express = require('express');
@@ -11,6 +11,10 @@ const path = require('path');
 const app = require('../app');
 const Util = require("../core/util");
 const accountsRoutes = require('../routes/accounts');
+const myAccountMyInfoRoutes = require('../routes/myaccount/my-info');
+const myAccountSecurityRoutes = require('../routes/myaccount/security');
+const myAccountServicesRoutes = require('../routes/myaccount/services');
+const myAccountDataRoutes = require('../routes/myaccount/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
 const showHomePage = (req, res, next) => {
@@ -76,25 +80,43 @@ router.get('/accounts/logout/', accountsRoutes.logout);
 
 router.all('/accounts/myaccount*', accountsRoutes.userCheck);
 
-router.get('/accounts/myaccount/', accountsRoutes.showMyAccountPage);
-router.get('/accounts/myaccount/my-info/', accountsRoutes.showMyAccountMyInfoPage);
+// My Account routes
 
-router.get('/accounts/myaccount/my-info/name/', accountsRoutes.showMyAccountMyInfoNamePage);
-router.post('/accounts/myaccount/my-info/name/', accountsRoutes.performMyAccountSaveName);
+// TODO: Refactor code
+// Each service is subclass of Service
+// has methods for service page, password change, storage usage
+// Uses new Service(...).hasOwnProperty(name) to check if the method exists
+// e.g. var service = new Service('bestermail');
+// if (service.hasOwnProperty('changePassword')) {
+//     service.changePassword();
+// }
 
-router.get('/accounts/myaccount/my-info/username/', accountsRoutes.showMyAccountMyInfoUsernamePage);
-router.post('/accounts/myaccount/my-info/username/', accountsRoutes.performMyAccountSaveUsername);
+const myAccountPath = '/accounts/myaccount/';
 
-router.get('/accounts/myaccount/my-info/dob/', accountsRoutes.showMyAccountMyInfoDobPage);
-router.post('/accounts/myaccount/my-info/dob/', accountsRoutes.performMyAccountSaveDob);
+router.get(myAccountPath, accountsRoutes.showMyAccountPage);
+router.get(myAccountPath + 'my-info/', myAccountMyInfoRoutes.showMyAccountMyInfoPage);
 
-router.get('/accounts/myaccount/security/', accountsRoutes.showMyAccountSecurityPage);
-router.get('/accounts/myaccount/services/', accountsRoutes.showMyAccountServicesPage);
-router.get('/accounts/myaccount/data/', accountsRoutes.showMyAccountDataPage);
+router.get(myAccountPath + 'my-info/name/', myAccountMyInfoRoutes.showMyAccountMyInfoNamePage);
+router.post(myAccountPath + 'my-info/name/', myAccountMyInfoRoutes.performMyAccountSaveName);
 
-router.get('/accounts/myaccount/test/', accountsRoutes.showPasswordConfirmationPage);
-router.post('/accounts/myaccount/test/', accountsRoutes.checkPassword);
-router.get('/accounts/myaccount/test/', (req, res, next) => {
+router.get(myAccountPath + 'my-info/username/', myAccountMyInfoRoutes.showMyAccountMyInfoUsernamePage);
+router.post(myAccountPath + 'my-info/username/', myAccountMyInfoRoutes.performMyAccountSaveUsername);
+
+router.get(myAccountPath + 'my-info/dob/', myAccountMyInfoRoutes.showMyAccountMyInfoDobPage);
+router.post(myAccountPath + 'my-info/dob/', myAccountMyInfoRoutes.performMyAccountSaveDob);
+
+router.get(myAccountPath + 'security/', myAccountSecurityRoutes.showMyAccountSecurityPage);
+router.get(myAccountPath + 'security/passwords/', myAccountSecurityRoutes.showMyAccountPasswordsPage);
+
+router.get(myAccountPath + 'services/', myAccountServicesRoutes.showMyAccountServicesPage);
+
+router.get(myAccountPath + 'services/:serviceName/*', myAccountServicesRoutes.showMyAccountServiceDetailsPage);
+
+router.get(myAccountPath + 'data/', myAccountDataRoutes.showMyAccountDataPage);
+
+router.get(myAccountPath + 'test/', accountsRoutes.showPasswordConfirmationPage);
+router.post(myAccountPath + 'test/', accountsRoutes.checkPassword);
+router.get(myAccountPath + 'test/', (req, res, next) => {
     res.send("Success").end();
 });
 

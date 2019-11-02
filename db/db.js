@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019 Ryan Bester
+Copyright (C) 2019 Bester Intranet
 */
 
 const mysql = require('mysql');

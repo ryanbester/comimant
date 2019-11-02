@@ -1,11 +1,12 @@
-//- Copyright (C) 2019 Ryan Bester
+//- Copyright (C) 2019 Bester Intranet
 extends myaccount
 
 block myaccount-content
-    .myaccount-stack-view
-        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/services/bestermail/")
-            span BesterMail
-            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
-        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/services/vpn/")
-            span VPN
-            img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+    if services
+        .myaccount-stack-view
+            each service in services
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="/myaccount/services/" + service.name + "/")
+                    span #{service.title}
+                    img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+    else
+        p No services

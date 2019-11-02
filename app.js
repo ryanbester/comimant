@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019 Ryan Bester
+Copyright (C) 2019 Bester Intranet
 */
 
 /*jshint esversion: 8 */
