@@ -15,6 +15,11 @@ const myAccountMyInfoRoutes = require('../routes/myaccount/my-info');
 const myAccountSecurityRoutes = require('../routes/myaccount/security');
 const myAccountServicesRoutes = require('../routes/myaccount/services');
 const myAccountDataRoutes = require('../routes/myaccount/data');
+const adminRoutes = require('../routes/admin/admin');
+const adminUserRoutes = require('../routes/admin/users');
+const adminAccessTokensRoutes = require('../routes/admin/access-tokens');
+const adminNoncesRoutes = require('../routes/admin/nonces');
+const adminDataRoutes = require('../routes/admin/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
 const showHomePage = (req, res, next) => {
@@ -115,5 +120,16 @@ router.post(myAccountPath + 'test/', accountsRoutes.checkPassword);
 router.get(myAccountPath + 'test/', (req, res, next) => {
     res.send("Success").end();
 });
+
+const adminPath = '/admin/';
+router.all('/admin/*', adminRoutes.userCheck);
+router.get(adminPath, adminRoutes.showAdminPanel);
+router.get(adminPath + 'users/', adminUserRoutes.showAdminUsersPage);
+router.get(adminPath + 'users/new/', adminUserRoutes.showAdminNewUserPage);
+router.all(adminPath + 'users/:userId/', adminUserRoutes.loadUserInfo);
+router.get(adminPath + 'users/:userId/', adminUserRoutes.showAdminUserPage);
+router.get(adminPath + 'access-tokens/', adminAccessTokensRoutes.showAdminAccessTokensPage);
+router.get(adminPath + 'nonces/', adminNoncesRoutes.showAdminNoncesPage);
+router.get(adminPath + 'data/', adminDataRoutes.showAdminDataPage);
 
 module.exports = router;

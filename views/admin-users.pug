@@ -1,0 +1,25 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    a.button(href="new/") New user
+    if users
+        if users.length > 0
+            .myaccount-table-view
+                table.myaccount-table
+                    tr
+                        th.myaccount-table-view__cell--align-left First Name
+                        th.myaccount-table-view__cell--align-left Last Name
+                        th.myaccount-table-view__cell--align-left Email Address
+                    each user in users
+                        tr
+                            td.myaccount-table-view__cell--align-left 
+                                a(href=user.user_id.toLowerCase() + '/')= user.first_name
+                            td.myaccount-table-view__cell--align-left
+                                a(href=user.user_id.toLowerCase() + '/')= user.last_name
+                            td.myaccount-table-view__cell--align-left
+                                a(href=user.user_id.toLowerCase() + '/')= user.email_address
+        else
+            p No users
+    else
+        p No users

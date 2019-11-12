@@ -1,0 +1,80 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='myaccount-user-form-email-address') Email Address
+        input#myaccount-user-form-email-address(
+            class=(emailAddressInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='emailAddress'
+            placeholder='Email Address'
+            value= emailAddress
+        )
+        .invalid-feedback Enter a valid email address
+        br
+        label(for='myaccount-user-form-first-name') First name
+        input#myaccount-user-form-first-name(
+            class=(firstNameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='firstName'
+            placeholder='First name'
+            value= firstName
+        )
+        .invalid-feedback Enter a valid first name
+        br
+        label(for='myaccount-user-form-last-name') Last name
+        input#myaccount-user-form-last-name(
+            class=(lastNameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='lastName'
+            placeholder='Last name'
+            value= lastName
+        )
+        .invalid-feedback Enter a valid last name
+        br
+        label(for='myaccount-user-form-username') Username
+        input#myaccount-user-form-username(
+            class=(usernameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='username'
+            placeholder='Username'
+            value= username
+        )
+        .invalid-feedback Enter a valid username
+        br
+        label(for='myaccount-user-form-dob') Date of Birth
+        input#myaccount-user-form-dob(
+            class=(dobInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='dob'
+            placeholder='Date of Birth'
+            value= dob
+        )
+        .invalid-feedback Enter a valid date of birth
+        br
+        label(for='myaccount-user-form-password') Password
+        input#myaccount-user-form-password(
+            class=(passwordInvalid ? "is-invalid" : undefined)
+            type='password'
+            name='password'
+            placeholder='Password'
+        )
+        br
+        label(for='myaccount-user-form-confirm-password') Confirm Password
+        input#myaccount-user-form-confirm-password(
+            class=(confirmPasswordInvalid ? "is-invalid" : undefined)
+            type='password'
+            name='conmfirmPassword'
+            placeholder='Confirm Password'
+        )
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

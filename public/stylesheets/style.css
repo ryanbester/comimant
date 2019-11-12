@@ -14,7 +14,7 @@ pre {
     font-family: 'Consolas', 'Courier New', 'monospace';
 }
 
-input {
+input, .button {
     margin-bottom: 15px;
     border: 1px solid #666666;
     padding: 10px;
@@ -22,18 +22,18 @@ input {
     border-radius: 7px;
 }
 
-input:focus {
+input:focus, .button:focus {
     outline: none;
     border: 1px solid #000000;
     background-color: #CFDBFF;
 }
 
-input:hover:not(:disabled) {
+input:hover:not(:disabled), .button:hover:not(:disabled) {
     border: 1px solid #000000;
     background-color: #CFDBFF;
 }
 
-input:disabled {
+input:disabled, .button:disabled {
     background-color: #DDDDDD;
 }
 
@@ -53,6 +53,13 @@ input.is-invalid {
 
 input.is-invalid ~ .invalid-feedback {
     display: block;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: #000000;
+    font-size: 16px;
 }
 
 select {
@@ -171,6 +178,10 @@ label {
     font-size: 20px;
     padding: 10px;
     border-radius: 7px;
+}
+
+.red-text {
+    color: #721C24;
 }
 
 .basic-container {
@@ -382,6 +393,46 @@ label {
 .myaccount-stack-view__box--related:not(:first-child) {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.myaccount-table-view {
+    border-radius: 7px;
+    border: 1px solid #666666;
+    overflow: hidden;
+}
+
+.myaccount-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-style: hidden;
+}
+
+.myaccount-table tr {
+    border-radius: 7px;
+    border: 1px solid #666666;
+}
+
+.myaccount-table tr:hover {
+    background-color: #CFDBFF;
+}
+
+.myaccount-table td, .myaccount-table th {
+    padding: 15px;
+}
+
+.myaccount-table a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.myaccount-table__cell--align-left {
+    text-align: left;
+}
+
+.myaccount-table__cell--align-right {
+    text-align: right;
 }
 
 .myaccount-form input[type='text'],

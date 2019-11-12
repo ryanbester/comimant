@@ -1,0 +1,69 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if adminUser
+        h3 General
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="name/")
+                span Name
+                span.myaccount-stack-view__box-value #{adminUser.first_name} #{adminUser.last_name}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="username/")
+                span Username
+                span.myaccount-stack-view__box-value #{adminUser.username}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="email-address/")
+                span Email Address
+                span.myaccount-stack-view__box-value #{adminUser.email_address}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="dob/")
+                span Date of Birth
+                span.myaccount-stack-view__box-value #{adminUser.dob.getDate()}/#{adminUser.dob.getMonth() + 1}/#{adminUser.dob.getFullYear()}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Security
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="security/privileges/")
+                span Privileges
+                span.myaccount-stack-view__box-value [Number granted]
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="security/passwords/")
+                span Passwords
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="security/twofa/")
+                span 2 Factor Authentication
+                span.myaccount-stack-view__box-value [Enabled/Disabled]
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Services
+        a.button(href="services/add/") Add service
+        if services
+            .myaccount-stack-view
+                each service in services
+                    a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="services/" + service.name + "/")
+                        span #{service.title}
+                        img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        else
+            p No services
+        h3 Data
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="data/")
+                span Data Usage
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Actions
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="logout/")
+                span Logout
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="revoke-nonces/")
+                span Revoke Nonces
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Danger Zone
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="clear-user-data/")
+                span.red-text Clear User Data
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="delete-user/")
+                span.red-text Delete User
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+    else
+        p Unknown user
