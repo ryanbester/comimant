@@ -499,6 +499,25 @@ module.exports.User = class User {
         return true;
     }
 
+    countGrantedPrivileges(){
+        if(this.user_id === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        var count = 0;
+        Object.keys(this.privileges).forEach(name => {
+            if(this.privileges[name] == 1){
+                count++;
+            }
+        });
+
+        return count;
+    }
+
     static usernameTaken(username) {
         return new Promise((resolve, reject) => {
             // Create a connection to the database
@@ -847,7 +866,7 @@ module.exports.Nonce = class Nonce {
                 });
             });
         });
-    }
+    }0.01
 
     static verifyNonce(name, id, url){
         return new Promise((resolve, reject) => {

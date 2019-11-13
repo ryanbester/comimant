@@ -298,7 +298,7 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
                         }
                     }, err => {
                         showError("1 fields are invalid", ['username']);
-                    })
+                    });
                 } else {
                     performSave();
                 }

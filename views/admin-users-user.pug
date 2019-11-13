@@ -25,7 +25,7 @@ block admin-content
         .myaccount-stack-view
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="security/privileges/")
                 span Privileges
-                span.myaccount-stack-view__box-value [Number granted]
+                span.myaccount-stack-view__box-value #{user.countGrantedPrivileges()} Granted
                 img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="security/passwords/")
                 span Passwords

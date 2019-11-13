@@ -436,7 +436,8 @@ label {
 }
 
 .myaccount-form input[type='text'],
-.myaccount-form input[type='password'] {
+.myaccount-form input[type='password'],
+.myaccount-form input[type='email'] {
     width: calc(100% - 20px);
 }
 
@@ -525,20 +526,23 @@ label {
     border-bottom-left-radius: 7px;
 }
 
-#myaccount-name-form-day {
+#myaccount-name-form-day,
+#admin-user-form-day {
     width: 25%;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-#myaccount-name-form-month {
+#myaccount-name-form-month,
+#admin-user-form-month {
     width: 50%;
     border-radius: 0;
     border-left: none;
     border-right: none;
 }
 
-#myaccount-name-form-year {
+#myaccount-name-form-year,
+#admin-user-form-year {
     width: 25%;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

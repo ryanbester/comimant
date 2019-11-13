@@ -1,0 +1,25 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    a.button(href="create/") Create New
+    if privilegeTemplates
+        if privilegeTemplates.length > 0
+            .myaccount-table-view
+                table.myaccount-table
+                    tr
+                        th.myaccount-table-view__cell--align-left Title
+                        th.myaccount-table-view__cell--align-left Privileges Granted
+                        th.myaccount-table-view__cell--align-left Default
+                    each privilegeTemplate in privilegeTemplates
+                        tr
+                            td.myaccount-table-view__cell--align-left 
+                                a(href=privilegeTemplate.name + '/')= privilegeTemplate.title
+                            td.myaccount-table-view__cell--align-left
+                                a(href=privilegeTemplate.name + '/') #{privilegeTemplate.countGrantedPrivileges()}
+                            td.myaccount-table-view__cell--align-left
+                                a(href=privilegeTemplate.name + '/')= privilegeTemplate.default_template == 1 ? "Yes" : ""
+        else
+            p No privilege templates
+    else
+        p No privilege templates
