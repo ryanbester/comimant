@@ -160,6 +160,16 @@ label {
     display: block;
 }
 
+.checkbox-container--table-cell {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+.checkbox-container__input--table-cell {
+    position: relative !important;
+    display: block;
+}
+
 .clear {
     clear: both;
 }

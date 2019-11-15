@@ -1,0 +1,24 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='admin-privilege-template-name-form-name') Name
+        input#admin-privilege-template-name-form-name(
+            class=(nameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='name'
+            placeholder='Name'
+            value= name
+        )
+        .invalid-feedback Enter a valid name
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

@@ -16,7 +16,10 @@ block admin-content
                             td.myaccount-table-view__cell--align-left 
                                 a(href=privilegeTemplate.name + '/')= privilegeTemplate.title
                             td.myaccount-table-view__cell--align-left
-                                a(href=privilegeTemplate.name + '/') #{privilegeTemplate.countGrantedPrivileges()}
+                                if privilegeTemplate.getPrivileges()
+                                    a(href=privilegeTemplate.name + '/') #{privilegeTemplate.countGrantedPrivileges()}
+                                else 
+                                    a(href=privilegeTemplate.name + '/') 0
                             td.myaccount-table-view__cell--align-left
                                 a(href=privilegeTemplate.name + '/')= privilegeTemplate.default_template == 1 ? "Yes" : ""
         else

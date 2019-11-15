@@ -132,6 +132,20 @@ module.exports.PrivilegeTemplate = class PrivilegeTemplate {
         return true;
     }
 
+    revokePrivilege(privilege){
+        if(this.name === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        this.privileges[privilege] = 0;
+
+        return true;
+    }
+
     deletePrivilege(privilege){
         if(this.name === undefined){
             return false;
@@ -144,6 +158,18 @@ module.exports.PrivilegeTemplate = class PrivilegeTemplate {
         delete this.privileges[privilege];
 
         return true;
+    }
+
+    getPrivileges(){
+        if(this.name === undefined){
+            return false;
+        }
+
+        if(this.privileges === undefined){
+            return false;
+        }
+
+        return this.privileges;
     }
 
     countGrantedPrivileges(){

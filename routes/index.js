@@ -125,6 +125,7 @@ router.get(myAccountPath + 'test/', (req, res, next) => {
 const adminPath = '/admin/';
 router.all('/admin/*', adminRoutes.userCheck);
 router.get(adminPath, adminRoutes.showAdminPanel);
+
 router.get(adminPath + 'users/', adminUserRoutes.showAdminUsersPage);
 router.get(adminPath + 'users/new/', adminUserRoutes.showAdminNewUserPage);
 router.all(adminPath + 'users/:userId/*', adminUserRoutes.loadUserInfo);
@@ -137,7 +138,22 @@ router.get(adminPath + 'users/:userId/email-address/', adminUserRoutes.showAdmin
 router.post(adminPath + 'users/:userId/email-address/', adminUserRoutes.performAdminUsersSaveEmailAddress);
 router.get(adminPath + 'users/:userId/dob/', adminUserRoutes.showAdminUsersDobPage);
 router.post(adminPath + 'users/:userId/dob/', adminUserRoutes.performAdminUsersSaveDob);
+
 router.get(adminPath + 'privilege-templates/', adminPrivilegeTemplatesRoutes.showAdminPrivilegeTemplatesPage);
+router.get(adminPath + 'privilege-templates/create/', adminPrivilegeTemplatesRoutes.showCreatePrivilegeTemplatePage);
+router.post(adminPath + 'privilege-templates/create/', adminPrivilegeTemplatesRoutes.performCreatePrivilegeTemplate);
+router.all(adminPath + 'privilege-templates/:name/*', adminPrivilegeTemplatesRoutes.loadPrivilegeTemplateInfo);
+router.get(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplatePage);
+router.post(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSave);
+router.get(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateNamePage);
+router.post(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveName);
+router.get(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateTitlePage);
+router.post(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveTitle);
+router.get(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateDefaultPage);
+router.post(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveDefault);
+router.get(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateAddPrivilegePage);
+router.post(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateAddPrivilege);
+
 router.get(adminPath + 'access-tokens/', adminAccessTokensRoutes.showAdminAccessTokensPage);
 router.get(adminPath + 'nonces/', adminNoncesRoutes.showAdminNoncesPage);
 router.get(adminPath + 'data/', adminDataRoutes.showAdminDataPage);
