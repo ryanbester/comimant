@@ -1,0 +1,19 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        p Are you sure you want to delete the user: #{targetUser.first_name} #{targetUser.last_name}?
+        p This action cannot be undone.
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Yes'
+        )
+        br
+        a.button.form-button(href='../') No

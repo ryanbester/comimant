@@ -189,19 +189,44 @@ module.exports.Auth = class Auth {
                     // Open the connection
                     connection.connect();
 
-                    // Execute the query to insert the new password into the database
-                    connection.query("UPDATE passwd "
-                    + "SET password = " + connection.escape(hash) + ", "
-                    + "salt = UNHEX(" + connection.escape(saltEncrypted) + "), "
-                    + "salt_iv = UNHEX(" + connection.escape(iv.toString('hex')) + ") "
-                    + "WHERE user_id = UNHEX(" + connection.escape(user_id) + ")",
+                    connection.query("SELECT COUNT(*) AS UserCount FROM passwd WHERE user_id = UNHEX(" + connection.escape(user_id) + ")",
                     (error, results, fields) => {
-                        // Close the connection
-                        connection.end();
+                        if (error) {
+                            connection.end();
+                            reject(error);
+                        } else {
+                            if(results[0].UserCount > 0){
+                                // Execute the query to update the existing password in the database
+                                connection.query("UPDATE passwd "
+                                + "SET password = " + connection.escape(hash) + ", "
+                                + "salt = UNHEX(" + connection.escape(saltEncrypted) + "), "
+                                + "salt_iv = UNHEX(" + connection.escape(iv.toString('hex')) + ") "
+                                + "WHERE user_id = UNHEX(" + connection.escape(user_id) + ")",
+                                (error, results, fields) => {
+                                    // Close the connection
+                                    connection.end();
 
-                        if (error) reject(error);
+                                    if (error) reject(error);
 
-                        resolve(true);
+                                    resolve(true);
+                                });
+                            } else {
+                                // Execute the query to insert the new password into the database
+                                connection.query("INSERT INTO passwd VALUES("
+                                + "UNHEX(" + connection.escape(user_id) + "), "
+                                + connection.escape(hash) + ", "
+                                + "UNHEX(" + connection.escape(saltEncrypted) + "), "
+                                + "UNHEX(" + connection.escape(iv.toString('hex')) + "))",
+                                (error, results, fields) => {
+                                    // Close the connection
+                                    connection.end();
+
+                                    if (error) reject(error);
+
+                                    resolve(true);
+                                });
+                            }
+                        }
                     });
                 });
             }
@@ -271,6 +296,26 @@ module.exports.Auth = class Auth {
                 })
             }
 
+        });
+    }
+
+    static deletePasswordFromDatabase(user_id){
+        return new Promise((resolve, reject) => {
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM passwd WHERE user_id = UNHEX(" + connection.escape(user_id) + ")",
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
         });
     }
 
@@ -430,18 +475,75 @@ module.exports.User = class User {
             // Open the connection
             connection.connect();
 
-            // Prepare dob
-            var dob = this.dob.getFullYear() + '-' + ("0" + (this.dob.getMonth() + 1)).slice(-2) + '-' + ("0" + this.dob.getDate()).slice(-2) ;
+            connection.query("SELECT COUNT(*) AS UserCount FROM users WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
+            (error, results, fields) => {
+                if(error){
+                    connection.end();
+                    reject(error);
+                } else {
+                    if(results[0].UserCount > 0){
+                        // Update the existing user
+                        // Prepare dob
+                        var dob = this.dob.getFullYear() + '-' + ("0" + (this.dob.getMonth() + 1)).slice(-2) + '-' + ("0" + this.dob.getDate()).slice(-2) ;
 
-            // Execute the query to update the user information
-            connection.query("UPDATE users "
-            + "SET username = " + connection.escape(this.username) + ", "
-            + "first_name = " + connection.escape(this.first_name) + ", "
-            + "last_name = " + connection.escape(this.last_name) + ", "
-            + "email_address = " + connection.escape(this.email_address) + ", "
-            + "dob = " + connection.escape(dob) + ", "
-            + "privileges = " + connection.escape(JSON.stringify(this.privileges)) 
-            + " WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
+                        // Execute the query to update the user information
+                        connection.query("UPDATE users "
+                        + "SET username = " + connection.escape(this.username) + ", "
+                        + "first_name = " + connection.escape(this.first_name) + ", "
+                        + "last_name = " + connection.escape(this.last_name) + ", "
+                        + "email_address = " + connection.escape(this.email_address) + ", "
+                        + "dob = " + connection.escape(dob) + ", "
+                        + "privileges = " + connection.escape(JSON.stringify(this.privileges)) 
+                        + " WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
+                        (error, results, fields) => {
+                            // Close the connection
+                            connection.end();
+
+                            if (error) reject(error);
+
+                            resolve(true);
+                        });
+                    } else {
+                        // Insert the new user
+                        // Prepare dob
+                        var dob = this.dob.getFullYear() + '-' + ("0" + (this.dob.getMonth() + 1)).slice(-2) + '-' + ("0" + this.dob.getDate()).slice(-2) ;
+
+                        // Execute the query to update the user information
+                        connection.query("INSERT INTO users VALUES("
+                        + "UNHEX(" + connection.escape(this.user_id) + "),"
+                        + connection.escape(this.username) + ", "
+                        + connection.escape(this.email_address) + ", "
+                        + connection.escape(this.first_name) + ", "
+                        + connection.escape(this.last_name) + ", "
+                        + connection.escape(dob) + ", "
+                        + connection.escape(JSON.stringify(this.privileges)) + ")",
+                        (error, results, fields) => {
+                            // Close the connection
+                            connection.end();
+
+                            if (error) reject(error);
+
+                            resolve(true);
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    deleteUser(){
+        return new Promise((resolve, reject) => {
+            if(this.user_id === undefined){
+                reject("User ID not set");
+            }
+
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM users WHERE user_id = UNHEX(" + connection.escape(this.user_id) + ")",
             (error, results, fields) => {
                 // Close the connection
                 connection.end();
@@ -486,7 +588,7 @@ module.exports.User = class User {
     }
 
     revokePrivilege(privilege){
-        if(this.name === undefined){
+        if(this.user_id === undefined){
             return false;
         }
 
@@ -514,7 +616,7 @@ module.exports.User = class User {
     }
 
     getPrivileges(){
-        if(this.name === undefined){
+        if(this.user_id === undefined){
             return false;
         }
 
@@ -567,6 +669,52 @@ module.exports.User = class User {
                     resolve(false);
                 }
             })
+        });
+    }
+
+    static generateUserId() {
+        return new Promise((resolve, reject) => {
+            var id = crypto.randomBytes(16).toString('hex');
+
+            // Check if the ID is already in the database
+            const checkID = idFound => {
+                return new Promise((resolve, reject) => {
+                    // Create a connection to the database
+                    const connection = db.getConnection();
+
+                    // Open the connection
+                    connection.connect();
+
+                    // Execute the query to check for the ID
+                    connection.query("SELECT COUNT(*) AS IDCount FROM users WHERE user_id = UNHEX(" + connection.escape(id) + ")",
+                    (error, results, fields) => {
+                        // Close the connection
+                        connection.end();
+
+                        if (error) reject(error);
+
+                        // If the ID is in the database, generate a new ID and continue the loop
+                        if(results[0].IDCount > 0){
+                            id = crypto.randomBytes(16).toString('hex');
+                            resolve(true);
+                        } else {
+                            // End the loop
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+
+            // Create a loop
+            ((data, condition, action) => {
+                var whilst = data => {
+                    // If ID is not in the database, end the loop
+                    return condition(data) ? action(data).then(whilst) : Promise.resolve(data);
+                }
+                return whilst(data);
+            })(true, idFound => idFound, checkID).then(idFound => {
+                resolve(id);
+            });
         });
     }
 }

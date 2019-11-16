@@ -1,0 +1,26 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        p This will override all privileges set for the user.
+        label(for='admin-user-privilege-apply-template-form-template') Template to apply privileges from
+        br
+        select#admin-user-privilege-apply-template-form-template(
+            class=(ptInvalid ? "is-invalid" : undefined)
+            name='pt'
+        )
+            if pt
+                if pt.length > 0
+                    each template in pt
+                        option(value=template.name)= template.title         
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

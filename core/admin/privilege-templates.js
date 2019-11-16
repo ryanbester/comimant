@@ -100,6 +100,30 @@ module.exports.PrivilegeTemplate = class PrivilegeTemplate {
         });
     }
 
+    deletePrivilegeTemplate(){
+        return new Promise((resolve, reject) => {
+            if(this.name === undefined){
+                reject("Privilege Template name is not set");
+            }
+
+            // Create a connection to the database
+            const connection = db.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query("DELETE FROM privilege_templates WHERE name = " + connection.escape(this.name),
+            (error, results, fields) => {
+                // Close the connection
+                connection.end();
+
+                if (error) reject(error);
+
+                resolve(true);
+            });
+        });
+    }
+
     hasPrivilege(privilege){
         if(this.name === undefined){
             return false;

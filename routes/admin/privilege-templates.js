@@ -87,6 +87,8 @@ exports.performCreatePrivilegeTemplate = (req, res, next) => {
                 name: name,
                 ptTitle: title,
                 formNonce: results[1],
+                nameInvalid: nameInvalid,
+                titleInvalid: titleInvalid,
                 error: error
             });
         });
@@ -660,6 +662,7 @@ exports.performPrivilegeTemplateAddPrivilege = (req, res, next) => {
                 name: name,
                 granted: granted,
                 formNonce: results[1],
+                nameInvalid: nameInvalid,
                 error: error
             });
         });
@@ -724,5 +727,88 @@ exports.performPrivilegeTemplateAddPrivilege = (req, res, next) => {
         }
     }, err => {
         showError("Error adding privilege. Please try again.");
+    });
+}
+
+exports.showPrivilegeTemplateDeletePage = (req, res, next) => {
+    const pt = res.locals.pt;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-privilege-template-delete-form', '/admin/privilege-templates/' + pt.name.toLowerCase() + '/delete-privilege-template/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-privilege-template-delete', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',
+            logoutNonce: results[0],
+            activeItem: 'privilege-templates',
+            subtitle: 'Delete Privilege Template: ' + pt.title,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performPrivilegeTemplateDelete = (req, res, next) => {
+    let pt = res.locals.pt;
+
+    const showError = (error) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-privilege-template-delete-form', '/admin/privilege-templates/' + pt.name.toLowerCase() + '/delete-privilege-template/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-privilege-template-delete', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',
+                logoutNonce: results[0],
+                activeItem: 'privilege-templates',
+                subtitle: 'Delete Privilege Template: ' + pt.title,
+                formNonce: results[1],
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-privilege-template-delete-form', '/admin/privilege-templates/' + pt.name.toLowerCase() + '/delete-privilege-template/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-privilege-template-delete', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',
+                logoutNonce: results[0],
+                activeItem: 'privilege-templates',
+                subtitle: 'Delete Privilege Template: ' + pt.title,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-privilege-template-delete-form', req.body.nonce, req.path).then(result => {
+        if(result == true){
+            pt.deletePrivilegeTemplate().then(result => {
+                if(result == true){
+                    res.redirect(301, '../../');
+                } else {
+                    showError("Error deleting privilege template. Please try again.");
+                }
+            }, err => {
+                showError("Error deleting privilege template. Please try again.");
+            });
+        } else {
+            showError("Error deleting privilege template. Please try again.");
+        }
+    }, err => {
+        showError("Error deleting privilege template. Please try again.");
     });
 }

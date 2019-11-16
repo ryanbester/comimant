@@ -1,0 +1,43 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='myaccount-user-privilege-form-name') Name
+        input#myaccount-user-privilege-form-name(
+            class=(nameInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='name'
+            placeholder='Name'
+            value= name
+        )
+        .invalid-feedback Enter a valid name
+        br
+        label.login-form__checkbox.checkbox-container Granted
+            input(
+                type="radio"
+                name= "granted"
+                value= 'granted'
+                checked= (granted == 1 ? "checked" : undefined)
+                tabindex='-1'
+            )
+            span.checkbox-checkmark
+        label.login-form__checkbox.checkbox-container Denied
+            input(
+                type="radio"
+                name= "granted"
+                value= 'denied'
+                checked= (granted == 0 ? "checked" : undefined)
+                tabindex='-1'
+            )
+            span.checkbox-checkmark
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

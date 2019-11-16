@@ -128,6 +128,7 @@ router.get(adminPath, adminRoutes.showAdminPanel);
 
 router.get(adminPath + 'users/', adminUserRoutes.showAdminUsersPage);
 router.get(adminPath + 'users/new/', adminUserRoutes.showAdminNewUserPage);
+router.post(adminPath + 'users/new/', adminUserRoutes.performAdminNewUser);
 router.all(adminPath + 'users/:userId/*', adminUserRoutes.loadUserInfo);
 router.get(adminPath + 'users/:userId/', adminUserRoutes.showAdminUserPage);
 router.get(adminPath + 'users/:userId/name/', adminUserRoutes.showAdminUsersNamePage);
@@ -138,6 +139,16 @@ router.get(adminPath + 'users/:userId/email-address/', adminUserRoutes.showAdmin
 router.post(adminPath + 'users/:userId/email-address/', adminUserRoutes.performAdminUsersSaveEmailAddress);
 router.get(adminPath + 'users/:userId/dob/', adminUserRoutes.showAdminUsersDobPage);
 router.post(adminPath + 'users/:userId/dob/', adminUserRoutes.performAdminUsersSaveDob);
+
+router.get(adminPath + 'users/:userId/security/privileges/', adminUserRoutes.showAdminUserPrivilegesPage);
+router.post(adminPath + 'users/:userId/security/privileges/', adminUserRoutes.performAdminUserSavePrivileges);
+router.get(adminPath + 'users/:userId/security/privileges/add-privilege/', adminUserRoutes.showAdminUserAddPrivilegePage);
+router.post(adminPath + 'users/:userId/security/privileges/add-privilege/', adminUserRoutes.performAdminUserAddPrivilege);
+router.get(adminPath + 'users/:userId/security/privileges/apply-template/', adminUserRoutes.showAdminUserApplyPrivilegeTemplatePage);
+router.post(adminPath + 'users/:userId/security/privileges/apply-template/', adminUserRoutes.performAdminUserApplyPrivilegeTemplate);
+
+router.get(adminPath + 'users/:userId/delete-user/', adminUserRoutes.showAdminDeleteUserPage);
+router.post(adminPath + 'users/:userId/delete-user/', adminUserRoutes.performAdminDeleteUser);
 
 router.get(adminPath + 'privilege-templates/', adminPrivilegeTemplatesRoutes.showAdminPrivilegeTemplatesPage);
 router.get(adminPath + 'privilege-templates/create/', adminPrivilegeTemplatesRoutes.showCreatePrivilegeTemplatePage);
@@ -153,6 +164,8 @@ router.get(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTempl
 router.post(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveDefault);
 router.get(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateAddPrivilegePage);
 router.post(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateAddPrivilege);
+router.get(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateDeletePage);
+router.post(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateDelete);
 
 router.get(adminPath + 'access-tokens/', adminAccessTokensRoutes.showAdminAccessTokensPage);
 router.get(adminPath + 'nonces/', adminNoncesRoutes.showAdminNoncesPage);

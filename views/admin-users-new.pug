@@ -7,18 +7,35 @@ block admin-content
     if success
         h2.success= success
     form.myaccount-form(method='POST' action='')
-        label(for='myaccount-user-form-email-address') Email Address
-        input#myaccount-user-form-email-address(
+        label(for='admin-user-form-privilege-template') Privilege Template
+        br
+        select#admin-user-form-privilege-template(
+            class=(ptInvalid ? "is-invalid" : undefined)
+            name='pt'
+        )
+            - var defaultSet = false;
+            if pt
+                if pt.length > 0
+                    each template in pt
+                        if defaultSet
+                            option(value=template.name)= template.title
+                        else
+                            option(value=template.name selected=(template.default_template == 1 ? "true": undefined))= template.title
+                            - defaultSet = (template.default_template == 1 ? true: false)
+            option(value='none' selected=(defaultSet == false ? "true": undefined))= 'None'
+        br
+        label(for='admin-user-form-email-address') Email Address
+        input#admin-user-form-email-address(
             class=(emailAddressInvalid ? "is-invalid" : undefined)
-            type='text'
+            type='email'
             name='emailAddress'
             placeholder='Email Address'
             value= emailAddress
         )
         .invalid-feedback Enter a valid email address
         br
-        label(for='myaccount-user-form-first-name') First name
-        input#myaccount-user-form-first-name(
+        label(for='admin-user-form-first-name') First name
+        input#admin-user-form-first-name(
             class=(firstNameInvalid ? "is-invalid" : undefined)
             type='text'
             name='firstName'
@@ -27,8 +44,8 @@ block admin-content
         )
         .invalid-feedback Enter a valid first name
         br
-        label(for='myaccount-user-form-last-name') Last name
-        input#myaccount-user-form-last-name(
+        label(for='admin-user-form-last-name') Last name
+        input#admin-user-form-last-name(
             class=(lastNameInvalid ? "is-invalid" : undefined)
             type='text'
             name='lastName'
@@ -37,8 +54,8 @@ block admin-content
         )
         .invalid-feedback Enter a valid last name
         br
-        label(for='myaccount-user-form-username') Username
-        input#myaccount-user-form-username(
+        label(for='admin-user-form-username') Username
+        input#admin-user-form-username(
             class=(usernameInvalid ? "is-invalid" : undefined)
             type='text'
             name='username'
@@ -47,29 +64,53 @@ block admin-content
         )
         .invalid-feedback Enter a valid username
         br
-        label(for='myaccount-user-form-dob') Date of Birth
-        input#myaccount-user-form-dob(
-            class=(dobInvalid ? "is-invalid" : undefined)
-            type='text'
-            name='dob'
-            placeholder='Date of Birth'
-            value= dob
-        )
-        .invalid-feedback Enter a valid date of birth
+        label Date of Birth
         br
-        label(for='myaccount-user-form-password') Password
-        input#myaccount-user-form-password(
+        select#admin-user-form-day(
+            class=(dayInvalid ? "is-invalid" : undefined)
+            name='day'
+        )
+            - for(let i = 1; i <= 31; i++)
+                option(value=i selected=(day == i ? "true": undefined))= i
+        .invalid-feedback Invalid day
+        select#admin-user-form-month(
+            class=(monthInvalid ? "is-invalid" : undefined)
+            name='month'
+        )
+            option(value='1' selected=(month == '1' ? "true": undefined)) January
+            option(value='2' selected=(month == '2' ? "true": undefined)) February
+            option(value='3' selected=(month == '3' ? "true": undefined)) March
+            option(value='4' selected=(month == '4' ? "true": undefined)) April
+            option(value='5' selected=(month == '5' ? "true": undefined)) May
+            option(value='6' selected=(month == '6' ? "true": undefined)) June
+            option(value='7' selected=(month == '7' ? "true": undefined)) July
+            option(value='8' selected=(month == '8' ? "true": undefined)) August
+            option(value='9' selected=(month == '9' ? "true": undefined)) September
+            option(value='10' selected=(month == '10' ? "true": undefined)) October
+            option(value='11' selected=(month == '11' ? "true": undefined)) November
+            option(value='12' selected=(month == '12' ? "true": undefined)) December
+        .invalid-feedback Invalid month
+        select#admin-user-form-year(
+            class=(yearInvalid ? "is-invalid" : undefined)
+            name='year'
+        )
+            - for(let i = (new Date()).getFullYear(); i >= 1890; i--)
+                option(value=i selected=(year == i ? "true": undefined))= i
+        .invalid-feedback Invalid year
+        br
+        label(for='admin-user-form-password') Password
+        input#admin-user-form-password(
             class=(passwordInvalid ? "is-invalid" : undefined)
             type='password'
             name='password'
             placeholder='Password'
         )
         br
-        label(for='myaccount-user-form-confirm-password') Confirm Password
-        input#myaccount-user-form-confirm-password(
+        label(for='admin-user-form-confirm-password') Confirm Password
+        input#admin-user-form-confirm-password(
             class=(confirmPasswordInvalid ? "is-invalid" : undefined)
             type='password'
-            name='conmfirmPassword'
+            name='confirmPassword'
             placeholder='Confirm Password'
         )
         br
