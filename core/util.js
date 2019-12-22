@@ -19,6 +19,10 @@ const url_rewrite = (host, url) => {
             newUrl = host + url;
         }
     }
+    
+    if(newUrl === undefined){
+        return host + url;
+    }
 
     return newUrl;
 }

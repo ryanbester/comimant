@@ -123,6 +123,7 @@ router.get(myAccountPath + 'test/', (req, res, next) => {
 });
 
 const adminPath = '/admin/';
+router.all('/admin', adminRoutes.userCheck);
 router.all('/admin/*', adminRoutes.userCheck);
 router.get(adminPath, adminRoutes.showAdminPanel);
 
@@ -146,6 +147,9 @@ router.get(adminPath + 'users/:userId/security/privileges/add-privilege/', admin
 router.post(adminPath + 'users/:userId/security/privileges/add-privilege/', adminUserRoutes.performAdminUserAddPrivilege);
 router.get(adminPath + 'users/:userId/security/privileges/apply-template/', adminUserRoutes.showAdminUserApplyPrivilegeTemplatePage);
 router.post(adminPath + 'users/:userId/security/privileges/apply-template/', adminUserRoutes.performAdminUserApplyPrivilegeTemplate);
+router.get(adminPath + 'users/:userId/security/passwords/', adminUserRoutes.showAdminUserPasswordsPage);
+router.get(adminPath + 'users/:userId/security/passwords/change-password/', adminUserRoutes.showUserChangePasswordPage);
+router.post(adminPath + 'users/:userId/security/passwords/change-password/', adminUserRoutes.performUserChangePassword);
 
 router.get(adminPath + 'users/:userId/delete-user/', adminUserRoutes.showAdminDeleteUserPage);
 router.post(adminPath + 'users/:userId/delete-user/', adminUserRoutes.performAdminDeleteUser);

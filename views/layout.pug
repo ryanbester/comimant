@@ -22,7 +22,7 @@ html(lang='en-gb')
         meta(property='og:title' content='Bester Intranet')
         meta(property='og:type' content='website')
         meta(property='og:image' content='https://static.besterintranet.com/assets/images/logo512x512.png')
-        meta(property='og:url' content='https://www.besterintranet.com')
+        meta(Qproperty='og:url' content='https://www.besterintranet.com')
         meta(name='theme-color' content='#FFFFFF')
         meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
         meta(name='application-name' content='Bester Intranet')
@@ -32,6 +32,12 @@ html(lang='en-gb')
         script(src='https://www.besterintranet.' + tld + '/scripts/main.js' async)
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+        script.
+            if('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                    .register('/sw.js')
+                    .then(function() { console.log("Service Worker Registered"); });
+            }
         if useBootstrap
             script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
         if scripts

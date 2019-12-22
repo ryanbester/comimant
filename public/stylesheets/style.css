@@ -6,8 +6,9 @@ Copyright (C) 2019 Bester Intranet
     font-family: 'Arial', sans-serif;
 }
 
-body:not(#basic-header) {
-    padding: 15px;
+body {
+    padding: 0;
+    margin: 0;
 }
 
 pre {
@@ -204,7 +205,160 @@ label {
     color: #721C24;
 }
 
+#main-header {
+    position: static;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: #000000;
+    color: #FFFFFF;
+    box-shadow: 0px 7px 19px 0px rgba(0,0,0,0.75);
+}
+
+#main-header table tr td h1 {
+    padding-left: 15px;
+}
+
+.main-header-left {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.main-header-right {
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+}
+
+.main-header-dropdown {
+    position: relative;
+    border: 1px solid transparent;
+    padding-left: 7px;
+    padding-right: 7px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.main-header-dropdown:hover {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.main-header-dropdown:hover .main-header-dropdown__content {
+    display: block;
+}
+
+.main-header-dropdown__header {
+    display: inline-block;
+}
+
+.main-header-dropdown__image {
+    position: relative;
+    margin-left: 12px;
+}
+
+.main-header-dropdown__content {
+    position: absolute;
+    left: -1px;
+    width: 100%;
+    background-color: #FFFFFF;
+    display: none;
+    border: 1px solid #000000;
+    border-radius: 7px;
+}
+
+.main-header-dropdown-content__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-header-dropdown__item:first-child {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.main-header-dropdown__item:last-child {
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.main-header-dropdown__item:hover {
+    background-color: #CFDBFF;
+}
+
+.main-header-dropdown__item a {
+    display: block;
+    padding: 7px;
+    text-decoration: none;
+    color: #000000;
+}
+
+.main-container {
+    height: 100%;
+    padding: 15px;
+    background-attachment: fixed;
+    background-size: 100vw 100vh;
+    background-image: radial-gradient(circle, rgba(0,45,179,1) 0%, rgba(207,219,255,1) 100%);;
+    min-height: 100vh;
+    color: #FFFFFF;
+    text-shadow: 0px 0px 20px #0000006e;
+}
+
+.home-page-grid-container {
+    display: grid;
+    align-items: start;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-gap: 1rem;
+    grid-auto-flow: row dense;
+}
+
+.home-page-grid-container__widget {
+    display: inline-block;
+    height: calc(100% - 30px);
+    border-radius: 7px;
+    background-color: #FFFFFF;
+    color: #000000;
+    box-shadow: 0px 0px 4px 0px #0000006e;
+    text-shadow: none;
+    transition: box-shadow 0.25s;
+    -moz-transition: box-shadow 0.25s;
+    -webkit-transition: box-shadow 0.25s;
+    -ms-transition: box-shadow 0.25s;
+    -o-transition: box-shadow 0.25s;
+    padding: 15px;
+}
+
+.home-page-grid-container__widget:hover {
+    box-shadow: 0px 0px 17px 2px #0000006e;
+}
+
+.home-page-grid-container__widget h1 {
+    margin: 0;
+}
+
+.home-page-grid-container__widget--add {
+    background-color: transparent;
+    color: #FFFFFF;
+    text-shadow: 0px 0px 20px #0000006e;
+}
+
+.home-page-grid-container__widget__full-link {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
 .basic-container {
+    padding: 15px;
     padding-left: 10%;
     padding-right: 10%;
 }
@@ -228,6 +382,11 @@ label {
 .basic-header-right {
     display: flex;
     flex-direction: column;
+}
+
+.logo-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .container--center {

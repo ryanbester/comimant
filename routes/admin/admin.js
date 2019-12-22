@@ -31,6 +31,21 @@ exports.userCheck = (req, res, next) => {
                         user.loadInfo().then(result => {
                             res.locals.user = user;
 
+                            var path;
+                            if(process.env.NODE_ENV == 'development'){
+                                path = 'dev';
+                            } else {
+                                path = 'prod';
+                            }
+
+                            require('child_process').exec('cd ' + path + ' && git rev-parse HEAD', function(err, stdout) {
+                                if(err){
+                                    res.locals.commit_id = "Not available"
+                                } else {
+                                    res.locals.commit_id = stdout;
+                                }
+                            });
+
                             if(!user.hasPrivilege('access_admin_panel')){
                                 res.render('error-custom', {
                                     useBootstrap: false,

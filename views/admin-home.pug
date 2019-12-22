@@ -8,9 +8,11 @@ block content
                 table
                     tr
                         td
-                            img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
+                            a.logo-link(href='/')
+                                img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
                         td
-                            h1 Bester Intranet
+                            a.logo-link(href='/')
+                                h1 Bester Intranet
             if user
                 .basic-header-right
                     .user-dropdown
@@ -42,4 +44,4 @@ block content
                 if subtitle
                     h2= subtitle
                 block admin-content
-                p &copy; 2017&ndash;#{(new Date()).getFullYear()} Bester Intranet
+                p &copy; 2017&ndash;#{(new Date()).getFullYear()} Bester Intranet, Commit: #{commit_id}

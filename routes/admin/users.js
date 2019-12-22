@@ -228,7 +228,7 @@ exports.performAdminNewUser = (req, res, next) => {
                                     privileges = pt.privileges;
                                 }
 
-                                var user = new User(user_id, username, firstName, lastName, email, new Date(dobYear, dobMonth, dobDay), privileges)
+                                var user = new User(user_id, username, firstName, lastName, email, new Date(dobYear, dobMonth - 1, dobDay), privileges)
                                 user.saveUser().then(result => {
                                     if(result == true){
                                         Auth.encryptPassword(confirmPassword).then(result => {
@@ -294,20 +294,20 @@ exports.loadUserInfo = (req, res, next) => {
     }
 
     const userId = req.params.userId;
-    const user = new User(userId);
+    const targetUser = new User(userId);
 
-    user.loadInfo().then(result => {
-        res.locals.user = user;
+    targetUser.loadInfo().then(result => {
+        res.locals.targetUser = targetUser;
         next();
     }, err => showError());
 }
 
 exports.showAdminUserPage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
 
-    const services = new ServiceManager(user.user_id);
+    const services = new ServiceManager(targetUser.user_id);
     const servicesPromise = services.getServices();
 
     Promise.all([noncePromise, servicesPromise]).then(results => {    
@@ -316,21 +316,21 @@ exports.showAdminUserPage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
-            title: user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: user.first_name + ' ' + user.last_name,
-            adminUser: user,
+            subtitle: targetUser.first_name + ' ' + targetUser.last_name,
+            adminUser: targetUser,
             services: results[1]
         });
     });
 }
 
 exports.showAdminUsersNamePage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + user.user_id.toLowerCase() + '/name/');
+    const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/name/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-name', {
@@ -338,19 +338,19 @@ exports.showAdminUsersNamePage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Change User\'s Name | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Name | ' + user.first_name + ' ' + user.last_name,
-            firstName: user.first_name,
-            lastName: user.last_name,
+            subtitle: 'Name | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            firstName: targetUser.first_name,
+            lastName: targetUser.last_name,
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminUsersSaveName = (req, res, next) => {
-    let user = res.locals.user;
+    let targetUser = res.locals.targetUser;
 
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
@@ -369,7 +369,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
         }
 
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + user.user_id.toLowerCase() + '/name/');
+        const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/name/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-name', {
@@ -377,10 +377,10 @@ exports.performAdminUsersSaveName = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Name | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Name | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Name | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 firstName: firstName,
                 lastName: lastName,
                 formNonce: results[1],
@@ -393,7 +393,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + user.user_id.toLowerCase() + '/name/');
+        const formNoncePromise = Nonce.createNonce('admin-user-name-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/name/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-name', {
@@ -401,10 +401,10 @@ exports.performAdminUsersSaveName = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Name | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Name | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Name | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 firstName: firstName,
                 lastName: lastName,
                 formNonce: results[1],
@@ -430,10 +430,10 @@ exports.performAdminUsersSaveName = (req, res, next) => {
                 showError(invalidFields.length + " fields are invalid", invalidFields);
             } else {
                 const performSave = () => {
-                    user.first_name = firstName;
-                    user.last_name = lastName;
+                    targetUser.first_name = firstName;
+                    targetUser.last_name = lastName;
 
-                    user.saveUser().then(result => {
+                    targetUser.saveUser().then(result => {
                         if(result == true){
                             showSuccess("Successfully saved user details");
                         } else {
@@ -455,10 +455,10 @@ exports.performAdminUsersSaveName = (req, res, next) => {
 }
 
 exports.showAdminUsersUsernamePage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + user.user_id.toLowerCase() + '/username/');
+    const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/username/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-username', {
@@ -466,18 +466,18 @@ exports.showAdminUsersUsernamePage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Change User\'s Username | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Username | ' + user.first_name + ' ' + user.last_name,
-            username: user.username,
+            subtitle: 'Username | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            username: targetUser.username,
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminUsersSaveUsername = (req, res, next) => {
-    let user = res.locals.user;
+    let targetUser = res.locals.targetUser;
 
     let username = req.body.username;
 
@@ -491,7 +491,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
         }
 
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + user.user_id.toLowerCase() + '/username/');
+        const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/username/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-username', {
@@ -499,10 +499,10 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Username | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Username | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Username | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 username: firstName,
                 formNonce: results[1],
                 usernameInvalid: firstNameInvalid,
@@ -513,7 +513,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + user.user_id.toLowerCase() + '/username/');
+        const formNoncePromise = Nonce.createNonce('admin-user-username-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/username/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-username', {
@@ -521,10 +521,10 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Username | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Username | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Username | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 username: username,
                 formNonce: results[1],
                 success: message
@@ -545,9 +545,9 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
                 showError(invalidFields.length + " fields are invalid", invalidFields);
             } else {
                 const performSave = () => {
-                    user.username = username;
+                    targetUser.username = username;
 
-                    user.saveUser().then(result => {
+                    targetUser.saveUser().then(result => {
                         if(result == true){
                             showSuccess("Successfully saved user details");
                         } else {
@@ -581,10 +581,10 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
 }
 
 exports.showAdminUsersEmailAddressPage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + user.user_id.toLowerCase() + '/email-address/');
+    const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/email-address/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-email-address', {
@@ -592,18 +592,18 @@ exports.showAdminUsersEmailAddressPage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Change User\'s Email Address | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Email Address | ' + user.first_name + ' ' + user.last_name,
-            email: user.email_address,
+            subtitle: 'Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            email: targetUser.email_address,
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
-    let user = res.locals.user;
+    let targetUser = res.locals.targetUser;
 
     let email = req.body.email;
 
@@ -617,7 +617,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
         }
 
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + user.user_id.toLowerCase() + '/email-address/');
+        const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/email-address/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-email-address', {
@@ -625,10 +625,10 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Email Address | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Email Address | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 email: email,
                 formNonce: results[1],
                 emailInvalid: emailInvalid,
@@ -639,7 +639,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + user.user_id.toLowerCase() + '/email-address/');
+        const formNoncePromise = Nonce.createNonce('admin-user-email-address-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/email-address/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-email-address', {
@@ -647,10 +647,10 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Email Address | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Email Address | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 email: email,
                 formNonce: results[1],
                 success: message
@@ -678,9 +678,9 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
                 showError(invalidFields.length + " fields are invalid", invalidFields);
             } else {
                 const performSave = () => {
-                    user.email_address = email;
+                    targetUser.email_address = email;
 
-                    user.saveUser().then(result => {
+                    targetUser.saveUser().then(result => {
                         if(result == true){
                             showSuccess("Successfully saved user details");
                         } else {
@@ -702,10 +702,10 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
 }
 
 exports.showAdminUsersDobPage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + user.user_id.toLowerCase() + '/dob/');
+    const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/dob/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-dob', {
@@ -713,20 +713,20 @@ exports.showAdminUsersDobPage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Change User\'s Date of Birth | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Date of Birth | ' + user.first_name + ' ' + user.last_name,
-            day: user.dob.getDate(),
-            month: user.dob.getMonth() + 1,
-            year: user.dob.getFullYear(),
+            subtitle: 'Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            day: targetUser.dob.getDate(),
+            month: targetUser.dob.getMonth() + 1,
+            year: targetUser.dob.getFullYear(),
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminUsersSaveDob = (req, res, next) => {
-    let user = res.locals.user;
+    let targetUser = res.locals.targetUser;
 
     let day = req.body.day;
     let month = req.body.month;
@@ -750,7 +750,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
         }
 
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + user.user_id.toLowerCase() + '/dob/');
+        const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/dob/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-dob', {
@@ -758,10 +758,10 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Date of Birth | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Date of Birth | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 day: day,
                 month: month,
                 year: year,
@@ -776,7 +776,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + user.user_id.toLowerCase() + '/dob/');
+        const formNoncePromise = Nonce.createNonce('admin-user-dob-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/dob/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-dob', {
@@ -784,10 +784,10 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Change User\'s Date of Birth | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Date of Birth | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 day: day,
                 month: month,
                 year: year,
@@ -819,9 +819,9 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
             } else {
                 const performSave = () => {
                     var date = new Date(year, month - 1, day);
-                    user.dob = date;
+                    targetUser.dob = date;
 
-                    user.saveUser().then(result => {
+                    targetUser.saveUser().then(result => {
                         if(result == true){
                             showSuccess("Successfully saved user details");
                         } else {
@@ -843,10 +843,10 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
 }
 
 exports.showAdminUserPrivilegesPage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/');
+    const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-privileges', {
@@ -854,22 +854,22 @@ exports.showAdminUserPrivilegesPage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Privileges | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Privileges | ' + user.first_name + ' ' + user.last_name,
-            adminUser: user,
+            subtitle: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            adminUser: targetUser,
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminUserSavePrivileges = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const showError = (error) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges', {
@@ -877,11 +877,11 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Privileges | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Privileges | ' + user.first_name + ' ' + user.last_name,
-                adminUser: user,
+                subtitle: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                adminUser: targetUser,
                 formNonce: results[1],
                 error: error
             });
@@ -890,7 +890,7 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges', {
@@ -898,11 +898,11 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Privileges | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Privileges | ' + user.first_name + ' ' + user.last_name,
-                adminUser: user,
+                subtitle: 'Privileges | ' + targetUser.first_name + ' ' + user.last_name,
+                adminUser: targetUser,
                 formNonce: results[1],
                 success: message
             });
@@ -915,14 +915,14 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
                 Object.keys(req.body).forEach(name => {
                     if(name !== 'nonce'){
                         if(req.body[name] == 'granted'){
-                            user.addPrivilege(name);
+                            targetUser.addPrivilege(name);
                         } else if (req.body[name] == 'denied'){
-                            user.revokePrivilege(name);
+                            targetUser.revokePrivilege(name);
                         }
                     }
                 });
 
-                user.saveUser().then(result => {
+                targetUser.saveUser().then(result => {
                     if(result == true){
                         showSuccess("Successfully saved privileges");
                     } else {
@@ -943,10 +943,10 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
 }
 
 exports.showAdminUserAddPrivilegePage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/add-privilege/');
+    const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/add-privilege/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-privileges-add', {
@@ -954,10 +954,10 @@ exports.showAdminUserAddPrivilegePage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Add Privilege | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Add Privilege | ' + user.first_name + ' ' + user.last_name,
+            subtitle: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name,
             granted: 1,
             formNonce: results[1]
         });
@@ -965,7 +965,7 @@ exports.showAdminUserAddPrivilegePage = (req, res, next) => {
 }
 
 exports.performAdminUserAddPrivilege = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     let name = req.body.name;
     let granted = req.body.granted == 'granted' ? 1 : 0;
@@ -980,7 +980,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
         }
 
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/add-privilege/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/add-privilege/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges-add', {
@@ -988,10 +988,10 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Add Privilege | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Add Privilege | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Add Privilege | ' + user.first_name + ' ' + targetUser.last_name,
                 name: name,
                 granted: granted,
                 formNonce: results[1],
@@ -1003,7 +1003,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/add-privilege/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-add-privilege-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/add-privilege/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges-add', {
@@ -1011,10 +1011,10 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Add Privilege | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Add Privilege | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 name: name,
                 granted: granted,
                 formNonce: results[1],
@@ -1036,13 +1036,13 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
                 showError(invalidFields.length + " fields are invalid", invalidFields);
             } else {
                 const performSave = () => {
-                    user.addPrivilege(name);
+                    targetUser.addPrivilege(name);
 
                     if(granted != 1){
-                        user.revokePrivilege(name);
+                        targetUser.revokePrivilege(name);
                     }
 
-                    user.saveUser().then(result => {
+                    targetUser.saveUser().then(result => {
                         if(result == true){
                             res.redirect(301, '../');
                         } else {
@@ -1064,10 +1064,10 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
 }
 
 exports.showAdminUserApplyPrivilegeTemplatePage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/apply-template/');
+    const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/apply-template/');
     const ptPromise = PrivilegeTemplates.getPrivilegeTemplates();
     
     Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
@@ -1076,10 +1076,10 @@ exports.showAdminUserApplyPrivilegeTemplatePage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
-            title: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name,
+            subtitle: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name,
             pt: results[2],
             formNonce: results[1]
         });
@@ -1087,13 +1087,13 @@ exports.showAdminUserApplyPrivilegeTemplatePage = (req, res, next) => {
 }
 
 exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     let ptName = req.body.pt;
 
     const showError = (error) => {
         const noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/apply-template/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/apply-template/');
         const ptPromise = PrivilegeTemplates.getPrivilegeTemplates();
         
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
@@ -1102,10 +1102,10 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
-                title: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 pt: results[2],
                 formNonce: results[1],
                 error: error
@@ -1115,7 +1115,7 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
 
     const showSuccess = (message) => {
         const noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + user.user_id.toLowerCase() + '/security/privileges/apply-template/');
+        const formNoncePromise = Nonce.createNonce('admin-user-privileges-apply-template-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/privileges/apply-template/');
         const ptPromise = PrivilegeTemplates.getPrivilegeTemplates();
         
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
@@ -1124,10 +1124,10 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
-                title: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Apply Privilege Template | ' + user.first_name + ' ' + user.last_name,
+                subtitle: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 pt: results[2],
                 formNonce: results[1],
                 success: message
@@ -1142,9 +1142,9 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
 
                 pt.loadInfo().then(result => {
                     if(result == true){
-                        user.privileges = pt.getPrivileges();
+                        targetUser.privileges = pt.getPrivileges();
 
-                        user.saveUser().then(result => {
+                        targetUser.saveUser().then(result => {
                             if(result == true){
                                 res.redirect(301, '../');
                             } else {
@@ -1171,10 +1171,10 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
 }
 
 exports.showAdminDeleteUserPage = (req, res, next) => {
-    const user = res.locals.user;
+    const targetUser = res.locals.targetUser;
 
     const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-    const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + user.user_id.toLowerCase() + '/delete-user/');
+    const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/delete-user/');
 
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-delete', {
@@ -1182,22 +1182,22 @@ exports.showAdminDeleteUserPage = (req, res, next) => {
             scripts: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
-            title: 'Delete User: ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+            title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
             activeItem: 'users',
-            subtitle: 'Delete User: ' + user.first_name + ' ' + user.last_name,
-            targetUser: user,
+            subtitle: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name,
+            targetUser: targetUser,
             formNonce: results[1]
         });
     });
 }
 
 exports.performAdminDeleteUser = (req, res, next) => {
-    let user = res.locals.user;
+    let targetUser = res.locals.targetUser;
 
     const showError = (error) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + user.user_id.toLowerCase() + '/delete-user/');
+        const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/delete-user/');
 
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-delete', {
@@ -1205,11 +1205,11 @@ exports.performAdminDeleteUser = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Delete User: ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Delete User: ' + user.first_name + ' ' + user.last_name,
-                targetUser: user,
+                subtitle: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name,
+                targetUser: targetUser,
                 formNonce: results[1],
                 error: error
             });
@@ -1218,7 +1218,7 @@ exports.performAdminDeleteUser = (req, res, next) => {
 
     const showSuccess = (message) => {
         const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
-        const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + user.user_id.toLowerCase() + '/delete-user/');
+        const formNoncePromise = Nonce.createNonce('admin-user-delete-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/delete-user/');
     
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-delete', {
@@ -1226,11 +1226,11 @@ exports.performAdminDeleteUser = (req, res, next) => {
                 scripts: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
-                title: 'Delete User: ' + user.first_name + ' ' + user.last_name + ' | Users | Admin',
+                title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
                 activeItem: 'users',
-                subtitle: 'Delete User: ' + user.first_name + ' ' + user.last_name,
-                targetUser: user,
+                subtitle: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name,
+                targetUser: targetUser,
                 formNonce: results[1],
                 success: message
             });
@@ -1239,9 +1239,9 @@ exports.performAdminDeleteUser = (req, res, next) => {
 
     Nonce.verifyNonce('admin-user-delete-form', req.body.nonce, req.path).then(result => {
         if(result == true){
-            Auth.deletePasswordFromDatabase(user.user_id).then(result => {
+            Auth.deletePasswordFromDatabase(targetUser.user_id).then(result => {
                 if(result == true){
-                    user.deleteUser().then(result => {
+                    targetUser.deleteUser().then(result => {
                         if(result == true){
                             res.redirect(301, '../../');
                         } else {
@@ -1261,5 +1261,151 @@ exports.performAdminDeleteUser = (req, res, next) => {
         }
     }, err => {
         showError("Error deleting user. Please try again.");
+    });
+}
+
+exports.showAdminUserPasswordsPage = (req, res, next) => {
+    const showError = () => {
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-security-passwords', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name
+            });
+        });
+    }
+
+    const targetUser = res.locals.targetUser;
+
+    const serviceManager = new ServiceManager(targetUser.user_id);
+    serviceManager.getServices().then(results => {
+        var servicesWithPassword = [];
+
+        results.forEach((rawService) => {
+            var service = rawService.getSubclass();
+
+            if(typeof service != 'string'){
+                servicesWithPassword.push(service);
+            }
+        });
+
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-security-passwords', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                services: servicesWithPassword
+            });
+        });
+    }, err => showError());
+}
+
+exports.showUserChangePasswordPage = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const changePasswordNoncePromise = Nonce.createNonce('admin-users-user-change-password', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/passwords/change-password/');
+
+    Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
+        res.render('admin-users-user-security-change-password', {
+            useBootstrap: false,
+            scripts: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performUserChangePassword = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    const showError = (error) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const changePasswordNoncePromise = Nonce.createNonce('admin-users-user-change-password', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/passwords/change-password/');
+
+        Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
+            res.render('admin-users-user-security-change-password', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                formNonce: results[1],
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const changePasswordNoncePromise = Nonce.createNonce('admin-users-user-change-password', '/admin/users/' + targetUser.user_id.toLowerCase() + '/security/passwords/change-password/');
+
+        Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
+            res.render('admin-users-user-security-change-password', {
+                useBootstrap: false,
+                scripts: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-users-user-change-password', req.body.nonce, req.path).then(result => {
+        if(result == true){            
+            const newPassword = req.body.newPassword;
+            const confirmPassword = req.body.confirmPassword;
+
+            if(newPassword !== confirmPassword){
+                showError("Passwords do not match");
+            } else if (newPassword < 4){
+                showError("Password must be at least 4 characters long");
+            } else {
+                Auth.encryptPassword(newPassword).then(result => {
+                    result.push(targetUser.user_id);
+
+                    Auth.savePasswordToDatabase({
+                        all: result
+                    }).then(result => {
+                        if(result == true){
+                            showSuccess("Password has been successfully changed");
+                        } else {
+                            showError("Cannot set your new password. Your password will remain unchanged.");
+                        }
+                    }, err => {
+                        showError("Cannot set your new password. Your password will remain unchanged.");
+                    });
+                }, err => {
+                    showError("Cannot set new password. Password will remain unchanged.");
+                });
+            }
+        } else {
+            showError("Error changing password. Please try again.");
+        }
+    }, err => {
+        showError("Error changing password. Please try again.");
     });
 }

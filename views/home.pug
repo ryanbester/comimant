@@ -2,6 +2,27 @@
 extends layout
 
 block content
+    #main-header
+        .main-header-left
+            table
+                tr
+                    td
+                        a.logo-link(href='https://www.besterintranet.' + (process.env.NODE_ENV == 'development' ? 'dev' : 'com') + '/')
+                            img(src="https://static.besterintranet.com/assets/images/logo_white.png" srcset="https://static.besterintranet.com/assets/images/logo_white96x96.png 2x" height="48" width="48")
+                    td
+                        a.logo-link(href='https://www.besterintranet.' + (process.env.NODE_ENV == 'development' ? 'dev' : 'com') + '/')
+                            h1 Bester Intranet
+        if user
+            .main-header-right
+                .main-header-dropdown
+                    h1.main-header-dropdown__header#main-header-dropdown-header #{user.first_name} #{user.last_name}
+                    img.main-header-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
+                    .main-header-dropdown__content
+                        ul.main-header-dropdown-content__list
+                            li.main-header-dropdown__item
+                                a(href="") Help
+                            li.main-header-dropdown__item
+                                a(href="/logout/?nonce=" + logoutNonce) Logout
     .main-container
         h1 Bester Intranet
         if user
@@ -13,3 +34,28 @@ block content
             p
                 a(href="https://accounts.besterintranet." + tld + "/login/") Login
         block home-content
+        .home-page-grid-container
+            .home-page-grid-container__widget
+                h1 Item
+            .home-page-grid-container__widget
+                h1 Item 2
+            .home-page-grid-container__widget
+                h1 Item 3
+                p Some more content to fill the space
+            .home-page-grid-container__widget
+                h1 Item 4
+            .home-page-grid-container__widget
+                h1 Item 5
+            .home-page-grid-container__widget
+                h1 Item 6
+            .home-page-grid-container__widget
+                h1 Item 7
+            .home-page-grid-container__widget
+                h1 Item 8
+            .home-page-grid-container__widget
+                h1 Item 9
+            .home-page-grid-container__widget
+                h1 Item 10
+            .home-page-grid-container__widget.home-page-grid-container__widget--add
+                a(href="/add/").home-page-grid-container__widget__full-link
+                    h1 Add Widget
