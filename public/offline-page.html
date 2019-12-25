@@ -1,0 +1,57 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="icon" href="https://static.besterintranet.com/assets/images/logo.png" type="image/png" sizes="48x48">
+    <title>You are currently offline | Bester Intranet</title>
+    <meta name="theme-color" content="#9933FF" />
+    <link rel="shortcut icon" href="https://static.besterintranet.com/favicon.ico" type="image/x-icon"> 
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <style>
+        * {
+            font-family: 'Arial', 'sans-serif';
+        }
+
+        body:not(#header) {
+            padding: 15px;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', 'monospace';
+        }
+
+        #header table tr td h1 {
+            padding-left: 15px;
+        }
+    </style>
+    <script>
+        if('serviceWorker' in navigator) {
+        navigator.serviceWorker
+                .register('/sw.js')
+                .then(function() { console.log("Service Worker Registered"); });
+        }
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <table>
+            <tr>
+                <td>
+                    <img src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48" />
+                </td>
+                <td>
+                    <h1>Bester Intranet</h1>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h1>You are not connected to the internet</h1>
+    </div>
+</body>
+
+</html>

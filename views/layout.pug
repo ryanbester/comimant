@@ -13,6 +13,7 @@ html(lang='en-gb')
         meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
         meta(name='mobile-web-app-capable' content='yes')
         meta(name='manifest' href='/manifest.json')
+        link(rel="shortcut icon" href="https://static.besterintranet.com/favicon.ico" type="image/x-icon")
         meta(name='icon' href='https://static.besterintranet.com/assets/images/logo48x48.png' type='image/png' sizes='48x48')
         meta(name='icon' href='https://static.besterintranet.com/assets/images/logo192x192.png' type='image/png' sizes='192x192')
         meta(name='author' content='Ryan Bester')
@@ -29,9 +30,13 @@ html(lang='en-gb')
         meta(name='msapplication-tooltip' content='Bester Intranet')
         meta(name='msapplication-window' content='width=1024;height=768')
         meta(name='msapplication-starturl' content='/')
-        script(src='https://www.besterintranet.' + tld + '/scripts/main.js' async)
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+        if scriptsBefore
+            each script in scriptsBefore
+                script(src= script)
+        script(src='https://www.besterintranet.' + tld + '/scripts/dialog.js' async)
+        script(src='https://www.besterintranet.' + tld + '/scripts/main.js' async)
         script.
             if('serviceWorker' in navigator) {
             navigator.serviceWorker
@@ -40,8 +45,8 @@ html(lang='en-gb')
             }
         if useBootstrap
             script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
-        if scripts
-            each script in scripts
+        if scriptsAfter
+            each script in scriptsAfter
                 script(src= script)
 
     body

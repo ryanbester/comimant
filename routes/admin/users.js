@@ -25,7 +25,7 @@ exports.showAdminUsersPage = (req, res, next) => {
 
         res.render('admin-users', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Users | Admin',
@@ -45,7 +45,7 @@ exports.showAdminNewUserPage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
         res.render('admin-users-new', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'New User | Users | Admin',
@@ -110,7 +110,7 @@ exports.performAdminNewUser = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
             res.render('admin-users-new', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'New User | Users | Admin',
@@ -146,7 +146,7 @@ exports.performAdminNewUser = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
             res.render('admin-users-new', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'New User | Users | Admin',
@@ -282,7 +282,7 @@ exports.loadUserInfo = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('admin-users-user', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Unknown User | Users | Admin',
@@ -313,7 +313,7 @@ exports.showAdminUserPage = (req, res, next) => {
     Promise.all([noncePromise, servicesPromise]).then(results => {    
         res.render('admin-users-user', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -335,7 +335,7 @@ exports.showAdminUsersNamePage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-name', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -374,7 +374,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-name', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -398,7 +398,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-name', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -463,7 +463,7 @@ exports.showAdminUsersUsernamePage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-username', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -496,7 +496,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-username', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -518,7 +518,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-username', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -589,7 +589,7 @@ exports.showAdminUsersEmailAddressPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-email-address', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -622,7 +622,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-email-address', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -644,7 +644,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-email-address', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -710,7 +710,7 @@ exports.showAdminUsersDobPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-dob', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -755,7 +755,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-dob', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -781,7 +781,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-dob', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -851,7 +851,7 @@ exports.showAdminUserPrivilegesPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-privileges', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -874,7 +874,7 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -895,7 +895,7 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -951,7 +951,7 @@ exports.showAdminUserAddPrivilegePage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-privileges-add', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -985,7 +985,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges-add', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1008,7 +1008,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-privileges-add', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1073,7 +1073,7 @@ exports.showAdminUserApplyPrivilegeTemplatePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
         res.render('admin-users-user-privileges-apply-template', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1099,7 +1099,7 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
             res.render('admin-users-user-privileges-apply-template', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1121,7 +1121,7 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise, ptPromise]).then(results => {    
             res.render('admin-users-user-privileges-apply-template', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1179,7 +1179,7 @@ exports.showAdminDeleteUserPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-users-user-delete', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1202,7 +1202,7 @@ exports.performAdminDeleteUser = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-delete', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1223,7 +1223,7 @@ exports.performAdminDeleteUser = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-users-user-delete', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1269,7 +1269,7 @@ exports.showAdminUserPasswordsPage = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('admin-users-user-security-passwords', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1297,7 +1297,7 @@ exports.showAdminUserPasswordsPage = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('admin-users-user-security-passwords', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1319,7 +1319,7 @@ exports.showUserChangePasswordPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
         res.render('admin-users-user-security-change-password', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1341,7 +1341,7 @@ exports.performUserChangePassword = (req, res, next) => {
         Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
             res.render('admin-users-user-security-change-password', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
@@ -1361,7 +1361,7 @@ exports.performUserChangePassword = (req, res, next) => {
         Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
             res.render('admin-users-user-security-change-password', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',

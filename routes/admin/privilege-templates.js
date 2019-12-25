@@ -24,7 +24,7 @@ exports.showAdminPrivilegeTemplatesPage = (req, res, next) => {
 
         res.render('admin-privilege-templates', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Privilege Templates | Admin',
@@ -43,7 +43,7 @@ exports.showCreatePrivilegeTemplatePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-templates-create', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Create Privilege Template | Privilege Templates | Admin',
@@ -77,7 +77,7 @@ exports.performCreatePrivilegeTemplate = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-templates-create', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Create Privilege Template | Privilege Templates | Admin',
@@ -101,7 +101,7 @@ exports.performCreatePrivilegeTemplate = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-templates-create', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Create Privilege Template | Privilege Templates | Admin',
@@ -161,7 +161,7 @@ exports.loadPrivilegeTemplateInfo = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('admin-privilege-template', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Unknown Privilege Template | Privilege Templates | Admin',
@@ -190,7 +190,7 @@ exports.showPrivilegeTemplatePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-template', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: pt.title + ' | Privilege Templates | Admin',
@@ -213,7 +213,7 @@ exports.performPrivilegeTemplateSave = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: pt.title + ' | Privilege Templates | Admin',
@@ -234,7 +234,7 @@ exports.performPrivilegeTemplateSave = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: pt.title + ' | Privilege Templates | Admin',
@@ -290,7 +290,7 @@ exports.showPrivilegeTemplateNamePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-template-name', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Name | ' + pt.title + ' | Privilege Templates | Admin',
@@ -323,7 +323,7 @@ exports.performPrivilegeTemplateSaveName = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-name', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Name | ' + pt.title + ' | Privilege Templates | Admin',
@@ -345,7 +345,7 @@ exports.performPrivilegeTemplateSaveName = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-name', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Name | ' + pt.title + ' | Privilege Templates | Admin',
@@ -410,7 +410,7 @@ exports.showPrivilegeTemplateTitlePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-template-title', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Title | ' + pt.title + ' | Privilege Templates | Admin',
@@ -443,7 +443,7 @@ exports.performPrivilegeTemplateSaveTitle = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-title', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Title | ' + pt.title + ' | Privilege Templates | Admin',
@@ -465,7 +465,7 @@ exports.performPrivilegeTemplateSaveTitle = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-title', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Title | ' + pt.title + ' | Privilege Templates | Admin',
@@ -524,7 +524,7 @@ exports.showPrivilegeTemplateDefaultPage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-template-default', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Default | ' + pt.title + ' | Privilege Templates | Admin',
@@ -549,7 +549,7 @@ exports.performPrivilegeTemplateSaveDefault = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-default', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Default | ' + pt.title + ' | Privilege Templates | Admin',
@@ -570,7 +570,7 @@ exports.performPrivilegeTemplateSaveDefault = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-default', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Default | ' + pt.title + ' | Privilege Templates | Admin',
@@ -618,7 +618,7 @@ exports.showPrivilegeTemplateAddPrivilegePage = (req, res, next) => {
     Promise.all([noncePromise, formNoncePromise]).then(results => {    
         res.render('admin-privilege-template-add-privilege', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Add Privilege | ' + pt.title + ' | Privilege Templates | Admin',
@@ -652,7 +652,7 @@ exports.performPrivilegeTemplateAddPrivilege = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-add-privilege', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Add Privilege | ' + pt.title + ' | Privilege Templates | Admin',
@@ -675,7 +675,7 @@ exports.performPrivilegeTemplateAddPrivilege = (req, res, next) => {
         Promise.all([noncePromise, formNoncePromise]).then(results => {    
             res.render('admin-privilege-template-add-privilege', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
                 ],
                 title: 'Add Privilege | ' + pt.title + ' | Privilege Templates | Admin',
@@ -739,7 +739,7 @@ exports.showPrivilegeTemplateDeletePage = (req, res, next) => {
     Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
         res.render('admin-privilege-template-delete', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',
@@ -761,7 +761,7 @@ exports.performPrivilegeTemplateDelete = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-privilege-template-delete', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',
@@ -781,7 +781,7 @@ exports.performPrivilegeTemplateDelete = (req, res, next) => {
         Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
             res.render('admin-privilege-template-delete', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Delete Privilege Template: ' + pt.title + ' | Privilege Templates | Admin',

@@ -16,7 +16,7 @@ exports.showMyAccountDataPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
         res.render('myaccount-data', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Data | My Account',

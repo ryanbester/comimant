@@ -23,7 +23,7 @@ exports.showMyAccountServicesPage = (req, res, next) => {
         const services = results[1];
         res.render('myaccount-services', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Services | My Account',
@@ -41,7 +41,7 @@ exports.showMyAccountServiceDetailsPage = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-services', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Services | My Account',

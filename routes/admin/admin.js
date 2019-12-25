@@ -87,7 +87,7 @@ exports.showAdminPanel = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
         res.render('admin-home', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Admin',

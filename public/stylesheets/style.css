@@ -205,6 +205,86 @@ label {
     color: #721C24;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #FFFFFF;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 15px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 4px 0px #0000006e;
+    text-shadow: none;
+    color: #000000;
+}
+
+.modal__title {
+    margin: 0;
+    color: #000000;
+    font-size: 30px;
+}
+
+.modal__actions {
+    text-align: right;
+}
+
+.modal__action-button {
+    padding: 10px;
+    background: none;
+    color: #000000;
+    border: none;
+    font: inherit;
+    font-size: 20px;
+    outline: none;
+    margin: 10px;
+    margin-right: 0;
+    margin-bottom: 0;
+
+    border-radius: 5px;
+    box-shadow: 0px 0px 4px 0px #0000006e;
+    text-shadow: none;
+    transition: box-shadow 0.25s;
+    -moz-transition: box-shadow 0.25s;
+    -webkit-transition: box-shadow 0.25s;
+    -ms-transition: box-shadow 0.25s;
+    -o-transition: box-shadow 0.25s;
+}
+
+.modal__action-button.primary {
+    background-color: #002DB3;
+    color: #FFFFFF;
+}
+
+.modal__action-button:hover {
+    box-shadow: 0px 0px 17px 2px #0000006e;
+}
+
+@media screen and (max-width: 940px){
+    .modal-content {
+        width: 75%;
+    }
+}
+
+@media screen and (max-width: 560px){
+    .modal-content {
+        width: calc(100% - 30px);
+    }
+}
+
 #main-header {
     position: static;
     top: 0;
@@ -313,14 +393,12 @@ label {
 
 .home-page-grid-container {
     display: grid;
-    align-items: start;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    grid-gap: 1rem;
-    grid-auto-flow: row dense;
+    grid-gap: 10px;
+    grid-auto-rows: 20px;
 }
 
 .home-page-grid-container__widget {
-    display: inline-block;
     height: calc(100% - 30px);
     border-radius: 7px;
     background-color: #FFFFFF;
@@ -333,6 +411,7 @@ label {
     -ms-transition: box-shadow 0.25s;
     -o-transition: box-shadow 0.25s;
     padding: 15px;
+    overflow: hidden;
 }
 
 .home-page-grid-container__widget:hover {

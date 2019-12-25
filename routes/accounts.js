@@ -20,7 +20,7 @@ exports.showLoginPage = (req, res, next) => {
         Nonce.createNonce('user-login', '/accounts/login/').then(result => {
             res.render('login', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/login-page.js'
                 ],
                 title: 'Login',
@@ -60,7 +60,7 @@ exports.login = (req, res, next) => {
         Nonce.createNonce('user-login', '/accounts/login/').then(result => {
             res.render('login', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/login-page.js'
                 ],
                 title: 'Login',
@@ -174,7 +174,7 @@ exports.showPasswordConfirmationPage = (req, res, next) => {
         Nonce.createNonce('user-password-confirm', req.path).then(result => {
             res.render('password-confirm', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
                 ],
                 title: 'Confirm it\'s you',
@@ -209,7 +209,7 @@ exports.checkPassword = (req, res, next) => {
         Nonce.createNonce('user-password-confirm', req.path).then(result => {
             res.render('password-confirm', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
                 ],
                 title: 'Confirm it\'s you',
@@ -338,7 +338,7 @@ exports.showMyAccountPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
         res.render('myaccount-home', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'My Account',

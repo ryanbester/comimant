@@ -16,7 +16,7 @@ exports.showAdminAccessTokensPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
         res.render('admin-access-tokens', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
             title: 'Access Tokens | Admin',

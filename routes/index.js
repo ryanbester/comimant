@@ -27,7 +27,10 @@ const showHomePage = (req, res, next) => {
     const renderHomePage = () => {
         res.render('home', {
             useBootstrap: false,
-            tld: Util.get_tld()
+            tld: Util.get_tld(),
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js'
+            ]
         });
     }
 
@@ -67,6 +70,7 @@ const showHomePage = (req, res, next) => {
 }
 
 router.get('/', showHomePage);
+router.get('/add', showHomePage);
 
 router.get('/accounts/login/', accountsRoutes.showLoginPage);
 router.post('/accounts/login/', accountsRoutes.login);

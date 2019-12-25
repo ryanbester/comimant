@@ -17,7 +17,7 @@ exports.showMyAccountSecurityPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
         res.render('myaccount-security', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Security | My Account',
@@ -33,7 +33,7 @@ exports.showMyAccountPasswordsPage = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-passwords', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | Security | My Account',
@@ -61,7 +61,7 @@ exports.showMyAccountPasswordsPage = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-passwords', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | Security | My Account',
@@ -83,7 +83,7 @@ exports.showChangePasswordPage = (req, res, next) => {
     Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
         res.render('myaccount-security-change-password', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Change Password | Passwords | Security | My Account',
@@ -103,7 +103,7 @@ exports.performChangePassword = (req, res, next) => {
         Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
             res.render('myaccount-security-change-password', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | Passwords | Security | My Account',
@@ -123,7 +123,7 @@ exports.performChangePassword = (req, res, next) => {
         Promise.all([logoutNoncePromise, changePasswordNoncePromise]).then(results => {
             res.render('myaccount-security-change-password', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | Passwords | Security | My Account',
@@ -197,7 +197,7 @@ exports.showLogoutEverywhereConfirmation = (req, res, next) => {
     Promise.all([logoutNoncePromise, logoutEverywhereAllDevicesPromise, logoutEverywhereOtherDevicesPromise]).then(results => {
         res.render('myaccount-security-logout-everywhere', {
             useBootstrap: false,
-            scripts: [
+            scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
             ],
             title: 'Logout of all Devices | Security | My Account',
@@ -215,7 +215,7 @@ exports.performLogoutEverywhereAll = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
@@ -231,7 +231,7 @@ exports.performLogoutEverywhereAll = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
@@ -270,7 +270,7 @@ exports.performLogoutEverywhereOther = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
@@ -286,7 +286,7 @@ exports.performLogoutEverywhereOther = (req, res, next) => {
         Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
-                scripts: [
+                scriptsAfter: [
                     'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
