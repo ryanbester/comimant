@@ -15,6 +15,10 @@ block content
         if user
             .main-header-right
                 .main-header-dropdown
+                    img#main-header-user-dropdown__loading(src="https://static.besterintranet.com/assets/images/loading196x196.gif" height="22" width="22")
+                    .main-header-user-dropdown__error-tooltip#main-header-user-dropdown__error
+                        img(src="https://static.besterintranet.com/assets/images/error.svg" height="22" width="22")
+                        span.main-header-user-dropdown__error-tooltip-text Cannot confirm it's you
                     h1.main-header-dropdown__header#main-header-dropdown-header #{user.first_name} #{user.last_name}
                     img.main-header-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
                     .main-header-dropdown__content
@@ -22,7 +26,7 @@ block content
                             li.main-header-dropdown__item
                                 a(href="") Help
                             li.main-header-dropdown__item
-                                a(href="/logout/?nonce=" + logoutNonce) Logout
+                                a(href="https://accounts.besterintranet." + tld + "/logout/?nonce=" + logoutNonce) Logout
     .main-container
         h1 Bester Intranet
         if user

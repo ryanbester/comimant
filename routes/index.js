@@ -24,49 +24,52 @@ const adminDataRoutes = require('../routes/admin/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
 const showHomePage = (req, res, next) => {
-    const renderHomePage = () => {
+    const renderHomePage = (nonce) => {
         res.render('home', {
             useBootstrap: false,
             tld: Util.get_tld(),
+            logoutNonce: nonce,
             scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js'
             ]
         });
     }
 
-    // Disable cache
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    Nonce.createNonce('user-logout', '/accounts/logout/').then(nonce => {
+        // Disable cache
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
 
-    const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
+        const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
 
-    if(req.signedCookies['AUTHTOKEN'] === undefined){
-        renderHomePage();
-    } else {
-        const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
-        accessToken.checkToken().then(result => {
-            if(result == true){
-                const user = new User(accessToken.user_id);
-                user.verifyUser().then(result => {
-                    if (result == true) {
-                        user.loadInfo().then(result => {
-                            res.locals.user = user;
-                            renderHomePage();
-                        }, err => {
-                            renderHomePage();
-                        });
-                    } else {
-                        renderHomePage();
-                    }
-                }, err => {
-                    renderHomePage();
-                });
-            } else {
-                renderHomePage();
-            }
-        }, err => {
-            renderHomePage();
-        });
-    }
+        if(req.signedCookies['AUTHTOKEN'] === undefined){
+            renderHomePage(nonce);
+        } else {
+            const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
+            accessToken.checkToken().then(result => {
+                if(result == true){
+                    const user = new User(accessToken.user_id);
+                    user.verifyUser().then(result => {
+                        if (result == true) {
+                            user.loadInfo().then(result => {
+                                res.locals.user = user;
+                                renderHomePage(nonce);
+                            }, err => {
+                                renderHomePage(nonce);
+                            });
+                        } else {
+                            renderHomePage(nonce);
+                        }
+                    }, err => {
+                        renderHomePage(nonce);
+                    });
+                } else {
+                    renderHomePage(nonce);
+                }
+            }, err => {
+                renderHomePage(nonce);
+            });
+        }
+    });
 }
 
 router.get('/', showHomePage);
@@ -76,6 +79,8 @@ router.get('/accounts/login/', accountsRoutes.showLoginPage);
 router.post('/accounts/login/', accountsRoutes.login);
 
 router.get('/accounts/logout/', accountsRoutes.logout);
+
+router.get('/usercheck/', accountsRoutes.userLoggedIn);
 
 router.all('/accounts/myaccount*', accountsRoutes.userCheck);
 

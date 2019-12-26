@@ -139,7 +139,7 @@ exports.login = (req, res, next) => {
                                     }
 
                                     if(req.query.continue === undefined){
-                                        res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                                        res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + "/?nc=1");
                                     } else {
                                         res.redirect(301, decodeURIComponent(req.query.continue));
                                     }
@@ -273,15 +273,15 @@ exports.logout = (req, res, next) => {
     Nonce.verifyNonce('user-logout', req.query.nonce, req.path).then(result => {
         if(result == true){
             if(req.signedCookies['AUTHTOKEN'] === undefined){
-                res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
             } else {
                 const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
                 accessToken.deleteToken().then(result => {
                     res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
-                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
                 }, err => {
                     res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
-                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
                 })
             }
         } else {
@@ -330,6 +330,45 @@ exports.userCheck = (req, res, next) => {
             }
         }, err => {
             res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+        });
+    }
+}
+
+exports.userLoggedIn = (req, res, next) => {
+    const returnStatus = (status) => {
+        res.json({
+            status: status
+        });
+    }
+
+    // Disable cache
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+
+    if(req.signedCookies['AUTHTOKEN'] === undefined) {
+        returnStatus(false);
+    } else {
+        const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
+        accessToken.checkToken().then(result => {
+            if (result == true) {
+                const user = new User(accessToken.user_id);
+                user.verifyUser().then(result => {
+                    if (result == true) {
+                        user.loadInfo().then(result => {
+                            returnStatus(true)
+                        }, err => {
+                            returnStatus(false);
+                        });
+                    } else {
+                        returnStatus(false);
+                    }
+                }, err => {
+                    returnStatus(false);
+                });
+            } else {
+                returnStatus(false);
+            }
+        }, err => {
+            returnStatus(false);
         });
     }
 }

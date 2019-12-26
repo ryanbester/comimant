@@ -380,6 +380,58 @@ label {
     color: #000000;
 }
 
+#main-header-user-dropdown__loading {
+    margin-right: 8px;
+}
+
+.main-header-user-dropdown__error-tooltip {
+    margin-right: 8px;
+    display: none;
+    position: relative;
+}
+
+.main-header-user-dropdown__error-tooltip 
+.main-header-user-dropdown__error-tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #FFFFFF;
+    color: #000000;
+    text-align: center;
+    border: 1px solid #000000;
+    border-radius: 7px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.main-header-user-dropdown__error-tooltip 
+.main-header-user-dropdown__error-tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #FFFFFF transparent;
+}
+
+.main-header-user-dropdown__error-tooltip:hover 
+.main-header-user-dropdown__error-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/*#main-header-user-dropdown__error {
+    margin-right: 8px;
+    display: none;
+}*/
+
 .main-container {
     height: 100%;
     padding: 15px;

@@ -5,6 +5,44 @@ Copyright (C) 2019 Bester Intranet
 var mainContainer = document.getElementsByClassName('main-container')[0];
 const path = window.location.pathname;
 
+const timeout = (ms, promise) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(_ => {
+            reject(new Error("timeout"));
+        }, ms);
+
+        promise.then(resolve, reject);
+    });
+}
+
+const checkUser = _ => {
+    timeout(5000, fetch('/usercheck/')).then(res => {
+        res.json().then(json => {
+            if(json.status == true){
+                $('#main-header-user-dropdown__loading').fadeOut(250);
+            } else {
+                $('#main-header-user-dropdown__loading').fadeOut(250, _ => {
+                    $('#main-header-user-dropdown__error').css({
+                        opacity: 0,
+                        display: 'inline-block'
+                    }).animate({ opacity: 1 }, 250);
+                });
+            }
+        });
+    }).catch(error => {
+        $('#main-header-user-dropdown__loading').fadeOut(250, _ => {
+            $('#main-header-user-dropdown__error').css({
+                opacity: 0,
+                display: 'inline-block'
+            }).animate({ opacity: 1 }, 250);
+        });
+    });
+}
+
+$(document).ready(_ => {
+    checkUser();
+});
+
 const navigateWithoutRefresh = (url, title, state) => {
     if(window.history.pushState) {
         window.history.pushState(state, title, url);
