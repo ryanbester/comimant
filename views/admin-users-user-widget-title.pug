@@ -1,0 +1,24 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    form.myaccount-form(method='POST' action='')
+        label(for='admin-widget-title-form-title') Title
+        input#admin-widget-title-form-title(
+            class=(titleInvalid ? "is-invalid" : undefined)
+            type='text'
+            name='title'
+            placeholder='Title'
+            value= widgetTitle
+        )
+        .invalid-feedback Enter a valid title
+        br
+        input(type='hidden' name='nonce' value=formNonce)
+        input(
+            type='submit'
+            value='Save'
+        )

@@ -14,6 +14,7 @@ const AuthUtil = require('../../core/auth-util')
 const app = require('../../app');
 const { Service, ServiceManager } = require('../../core/myaccount/servicemanager');
 const { PrivilegeTemplate, PrivilegeTemplates } = require('../../core/admin/privilege-templates');
+const { Widget, WidgetManager } = require('../../core/widgets');
 
 exports.showAdminUsersPage = (req, res, next) => {
     var noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
@@ -839,6 +840,1197 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
         }
     }, err => {
         showError("Error saving user details. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetsPage = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+
+    var widgetManager = new WidgetManager(targetUser.user_id);
+
+    widgets = [];
+    unknownWidgets = [];
+
+    var promises = [];
+
+    widgetManager.loadWidgets().then(_ => {
+        widgetManager.getAllWidgets().then(results => {
+            for(var i = 0; i < results.length; i++) {
+                var widget = {};
+
+                widget.widget = results[i];
+
+                if(widgetManager.getWidget(results[i].widget_id)) {
+                    for(var j = 0; j < widgetManager.layout.widgets.length; j++) {
+                        if(widgetManager.layout.widgets[j].widget_id == results[i].widget_id) {
+                            widget.position = widgetManager.layout.widgets[j].position;
+                            widget.height = widgetManager.layout.widgets[j].height;
+
+                            break;
+                        }
+                    }
+                }
+
+                var loadInfoPromise = widget.widget.loadInfo();
+                promises.push(loadInfoPromise);
+
+                widgets.push(widget);
+            }
+
+            Promise.all(promises).then(_ => {
+                Promise.all([logoutNoncePromise]).then(results => {
+                    res.render('admin-users-user-widgets', {
+                        useBootstrap: false,
+                        scriptsAfter: [
+                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        ],
+                        title: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                        logoutNonce: results[0],
+                        activeItem: 'users',
+                        subtitle: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                        adminUser: targetUser,
+                        widgets: widgets
+                    });
+                });
+            });
+        });
+    }, err => {
+        Promise.all([logoutNoncePromise]).then(results => {
+            res.render('admin-users-user-widgets', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                adminUser: targetUser,
+                widgets: undefined
+            });
+        });
+    });
+}
+
+exports.showAdminUserAddWidgetPage = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-user-widgets-add-widget-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/add-widget/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-users-user-widgets-add', {
+            useBootstrap: false,
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performAdminUserAddWidget = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    let title = req.body.title;
+    let type = req.body.type;
+    let data = req.body.data;
+    let position = req.body.position;
+    let height = req.body.height;
+
+    const showError = (error, invalidFields) => {
+        let titleInvalid = false;
+        let typeInvalid = false;
+        let dataInvalid = false;
+        let positionInvalid = false;
+        let heightInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('title')) {
+                titleInvalid = true;
+            }
+            if(invalidFields.includes('type')) {
+                typeInvalid = true;
+            }
+            if(invalidFields.includes('data')) {
+                dataInvalid = true;
+            }
+            if(invalidFields.includes('position')) {
+                positionInvalid = true;
+            }
+            if(invalidFields.includes('height')) {
+                heightInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-user-widgets-add-widget-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/add-widget/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widgets-add', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                widgetTitle: title,
+                type: type,
+                data: data,
+                position: position,
+                height: height,
+                formNonce: results[1],
+                titleInvalid: titleInvalid,
+                typeInvalid: typeInvalid,
+                dataInvalid: dataInvalid,
+                positionInvalid: positionInvalid,
+                heightInvalid: heightInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-user-widgets-add-widget-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/add-widget/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widgets-add', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                widgetTitle: title,
+                type: type,
+                data: data,
+                position: position,
+                height: height,
+                formNonce: results[1],
+                success: message,
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-user-widgets-add-widget-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            if(title.length < 1) {
+                invalidFields.push('title');
+            }
+
+            if(type.length < 1) {
+                invalidFields.push('type');
+            }
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    Widget.generateWidgetId().then(id => {
+                        var widget = new Widget(id.toUpperCase(), targetUser.user_id, type, title, data);
+
+                        widget.saveWidget().then(result => {
+                            if(result == true) {
+                                var widgetManager = new WidgetManager(targetUser.user_id);
+
+                                widgetManager.loadWidgets().then(result => {
+                                    if(result == true) {
+                                        if(!widgetManager.prepareUser()) {
+                                            showError("Error adding widget. Please try again.");
+                                        }
+
+                                        widgetManager.addWidget(widget, parseInt(height), parseInt(position));
+
+                                        widgetManager.saveLayout().then(result => {
+                                            if(result == true) {
+                                                res.redirect(301, '../');
+                                            } else {
+                                                showError("Error adding widget. Please try again.");
+                                            }
+                                        }, err => {
+                                            showError("Error adding widget. Please try again.");
+                                        });
+                                    } else {
+                                        showError("Error adding widget. Please try again.");
+                                    }
+                                }, err => {
+                                    if(widgetManager.prepareUser()) {
+                                        widgetManager.saveLayout().then(result => {
+                                            if(result == true) {
+                                                widgetManager.addWidget(widget, parseInt(height), parseInt(position));
+
+                                                widgetManager.saveLayout().then(result => {
+                                                    if(result == true) {
+                                                        res.redirect(301, '../');
+                                                    } else {
+                                                        showError("Error adding widget. Please try again.");
+                                                    }
+                                                }, err => {
+                                                    showError("Error adding widget. Please try again.");
+                                                });
+                                            } else {
+                                                showError("Error adding widget. Please try again.");
+                                            }
+                                        }, err => {
+                                            showError("Error adding widget. Please try again.");
+                                        });
+                                    } else {
+                                        showError("Error adding widget. Please try again.");
+                                    }
+                                });
+                            } else {
+                                showError("Error adding widget. Please try again.");
+                            }
+                        }, err => {
+                            showError("Error adding widget. Please try again.");
+                        });
+                    }, err => {
+                        showError("Error adding widget. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error adding widget. Please try again.");
+        }
+    }, err => {
+        showError("Error adding widget. Please try again.");
+    });
+}
+
+exports.loadUserWidgetInfo = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+
+    const showError = () => {
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-widgets-widget', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                ],
+                title: 'Unknown Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Unknown Widget'
+            });
+        });
+    }
+
+    const widgetId = req.params.widgetId;
+    const targetWidget = new Widget(widgetId, targetUser.user_id);
+
+    targetWidget.loadInfo().then(result => {
+        res.locals.targetWidget = targetWidget;
+        next();
+    }, err => showError());
+}
+
+exports.showAdminUserWidgetPage = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+    const targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+
+    const showError = () => {
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-widgets-widget', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                ],
+                title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Error loading widget information'
+            });
+        });
+    }
+
+    Promise.all([logoutNoncePromise]).then(nonce => {
+        var widgetManager = new WidgetManager(targetUser.user_id);
+
+        widgetManager.loadWidgets().then(_ => {
+            var found = false;
+            for(var j = 0; j < widgetManager.layout.widgets.length; j++) {
+                if(found) {
+                    break;
+                }
+
+                if(widgetManager.layout.widgets[j].widget_id == targetWidget.widget_id.toUpperCase()) {
+                    var data = {
+                        widget: targetWidget,
+                        position: widgetManager.layout.widgets[j].position,
+                        height: widgetManager.layout.widgets[j].height
+                    };
+
+                    res.render('admin-users-user-widgets-widget', {
+                        useBootstrap: false,
+                        scriptsAfter: [
+                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        ],
+                        title: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                        logoutNonce: nonce,
+                        activeItem: 'users',
+                        subtitle: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                        widget: data
+                    });
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if(!found) {
+                var data = {
+                    widget: targetWidget,
+                    position: "",
+                    height: ""
+                };
+
+                res.render('admin-users-user-widgets-widget', {
+                    useBootstrap: false,
+                    scriptsAfter: [
+                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    ],
+                    title: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+                    logoutNonce: nonce,
+                    activeItem: 'users',
+                    subtitle: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                    widget: data
+                });
+            }
+        }, err => {
+            showError();
+        });
+    });
+}
+
+exports.showAdminUserDeleteWidgetPage = (req, res, next) => {
+    const targetUser = res.locals.targetUser;
+    const targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-delete-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/delete-widget/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-users-user-widget-delete', {
+            useBootstrap: false,
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Delete Widget | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Delete Widget',
+            targetUser: targetUser,
+            targetWidget: targetWidget,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performAdminUserDeleteWidget = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const showError = (error) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-delete-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/delete-widget/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-delete', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Delete Widget | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Delete Widget',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                formNonce: results[1],
+                error: error
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-delete-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            targetWidget.deleteWidget().then(result => {
+                if(result == true) {
+                    var widgetManager = new WidgetManager(targetUser.user_id);
+
+                    widgetManager.loadWidgets().then(result => {
+                        if(result == true) {
+                            widgetManager.deleteWidget(targetWidget.widget_id.toUpperCase());
+
+                            widgetManager.saveLayout().then(result => {
+                                if(result == true) {
+                                    res.redirect(301, '../../');
+                                } else {
+                                    showError("Error deleting widget. Please try again.");
+                                }
+                            }, err => {
+                                showError("Error deleting widget. Please try again.");
+                            });
+                        } else {
+                            showError("Error deleting widget. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error deleting widget. Please try again.");
+                    });
+                } else {
+                    showError("Error deleting widget. Please try again.");
+                }
+            }, err => {
+                showError("Error deleting widget. Please try again.");
+            });
+        } else {
+            showError("Error deleting widget. Please try again.");
+        }
+    }, err => {
+        showError("Error deleting widget. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetTitlePage = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-title-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/title/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-users-user-widget-title', {
+            useBootstrap: false,
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Title | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Title',
+            targetUser: targetUser,
+            targetWidget: targetWidget,
+            widgetTitle: targetWidget.title,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performAdminUserWidgetSaveTitle = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    let title = req.body.title;
+
+    const showError = (error, invalidFields) => {
+        let titleInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('title')) {
+                titleInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-title-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/title/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-title', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Title | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Title',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                widgetTitle: title,
+                formNonce: results[1],
+                titleInvalid: titleInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-title-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/title/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-title', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Title | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Title',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                widgetTitle: title,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-title-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            if(title.length < 0) {
+                invalidFields.push('title');
+            }
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    targetWidget.title = title;
+
+                    targetWidget.saveWidget().then(result => {
+                        if(result == true) {
+                            showSuccess("Successfully changed widget title");
+                        } else {
+                            showError("Error changing widget title. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error changing widget title. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error changing widget title. Please try again.");
+        }
+    }, err => {
+        showError("Error changing widget title. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetTypePage = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-type-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/type/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-users-user-widget-type', {
+            useBootstrap: false,
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Type | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Type',
+            targetUser: targetUser,
+            targetWidget: targetWidget,
+            type: targetWidget.type,
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performAdminUserWidgetSaveType = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    let type = req.body.type;
+
+    const showError = (error, invalidFields) => {
+        let typeInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('type')) {
+                typeInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-type-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/type/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-type', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Type | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Type',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                type: type,
+                formNonce: results[1],
+                typeInvalid: typeInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-type-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/type/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-type', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Type | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Type',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                type: type,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-type-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            if(type.length < 0) {
+                invalidFields.push('type');
+            }
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    targetWidget.type = type;
+
+                    targetWidget.saveWidget().then(result => {
+                        if(result == true) {
+                            showSuccess("Successfully changed widget type");
+                        } else {
+                            showError("Error changing widget type. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error changing widget type. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error changing widget type. Please try again.");
+        }
+    }, err => {
+        showError("Error changing widget type. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetDataPage = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-data-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/data/');
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        res.render('admin-users-user-widget-data', {
+            useBootstrap: false,
+            scriptsAfter: [
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+            ],
+            title: 'Data (JSON) | Users | Admin',
+            logoutNonce: results[0],
+            activeItem: 'users',
+            subtitle: 'Data (JSON)',
+            targetUser: targetUser,
+            targetWidget: targetWidget,
+            data: JSON.stringify(targetWidget.data),
+            formNonce: results[1]
+        });
+    });
+}
+
+exports.performAdminUserWidgetSaveData = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    let data = req.body.data;
+
+    const showError = (error, invalidFields) => {
+        let dataInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('data')) {
+                dataInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-data-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/data/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-data', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Data (JSON) | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Data (JSON)',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                data: JSON.stringify(data),
+                formNonce: results[1],
+                dataInvalid: dataInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-data-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/data/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-data', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Data (JSON) | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Data (JSON)',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                data: JSON.stringify(data),
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-data-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            try {
+                var json = JSON.parse(data);
+            } catch (e) {
+                invalidFields.push('data');
+            }
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    targetWidget.data = json;
+
+                    targetWidget.saveWidget().then(result => {
+                        if(result == true) {
+                            showSuccess("Successfully saving widget data");
+                        } else {
+                            showError("Error saving widget data. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error saving widget data. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error saving widget data. Please try again.");
+        }
+    }, err => {
+        showError("Error saving widget data. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetPositionPage = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-position-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/position/');
+
+    const showError = () => {
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-widget-position', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                ],
+                title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Error loading widget information'
+            });
+        });
+    }
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        var widgetManager = new WidgetManager(targetUser.user_id);
+
+        widgetManager.loadWidgets().then(_ => {
+            var found = false;
+            for(var j = 0; j < widgetManager.layout.widgets.length; j++) {
+                if(found) {
+                    break;
+                }
+
+                if(widgetManager.layout.widgets[j].widget_id == targetWidget.widget_id.toUpperCase()) {
+                    res.render('admin-users-user-widget-position', {
+                        useBootstrap: false,
+                        scriptsAfter: [
+                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        ],
+                        title: 'Position | Users | Admin',
+                        logoutNonce: results[0],
+                        activeItem: 'users',
+                        subtitle: 'Position',
+                        targetUser: targetUser,
+                        targetWidget: targetWidget,
+                        position: widgetManager.layout.widgets[j].position,
+                        formNonce: results[1]
+                    });
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if(!found) {
+                res.render('admin-users-user-widget-position', {
+                    useBootstrap: false,
+                    scriptsAfter: [
+                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    ],
+                    title: 'Position | Users | Admin',
+                    logoutNonce: results[0],
+                    activeItem: 'users',
+                    subtitle: 'Position',
+                    targetUser: targetUser,
+                    targetWidget: targetWidget,
+                    position: "",
+                    formNonce: results[1]
+                });
+            }
+        }, err => {
+            showError();
+        });
+    });
+}
+
+exports.performAdminUserWidgetSavePosition = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    let position = req.body.position;
+
+    const showError = (error, invalidFields) => {
+        let positionInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('position')) {
+                positionInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-position-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/position/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-position', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Position | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Position',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                position: position,
+                formNonce: results[1],
+                positionInvalid: positionInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-position-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/position/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-position', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Position | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Position',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                position: position,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-position-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    var widgetManager = new WidgetManager(targetUser.user_id);
+
+                    widgetManager.loadWidgets().then(result => {
+                        if(result == true) {
+                            if(widgetManager.updateWidget(targetWidget.widget_id.toUpperCase(), parseInt(position))) {
+                                widgetManager.saveLayout().then(result => {
+                                    if (result == true) {
+                                        showSuccess("Successfully saved widget position");
+                                    } else {
+                                        showError("Error saving widget position. Please try again.");
+                                    }
+                                }, err => {
+                                    showError("Error saving widget position. Please try again.");
+                                });
+                            } else {
+                                showError("Error saving widget position. Please try again.");
+                            }
+                        } else {
+                            showError("Error saving widget position. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error saving widget position. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error saving widget position. Please try again.");
+        }
+    }, err => {
+        showError("Error saving widget position. Please try again.");
+    });
+}
+
+exports.showAdminUserWidgetHeightPage = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+    const formNoncePromise = Nonce.createNonce('admin-widget-height-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/height/');
+
+    const showError = () => {
+        Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
+            res.render('admin-users-user-widget-height', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                ],
+                title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
+                logoutNonce: result,
+                activeItem: 'users',
+                subtitle: 'Error loading widget information'
+            });
+        });
+    }
+
+    Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+        var widgetManager = new WidgetManager(targetUser.user_id);
+
+        widgetManager.loadWidgets().then(_ => {
+            var found = false;
+            for(var j = 0; j < widgetManager.layout.widgets.length; j++) {
+                if(found) {
+                    break;
+                }
+
+                if(widgetManager.layout.widgets[j].widget_id == targetWidget.widget_id.toUpperCase()) {
+                    res.render('admin-users-user-widget-height', {
+                        useBootstrap: false,
+                        scriptsAfter: [
+                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        ],
+                        title: 'Height | Users | Admin',
+                        logoutNonce: results[0],
+                        activeItem: 'users',
+                        subtitle: 'Height',
+                        targetUser: targetUser,
+                        targetWidget: targetWidget,
+                        height: widgetManager.layout.widgets[j].height,
+                        formNonce: results[1]
+                    });
+
+                    found = true;
+
+                    break;
+                }
+            }
+
+            if(!found) {
+                res.render('admin-users-user-widget-height', {
+                    useBootstrap: false,
+                    scriptsAfter: [
+                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    ],
+                    title: 'Height | Users | Admin',
+                    logoutNonce: results[0],
+                    activeItem: 'users',
+                    subtitle: 'Height',
+                    targetUser: targetUser,
+                    targetWidget: targetWidget,
+                    height: "",
+                    formNonce: results[1]
+                });
+            }
+        }, err => {
+            showError();
+        });
+    });
+}
+
+exports.performAdminUserWidgetSaveHeight = (req, res, next) => {
+    let targetUser = res.locals.targetUser;
+    let targetWidget = res.locals.targetWidget;
+
+    let height = req.body.height;
+
+    const showError = (error, invalidFields) => {
+        let heightInvalid = false;
+
+        if(invalidFields != undefined) {
+            if(invalidFields.includes('height')) {
+                heightInvalid = true;
+            }
+        }
+
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-height-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/height/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-height', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Height | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Height',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                height: height,
+                formNonce: results[1],
+                heightInvalid: heightInvalid,
+                error: error
+            });
+        });
+    }
+
+    const showSuccess = (message) => {
+        const logoutNoncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
+        const formNoncePromise = Nonce.createNonce('admin-widget-height-form', '/admin/users/' + targetUser.user_id.toLowerCase() + '/widgets/' + targetWidget.widget_id.toLowerCase() + '/height/');
+
+        Promise.all([logoutNoncePromise, formNoncePromise]).then(results => {
+            res.render('admin-users-user-widget-height', {
+                useBootstrap: false,
+                scriptsAfter: [
+                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                ],
+                title: 'Height | Users | Admin',
+                logoutNonce: results[0],
+                activeItem: 'users',
+                subtitle: 'Height',
+                targetUser: targetUser,
+                targetWidget: targetWidget,
+                height: height,
+                formNonce: results[1],
+                success: message
+            });
+        });
+    }
+
+    Nonce.verifyNonce('admin-widget-height-form', req.body.nonce, req.path).then(result => {
+        if(result == true) {
+            invalidFields = [];
+
+            if(invalidFields.length > 0) {
+                showError(invalidFields.length + " fields are invalid", invalidFields);
+            } else {
+                const performSave = () => {
+                    var widgetManager = new WidgetManager(targetUser.user_id);
+
+                    widgetManager.loadWidgets().then(result => {
+                        if(result == true) {
+                            if(widgetManager.updateWidget(targetWidget.widget_id.toUpperCase(), undefined, parseInt(height))) {
+                                widgetManager.saveLayout().then(result => {
+                                    if (result == true) {
+                                        showSuccess("Successfully saved widget height");
+                                    } else {
+                                        showError("Error saving widget height. Please try again.");
+                                    }
+                                }, err => {
+                                    showError("Error saving widget height. Please try again.");
+                                });
+                            } else {
+                                showError("Error saving widget height. Please try again.");
+                            }
+                        } else {
+                            showError("Error saving widget height. Please try again.");
+                        }
+                    }, err => {
+                        showError("Error saving widget height. Please try again.");
+                    });
+                }
+
+                performSave();
+            }
+        } else {
+            showError("Error saving widget height. Please try again.");
+        }
+    }, err => {
+        showError("Error saving widget height. Please try again.");
     });
 }
 

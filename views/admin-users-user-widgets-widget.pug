@@ -1,0 +1,35 @@
+//- Copyright (C) 2019 Bester Intranet
+extends admin-home
+
+block admin-content
+    if widget
+        h3 General
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="title/")
+                span Title
+                span.myaccount-stack-view__box-value #{widget.widget.title}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="type/")
+                span Type
+                span.myaccount-stack-view__box-value #{widget.widget.type}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="data/")
+                span Data (JSON)
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Layout
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="position/")
+                span Position
+                span.myaccount-stack-view__box-value #{widget.position}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="height/")
+                span Height
+                span.myaccount-stack-view__box-value #{widget.height}
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+        h3 Danger Zone
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="delete-widget/")
+                span.red-text Delete Widget
+                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+    else
+        p Unknown widget

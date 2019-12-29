@@ -76,104 +76,107 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    if(event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
-        if(event.request.url.startsWith("https://" + self.location.hostname + "/")) {
-            if(event.request.url.endsWith('nc=1')) {
-                var newUrl = event.request.url.substr(0, event.request.url.length - 5);
-                event.respondWith(
-                    fetch(newUrl).catch(_ => {
-                        return caches.match('/offline-page.html');
-                    }).then(response => {
-                        caches.open(staticCacheName).then(cache => {
-                            cache.put(newUrl, response.clone());
-                        });
-
-                        return response.clone();
-                    })
-                );
-            } else {
-                var urlFound = false;
-
-                var urls = staticUrls.concat(dynamicUrls);
-
-                for(var i = 0; i < urls.length; i++) {
-                    url = urls[i];
-                    if(url.startsWith('/')) {
-                        url = "https://" + self.location.hostname + url;
-                    }
-
-                    if(url == event.request.url) {
-                        urlFound = true;
-
-                        event.respondWith(
+    // Only use service worker for GET requests
+    if(event.request.method == 'GET') {
+        if(event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+            if(event.request.url.startsWith("https://" + self.location.hostname + "/")) {
+                if(event.request.url.endsWith('nc=1')) {
+                    var newUrl = event.request.url.substr(0, event.request.url.length - 5);
+                    event.respondWith(
+                        fetch(newUrl).catch(_ => {
+                            return caches.match('/offline-page.html');
+                        }).then(response => {
                             caches.open(staticCacheName).then(cache => {
-                                return cache.match(event.request).then(response => {
-                                    if(arrayIncludesPrefix(event.request.url, safeUrls)){
-                                        var fetchPromise = fetch(event.request).then(networkResponse => {
-                                            cache.put(event.request, networkResponse.clone());
-                                            return networkResponse;
-                                        });
-                                        return response || fetchPromise;
-                                    }
-                                    
-                                    return response;
-                                });
-                            }
-                        ));
-                    }
-                }
+                                cache.put(newUrl, response.clone());
+                            });
 
+                            return response.clone();
+                        })
+                    );
+                } else {
+                    var urlFound = false;
+
+                    var urls = staticUrls.concat(dynamicUrls);
+
+                    for(var i = 0; i < urls.length; i++) {
+                        url = urls[i];
+                        if(url.startsWith('/')) {
+                            url = "https://" + self.location.hostname + url;
+                        }
+
+                        if(url == event.request.url) {
+                            urlFound = true;
+
+                            event.respondWith(
+                                caches.open(staticCacheName).then(cache => {
+                                    return cache.match(event.request).then(response => {
+                                        if(arrayIncludesPrefix(event.request.url, safeUrls)){
+                                            var fetchPromise = fetch(event.request).then(networkResponse => {
+                                                cache.put(event.request, networkResponse.clone());
+                                                return networkResponse;
+                                            });
+                                            return response || fetchPromise;
+                                        }
+                                        
+                                        return response;
+                                    });
+                                }
+                            ));
+                        }
+                    }
+
+                    event.respondWith(
+                        // Handle no internet page
+                        fetch(event.request.url).catch(error => {
+                            return caches.match('/offline-page.html');
+                        }).then(res => {
+                            return res;
+                        })
+                    );
+                }
+            } else {
                 event.respondWith(
                     // Handle no internet page
                     fetch(event.request.url).catch(error => {
                         return caches.match('/offline-page.html');
-                    }).then(res => {
-                        return res;
                     })
                 );
             }
         } else {
-            event.respondWith(
-                // Handle no internet page
-                fetch(event.request.url).catch(error => {
-                    return caches.match('/offline-page.html');
-                })
-            );
-        }
-    } else {
-        var urlFound = false;
+            var urlFound = false;
 
-        var urls = staticUrls.concat(dynamicUrls);
+            var urls = staticUrls.concat(dynamicUrls);
 
-        for(var i = 0; i < urls.length; i++) {
-            url = urls[i];
-            if(url.startsWith('/')) {
-                url = "https://" + self.location.hostname + url;
+            for(var i = 0; i < urls.length; i++) {
+                url = urls[i];
+                if(url.startsWith('/')) {
+                    url = "https://" + self.location.hostname + url;
+                }
+
+                if(url == event.request.url) {
+                    urlFound = true;
+                    event.respondWith(
+                        caches.open(staticCacheName).then(cache => {
+                            return cache.match(event.request).then(response => {
+                                if(arrayIncludesPrefix(event.request.url, safeUrls)){
+
+                                    var fetchPromise = fetch(event.request).then(networkResponse => {
+                                        cache.put(event.request, networkResponse.clone());
+                                        return networkResponse;
+                                    });
+                                    return response || fetchPromise;
+                                }
+                                
+                                return response;
+                            });
+                        }
+                    ));
+                }
             }
 
-            if(url == event.request.url) {
-                urlFound = true;
-                event.respondWith(
-                    caches.open(staticCacheName).then(cache => {
-                        return cache.match(event.request).then(response => {
-                            if(arrayIncludesPrefix(event.request.url, safeUrls)){
-
-                                var fetchPromise = fetch(event.request).then(networkResponse => {
-                                    cache.put(event.request, networkResponse.clone());
-                                    return networkResponse;
-                                });
-                                return response || fetchPromise;
-                            }
-                            
-                            return response;
-                        });
-                    }
-                ));
+            if(!urlFound) {
+                return false;
             }
-        }
-
-        if(!urlFound) {
-            return false;
         }
     }
 });

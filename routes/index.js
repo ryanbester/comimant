@@ -18,6 +18,7 @@ const myAccountDataRoutes = require('../routes/myaccount/data');
 const adminRoutes = require('../routes/admin/admin');
 const adminUserRoutes = require('../routes/admin/users');
 const adminPrivilegeTemplatesRoutes = require('../routes/admin/privilege-templates');
+const adminWidgetsRoutes = require('../routes/admin/widgets');
 const adminAccessTokensRoutes = require('../routes/admin/access-tokens');
 const adminNoncesRoutes = require('../routes/admin/nonces');
 const adminDataRoutes = require('../routes/admin/data');
@@ -150,6 +151,24 @@ router.post(adminPath + 'users/:userId/email-address/', adminUserRoutes.performA
 router.get(adminPath + 'users/:userId/dob/', adminUserRoutes.showAdminUsersDobPage);
 router.post(adminPath + 'users/:userId/dob/', adminUserRoutes.performAdminUsersSaveDob);
 
+router.get(adminPath + 'users/:userId/widgets/', adminUserRoutes.showAdminUserWidgetsPage);
+router.get(adminPath + 'users/:userId/widgets/add-widget/', adminUserRoutes.showAdminUserAddWidgetPage);
+router.post(adminPath + 'users/:userId/widgets/add-widget/', adminUserRoutes.performAdminUserAddWidget);
+router.all(adminPath + 'users/:userId/widgets/:widgetId/*', adminUserRoutes.loadUserWidgetInfo);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/', adminUserRoutes.showAdminUserWidgetPage);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/delete-widget/', adminUserRoutes.showAdminUserDeleteWidgetPage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/delete-widget/', adminUserRoutes.performAdminUserDeleteWidget);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/title/', adminUserRoutes.showAdminUserWidgetTitlePage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/title/', adminUserRoutes.performAdminUserWidgetSaveTitle);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/type/', adminUserRoutes.showAdminUserWidgetTypePage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/type/', adminUserRoutes.performAdminUserWidgetSaveType);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/data/', adminUserRoutes.showAdminUserWidgetDataPage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/data/', adminUserRoutes.performAdminUserWidgetSaveData);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/position/', adminUserRoutes.showAdminUserWidgetPositionPage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/position/', adminUserRoutes.performAdminUserWidgetSavePosition);
+router.get(adminPath + 'users/:userId/widgets/:widgetId/height/', adminUserRoutes.showAdminUserWidgetHeightPage);
+router.post(adminPath + 'users/:userId/widgets/:widgetId/height/', adminUserRoutes.performAdminUserWidgetSaveHeight);
+
 router.get(adminPath + 'users/:userId/security/privileges/', adminUserRoutes.showAdminUserPrivilegesPage);
 router.post(adminPath + 'users/:userId/security/privileges/', adminUserRoutes.performAdminUserSavePrivileges);
 router.get(adminPath + 'users/:userId/security/privileges/add-privilege/', adminUserRoutes.showAdminUserAddPrivilegePage);
@@ -179,6 +198,8 @@ router.get(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivileg
 router.post(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateAddPrivilege);
 router.get(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateDeletePage);
 router.post(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateDelete);
+
+router.get(adminPath + 'widgets/', adminWidgetsRoutes.showAdminWidgetsPage);
 
 router.get(adminPath + 'access-tokens/', adminAccessTokensRoutes.showAdminAccessTokensPage);
 router.get(adminPath + 'nonces/', adminNoncesRoutes.showAdminNoncesPage);
