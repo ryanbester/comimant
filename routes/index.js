@@ -24,6 +24,9 @@ const adminNoncesRoutes = require('../routes/admin/nonces');
 const adminDataRoutes = require('../routes/admin/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
+const internalAPIMain = require('../routes/api/internal/main');
+const internalAPIWidgets = require('../routes/api/internal/widgets');
+
 const showHomePage = (req, res, next) => {
     const renderHomePage = (nonce) => {
         res.render('home', {
@@ -131,6 +134,20 @@ router.post(myAccountPath + 'test/', accountsRoutes.checkPassword);
 router.get(myAccountPath + 'test/', (req, res, next) => {
     res.send("Success").end();
 });
+
+// Internal API
+const internalAPIPath = '/api/internal/';
+router.all(internalAPIPath + 'widgets/*', internalAPIMain.userCheck);
+
+router.get(internalAPIPath + 'widgets/', internalAPIWidgets.getAllWidgets);
+router.post(internalAPIPath + 'widgets/', internalAPIWidgets.addWidget);
+
+router.get(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.getWidget);
+router.delete(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.deleteWidget);
+router.put(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.updateWidget);
+// Public API
+
+// Admin section
 
 const adminPath = '/admin/';
 router.all('/admin', adminRoutes.userCheck);
