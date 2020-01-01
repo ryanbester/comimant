@@ -33,7 +33,7 @@ const showHomePage = (req, res, next) => {
             useBootstrap: false,
             tld: Util.get_tld(),
             logoutNonce: nonce,
-            scriptsAfter: [
+            scriptsBefore: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js'
             ]
         });

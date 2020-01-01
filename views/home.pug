@@ -28,13 +28,10 @@ block content
                             li.main-header-dropdown__item
                                 a(href="https://accounts.besterintranet." + tld + "/logout/?nonce=" + logoutNonce) Logout
     .main-container
-        h1 Bester Intranet
         if user
-            h2 Welcome, #{user.first_name} #{user.last_name}
-            p
-                a(href="https://accounts.besterintranet." + tld + "/myaccount/") My Account
+            h1 Hello, #{user.first_name} #{user.last_name}
         else
-            h2 Login to customise your Dashboard
+            h1 Login to customise your Dashboard
             p
                 a(href="https://accounts.besterintranet." + tld + "/login/") Login
         block home-content

@@ -523,7 +523,7 @@ module.exports.updateWidget = (req, res, next) => {
                             id: widget.widget_id.toLowerCase(),
                             title: widget.title,
                             type: widget.type,
-                            data: JSON.parse(data),
+                            data: data,
                             position: position,
                             height: height
                         }

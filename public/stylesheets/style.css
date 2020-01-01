@@ -464,10 +464,30 @@ label {
     -o-transition: box-shadow 0.25s;
     padding: 15px;
     overflow: hidden;
+    animation: slide-up 0.4s ease;
 }
 
 .home-page-grid-container__widget:hover {
     box-shadow: 0px 0px 17px 2px #0000006e;
+}
+
+.home-page-grid-container__widget.loading {
+    animation: placeHolderShimmer 1.8s linear infinite forwards, slide-up 0.4s ease;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #fafafa 8%, #e4e4e4 38%, #fafafa 54%);
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.home-page-grid-container__widget-content {
+    
 }
 
 .home-page-grid-container__widget h1 {
@@ -486,6 +506,17 @@ label {
     height: 100%;
     text-decoration: none;
     color: #FFFFFF;
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .basic-container {

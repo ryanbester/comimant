@@ -41,7 +41,8 @@ const dynamicUrls = [
     '/',
     '/scripts/grid.js',
     '/scripts/dialog.js', 
-    '/scripts/main.js'
+    '/scripts/main.js',
+    '/api/internal/widgets/'
 ];
 
 const arrayIncludesPrefix = (url, safeUrls) => {

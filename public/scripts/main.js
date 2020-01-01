@@ -39,8 +39,59 @@ const checkUser = _ => {
     });
 }
 
+const loadSkeleton = _ => {
+    fetch('/api/internal/widgets/').then(res => {
+        res.json().then(json => {
+            json.widgets.sort((a, b) => {
+                return a.position - b.position;
+            });
+
+            for(var i = 0; i < json.widgets.length; i++) {
+                var widget = json.widgets[i];
+
+                if(widget.position ===undefined || widget.position == null ) {
+                    continue;
+                }
+
+                if(widget.position == 0 || widget.position == '0') {
+                    continue;
+                }
+
+                widgetGrid.addWidget(widget.widget_id, widget.height);
+            }
+
+            widgetGrid.addWidgetBtn(addWidgetClick = (e) => {
+                e.preventDefault();
+
+                console.log("Test");
+                
+                navigateWithoutRefresh('/add', 'Add Widget | Bester Intranet', {
+                    'action': 'add-widget'
+                });
+
+                showAddWidgetDialog();
+            });
+
+            widgetGrid.loadWidgets();
+        });
+    }).catch(e => {
+        console.log(e);
+    });
+}
+
 $(document).ready(_ => {
     checkUser();
+
+    loadSkeleton();
+
+    /** Update code: */
+    /*
+    caches.open('static-v1').then(cache => {
+        fetch('/api/internal/widgets/').then(res => {
+            cache.put('/api/internal/widgets/', res.clone());
+        });
+    });
+    */
 });
 
 const navigateWithoutRefresh = (url, title, state) => {
@@ -97,16 +148,6 @@ window.onpopstate = (e) => {
         Dialog.deleteAllDialogs();
     }
 }
-
-$('#add-widget-btn').click((e) => {
-    e.preventDefault();
-    
-    navigateWithoutRefresh('/add', 'Add Widget | Bester Intranet', {
-        'action': 'add-widget'
-    });
-
-    showAddWidgetDialog();
-});
 
 if(path.startsWith('/add')) {
     showAddWidgetDialog();
