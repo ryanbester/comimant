@@ -35,17 +35,12 @@ var widgetGrid = (function() {
 
             widget.setAttribute('data-id', widget_id);
 
-            var widgetContent = document.createElement('div');
-            widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
-
             var container = document.getElementsByClassName('home-page-grid-container')[0];
             var rowHeight = parseInt(window.getComputedStyle(container).getPropertyValue('grid-auto-rows'));
             var rowGap = parseInt(window.getComputedStyle(container).getPropertyValue('grid-row-gap'));
 
             var rowSpan = Math.ceil(height / (rowHeight + rowGap));
             widget.style.gridRowEnd = "span " + rowSpan;
-
-            widget.appendChild(widgetContent);
 
             container.appendChild(widget);
         },
@@ -92,20 +87,70 @@ var widgetGrid = (function() {
 
                     fetch('/api/internal/widgets/' + widget_id).then(res => {
                         res.json().then(json => {
+                            var titleContainer = document.createElement('div');
+                            titleContainer.setAttribute('class', 'home-page-grid-container__widget-title');
+
                             var title = document.createElement('h1');
                             
                             var titleText = document.createTextNode(json.widget.title);
 
                             title.appendChild(titleText);
 
+                            titleContainer.appendChild(title);
+                            
+                            this.createWidgetMenu(widget_id, titleContainer);
+
+                            var widgetContent = document.createElement('div');
+                            widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
+
                             widget.setAttribute('class', 'home-page-grid-container__widget');
-                            widget.childNodes[0].appendChild(title);
+                            widget.appendChild(titleContainer);
+                            widget.appendChild(widgetContent);
                         });
                     }).catch(e => {
                         console.log(e);
                     });
                 }
             });
+        },
+        createWidgetMenu : function(widget_id, container) {
+            var menuContainer = document.createElement('div');
+            menuContainer.setAttribute('class', 'home-page-grid-container__widget-menu-container');
+
+            var menuBtn = document.createElement('div');
+            menuBtn.setAttribute('class', 'home-page-grid-container__widget-menu-btn');
+
+            $(menuBtn).click(e => {
+                $(e.target).next().children('.home-page-grid-container__widget-menu-list').fadeToggle(250);
+            });
+
+            var menu = document.createElement('div');
+            menu.setAttribute('class', 'home-page-grid-container__widget-menu');
+
+            var menuList = document.createElement('ul');
+            menuList.setAttribute('class', 'home-page-grid-container__widget-menu-list');
+
+            var sizeItem = document.createElement('li');
+            sizeItem.setAttribute('class', 'home-page-grid-container__widget-menu-item');
+            sizeItem.innerHTML = "Size";
+            menuList.appendChild(sizeItem);
+
+            var positionItem = document.createElement('li');
+            positionItem.setAttribute('class', 'home-page-grid-container__widget-menu-item');
+            positionItem.innerHTML = "Position";
+            menuList.appendChild(positionItem);
+
+            var deleteItem = document.createElement('li');
+            deleteItem.setAttribute('class', 'home-page-grid-container__widget-menu-item delete');
+            deleteItem.innerHTML = "Delete";
+            menuList.appendChild(deleteItem);
+
+            menu.appendChild(menuList);
+
+            menuContainer.appendChild(menuBtn);
+            menuContainer.appendChild(menu);
+
+            container.appendChild(menuContainer);
         }
     };
 

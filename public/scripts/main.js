@@ -49,7 +49,7 @@ const loadSkeleton = _ => {
             for(var i = 0; i < json.widgets.length; i++) {
                 var widget = json.widgets[i];
 
-                if(widget.position ===undefined || widget.position == null ) {
+                if(widget.position === undefined || widget.position == null ) {
                     continue;
                 }
 
@@ -62,8 +62,6 @@ const loadSkeleton = _ => {
 
             widgetGrid.addWidgetBtn(addWidgetClick = (e) => {
                 e.preventDefault();
-
-                console.log("Test");
                 
                 navigateWithoutRefresh('/add', 'Add Widget | Bester Intranet', {
                     'action': 'add-widget'
@@ -108,7 +106,7 @@ const navigateWithoutRefresh = (url, title, state) => {
 }
 
 const showAddWidgetDialog = _ => {
-    var addWidgetDlg = new Dialog("Add Widget", "<p>Test</p>", [
+    var addWidgetDlg = new Dialog("Add Widget", "<p>Coming Soon!</p>", [
         {
             "title": "Cancel",
             "action": "cancel"
