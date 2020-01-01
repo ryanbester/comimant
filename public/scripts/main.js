@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2019 Bester Intranet
+Copyright (C) 2019-2020 Bester Intranet
 */
 
 var mainContainer = document.getElementsByClassName('main-container')[0];
