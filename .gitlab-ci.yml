@@ -16,6 +16,7 @@ mysql_build:
   services:
     - mysql
   image: mysql:latest
+  restart: always
   script:
     - mysql -u=root -p="${MYSQL_ROOT_PASSWORD}" --host=mysql "${MYSQL_DATABASE}" < db.sql
 
