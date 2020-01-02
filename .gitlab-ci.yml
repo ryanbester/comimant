@@ -8,6 +8,17 @@ cache:
   paths:
     - node_modules/
 
+mysql_build:
+  stage: build
+  variables:
+    MYSQL_DATABASE: BesterIntranet_dev
+    MYSQL_ROOT_PASSWORD: RootPassword
+  services:
+    - mysql
+  image: mysql:latest
+  script:
+    - mysql -u=root -p="${MYSQL_ROOT_PASSWORD}" --host=mysql "${MYSQL_DATABASE}" < db.sql
+
 install_dependencies:
   stage: build
   script:
@@ -18,4 +29,19 @@ install_dependencies:
 
 testing:
   stage: test
+  variables:
+    NODE_ENV: development
+    DB_HOST: mysql
+    DB_PORT: 3306
+    DB_DATABASE: BesterIntranet_dev
+    DB_USER: root
+    DB_PASS: RootPassword
+    DB_USER_MODIFY: root
+    DB_PASS_MODIFY: RootPassword
+    DB_USER_DELETE: root
+    DB_PASS_DELETE: RootPassword
+    PEPPER: 1DUHLczT
+    SECRET_1: 5B7071A1AB5D3BD5B16C377A868B04742B254139B6DAFA42D4170F9E0382DF4E
+    SECRET_2: 588AADAF6C20647B58E72C36DBA60F2C86981C0B526D6BB8526F126432FFA731
+    COOKIE_SECRET: B7885794FA2704CCD39BEBACB884FB4D432AB405FA363A593433A6AF30DA1060
   script: npm run-script test:coverage
