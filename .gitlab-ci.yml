@@ -12,10 +12,6 @@ install_dependencies:
   stage: build
   script:
     - npm install
-  before_script:
-    - git config --global http.sslVerify false
-    - cp /etc/gitlab-runner/certs/ca.crt /usr/local/share/ca-certificates/ca.crt
-    - update ca-certificates
   artifacts:
     paths:
       - node_modules/
