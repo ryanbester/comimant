@@ -18,4 +18,4 @@ install_dependencies:
 
 testing:
   stage: test
-  script: npm test
+  script: npm run-script test:coverage

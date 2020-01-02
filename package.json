@@ -21,8 +21,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --passWithNoTests --coverage"
   },
   "repository": {
     "type": "git",
