@@ -10,18 +10,18 @@ const path = require('path');
 
 const app = require('../app');
 const Util = require("../core/util");
-const accountsRoutes = require('../routes/accounts');
-const myAccountMyInfoRoutes = require('../routes/myaccount/my-info');
-const myAccountSecurityRoutes = require('../routes/myaccount/security');
-const myAccountServicesRoutes = require('../routes/myaccount/services');
-const myAccountDataRoutes = require('../routes/myaccount/data');
-const adminRoutes = require('../routes/admin/admin');
+const accounts = require('../routes/accounts');
+const myAccountMyInfo = require('../routes/myaccount/my-info');
+const myAccountSecurity = require('../routes/myaccount/security');
+const myAccountServices = require('../routes/myaccount/services');
+const myAccountData = require('../routes/myaccount/data');
+const admin = require('./admin');
 const adminUserRoutes = require('../routes/admin/users');
-const adminPrivilegeTemplatesRoutes = require('../routes/admin/privilege-templates');
-const adminWidgetsRoutes = require('../routes/admin/widgets');
-const adminAccessTokensRoutes = require('../routes/admin/access-tokens');
-const adminNoncesRoutes = require('../routes/admin/nonces');
-const adminDataRoutes = require('../routes/admin/data');
+const adminPrivilegeTemplates = require('../routes/admin/privilege-templates');
+const adminWidgets = require('../routes/admin/widgets');
+const adminAccessTokens = require('../routes/admin/access-tokens');
+const adminNonces = require('../routes/admin/nonces');
+const adminData = require('../routes/admin/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
 const internalAPIMain = require('../routes/api/internal/main');
@@ -79,14 +79,14 @@ const showHomePage = (req, res, next) => {
 router.get('/', showHomePage);
 router.get('/add', showHomePage);
 
-router.get('/accounts/login/', accountsRoutes.showLoginPage);
-router.post('/accounts/login/', accountsRoutes.login);
+router.get('/accounts/login/', accounts.showLoginPage);
+router.post('/accounts/login/', accounts.login);
 
-router.get('/accounts/logout/', accountsRoutes.logout);
+router.get('/accounts/logout/', accounts.logout);
 
-router.get('/usercheck/', accountsRoutes.userLoggedIn);
+router.get('/usercheck/', accounts.userLoggedIn);
 
-router.all('/accounts/myaccount*', accountsRoutes.userCheck);
+router.all('/accounts/myaccount*', accounts.userCheck);
 
 // My Account routes
 
@@ -101,36 +101,36 @@ router.all('/accounts/myaccount*', accountsRoutes.userCheck);
 
 const myAccountPath = '/accounts/myaccount/';
 
-router.get(myAccountPath, accountsRoutes.showMyAccountPage);
-router.get(myAccountPath + 'my-info/', myAccountMyInfoRoutes.showMyAccountMyInfoPage);
+router.get(myAccountPath, accounts.showMyAccountPage);
+router.get(myAccountPath + 'my-info/', myAccountMyInfo.showMyAccountMyInfoPage);
 
-router.get(myAccountPath + 'my-info/name/', myAccountMyInfoRoutes.showMyAccountMyInfoNamePage);
-router.post(myAccountPath + 'my-info/name/', myAccountMyInfoRoutes.performMyAccountSaveName);
+router.get(myAccountPath + 'my-info/name/', myAccountMyInfo.showMyAccountMyInfoNamePage);
+router.post(myAccountPath + 'my-info/name/', myAccountMyInfo.performMyAccountSaveName);
 
-router.get(myAccountPath + 'my-info/username/', myAccountMyInfoRoutes.showMyAccountMyInfoUsernamePage);
-router.post(myAccountPath + 'my-info/username/', myAccountMyInfoRoutes.performMyAccountSaveUsername);
+router.get(myAccountPath + 'my-info/username/', myAccountMyInfo.showMyAccountMyInfoUsernamePage);
+router.post(myAccountPath + 'my-info/username/', myAccountMyInfo.performMyAccountSaveUsername);
 
-router.get(myAccountPath + 'my-info/dob/', myAccountMyInfoRoutes.showMyAccountMyInfoDobPage);
-router.post(myAccountPath + 'my-info/dob/', myAccountMyInfoRoutes.performMyAccountSaveDob);
+router.get(myAccountPath + 'my-info/dob/', myAccountMyInfo.showMyAccountMyInfoDobPage);
+router.post(myAccountPath + 'my-info/dob/', myAccountMyInfo.performMyAccountSaveDob);
 
-router.get(myAccountPath + 'security/', myAccountSecurityRoutes.showMyAccountSecurityPage);
-router.get(myAccountPath + 'security/passwords/', myAccountSecurityRoutes.showMyAccountPasswordsPage);
+router.get(myAccountPath + 'security/', myAccountSecurity.showMyAccountSecurityPage);
+router.get(myAccountPath + 'security/passwords/', myAccountSecurity.showMyAccountPasswordsPage);
 
-router.get(myAccountPath + 'security/passwords/change-password/', myAccountSecurityRoutes.showChangePasswordPage);
-router.post(myAccountPath + 'security/passwords/change-password/', myAccountSecurityRoutes.performChangePassword);
+router.get(myAccountPath + 'security/passwords/change-password/', myAccountSecurity.showChangePasswordPage);
+router.post(myAccountPath + 'security/passwords/change-password/', myAccountSecurity.performChangePassword);
 
-router.get(myAccountPath + 'security/logout-everywhere/', myAccountSecurityRoutes.showLogoutEverywhereConfirmation);
-router.get(myAccountPath + 'security/logout-everywhere/all-devices/', myAccountSecurityRoutes.performLogoutEverywhereAll);
-router.get(myAccountPath + 'security/logout-everywhere/other-devices/', myAccountSecurityRoutes.performLogoutEverywhereOther)
+router.get(myAccountPath + 'security/logout-everywhere/', myAccountSecurity.showLogoutEverywhereConfirmation);
+router.get(myAccountPath + 'security/logout-everywhere/all-devices/', myAccountSecurity.performLogoutEverywhereAll);
+router.get(myAccountPath + 'security/logout-everywhere/other-devices/', myAccountSecurity.performLogoutEverywhereOther)
 
-router.get(myAccountPath + 'services/', myAccountServicesRoutes.showMyAccountServicesPage);
+router.get(myAccountPath + 'services/', myAccountServices.showMyAccountServicesPage);
 
-router.get(myAccountPath + 'services/:serviceName/*', myAccountServicesRoutes.showMyAccountServiceDetailsPage);
+router.get(myAccountPath + 'services/:serviceName/*', myAccountServices.showMyAccountServiceDetailsPage);
 
-router.get(myAccountPath + 'data/', myAccountDataRoutes.showMyAccountDataPage);
+router.get(myAccountPath + 'data/', myAccountData.showMyAccountDataPage);
 
-router.get(myAccountPath + 'test/', accountsRoutes.showPasswordConfirmationPage);
-router.post(myAccountPath + 'test/', accountsRoutes.checkPassword);
+router.get(myAccountPath + 'test/', accounts.showPasswordConfirmationPage);
+router.post(myAccountPath + 'test/', accounts.checkPassword);
 router.get(myAccountPath + 'test/', (req, res, next) => {
     res.send("Success").end();
 });
@@ -150,9 +150,9 @@ router.put(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.updateWidge
 // Admin section
 
 const adminPath = '/admin/';
-router.all('/admin', adminRoutes.userCheck);
-router.all('/admin/*', adminRoutes.userCheck);
-router.get(adminPath, adminRoutes.showAdminPanel);
+router.all('/admin', admin.userCheck);
+router.all('/admin/*', admin.userCheck);
+router.get(adminPath, admin.showAdminPanel);
 
 router.get(adminPath + 'users/', adminUserRoutes.showAdminUsersPage);
 router.get(adminPath + 'users/new/', adminUserRoutes.showAdminNewUserPage);
@@ -199,27 +199,27 @@ router.post(adminPath + 'users/:userId/security/passwords/change-password/', adm
 router.get(adminPath + 'users/:userId/delete-user/', adminUserRoutes.showAdminDeleteUserPage);
 router.post(adminPath + 'users/:userId/delete-user/', adminUserRoutes.performAdminDeleteUser);
 
-router.get(adminPath + 'privilege-templates/', adminPrivilegeTemplatesRoutes.showAdminPrivilegeTemplatesPage);
-router.get(adminPath + 'privilege-templates/create/', adminPrivilegeTemplatesRoutes.showCreatePrivilegeTemplatePage);
-router.post(adminPath + 'privilege-templates/create/', adminPrivilegeTemplatesRoutes.performCreatePrivilegeTemplate);
-router.all(adminPath + 'privilege-templates/:name/*', adminPrivilegeTemplatesRoutes.loadPrivilegeTemplateInfo);
-router.get(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplatePage);
-router.post(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSave);
-router.get(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateNamePage);
-router.post(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveName);
-router.get(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateTitlePage);
-router.post(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveTitle);
-router.get(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateDefaultPage);
-router.post(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateSaveDefault);
-router.get(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateAddPrivilegePage);
-router.post(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateAddPrivilege);
-router.get(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.showPrivilegeTemplateDeletePage);
-router.post(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplatesRoutes.performPrivilegeTemplateDelete);
+router.get(adminPath + 'privilege-templates/', adminPrivilegeTemplates.showAdminPrivilegeTemplatesPage);
+router.get(adminPath + 'privilege-templates/create/', adminPrivilegeTemplates.showCreatePrivilegeTemplatePage);
+router.post(adminPath + 'privilege-templates/create/', adminPrivilegeTemplates.performCreatePrivilegeTemplate);
+router.all(adminPath + 'privilege-templates/:name/*', adminPrivilegeTemplates.loadPrivilegeTemplateInfo);
+router.get(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplates.showPrivilegeTemplatePage);
+router.post(adminPath + 'privilege-templates/:name/', adminPrivilegeTemplates.performPrivilegeTemplateSave);
+router.get(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplates.showPrivilegeTemplateNamePage);
+router.post(adminPath + 'privilege-templates/:name/name/', adminPrivilegeTemplates.performPrivilegeTemplateSaveName);
+router.get(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplates.showPrivilegeTemplateTitlePage);
+router.post(adminPath + 'privilege-templates/:name/title/', adminPrivilegeTemplates.performPrivilegeTemplateSaveTitle);
+router.get(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplates.showPrivilegeTemplateDefaultPage);
+router.post(adminPath + 'privilege-templates/:name/default/', adminPrivilegeTemplates.performPrivilegeTemplateSaveDefault);
+router.get(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplates.showPrivilegeTemplateAddPrivilegePage);
+router.post(adminPath + 'privilege-templates/:name/add-privilege/', adminPrivilegeTemplates.performPrivilegeTemplateAddPrivilege);
+router.get(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplates.showPrivilegeTemplateDeletePage);
+router.post(adminPath + 'privilege-templates/:name/delete-privilege-template/', adminPrivilegeTemplates.performPrivilegeTemplateDelete);
 
-router.get(adminPath + 'widgets/', adminWidgetsRoutes.showAdminWidgetsPage);
+router.get(adminPath + 'widgets/', adminWidgets.showAdminWidgetsPage);
 
-router.get(adminPath + 'access-tokens/', adminAccessTokensRoutes.showAdminAccessTokensPage);
-router.get(adminPath + 'nonces/', adminNoncesRoutes.showAdminNoncesPage);
-router.get(adminPath + 'data/', adminDataRoutes.showAdminDataPage);
+router.get(adminPath + 'access-tokens/', adminAccessTokens.showAdminAccessTokensPage);
+router.get(adminPath + 'nonces/', adminNonces.showAdminNoncesPage);
+router.get(adminPath + 'data/', adminData.showAdminDataPage);
 
 module.exports = router;

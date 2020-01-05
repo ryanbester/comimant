@@ -36,7 +36,8 @@ exports.showMyAccountMyInfoNamePage = (req, res, next) => {
             title: "Permission Denied",
             error: {
                 title: "Permission Denied",
-                message: "You do not have permission to change your name. Please contact your administrator."
+                message: "You do not have permission to change your name. Please contact your administrator.",
+                code: 12001
             }
         });
     }
@@ -128,7 +129,7 @@ exports.performMyAccountSaveName = (req, res, next) => {
     Nonce.verifyNonce('myaccount-my-info-name-form', req.body.nonce, req.path).then(result => {
         if(result == true){
             if(!user.hasPrivilege('change_name')){
-                showError("You do not have permission to change your name. Contact your administrator.");
+                showError("You do not have permission to change your name. Contact your administrator. Code: 12002");
             }
 
             // Validate fields
@@ -153,20 +154,20 @@ exports.performMyAccountSaveName = (req, res, next) => {
                         if(result == true){
                             showSuccess("Successfully saved your details");
                         } else {
-                            showError("Error saving your details. Please try again.");
+                            showError("Error saving your details. Please try again. Code: 13002");
                         }
                     }, err => {
-                        showError("Error saving your details. Please try again.");
+                        showError("Error saving your details. Please try again. Code: 13001");
                     });
                 }
 
                 performSave();
             }
         } else {
-            showError("Error saving your details. Please try again.");
+            showError("Error saving your details. Please try again. Code: 11002");
         }
     }, err => {
-        showError("Error saving your details. Please try again.");
+        showError("Error saving your details. Please try again. Code: 11001");
     });
 }
 
@@ -179,7 +180,8 @@ exports.showMyAccountMyInfoUsernamePage = (req, res, next) => {
             title: "Permission Denied",
             error: {
                 title: "Permission Denied",
-                message: "You do not have permission to change your username. Please contact your administrator."
+                message: "You do not have permission to change your username. Please contact your administrator.",
+                code: 12003
             }
         });
     }
@@ -262,7 +264,7 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
     Nonce.verifyNonce('myaccount-my-info-username-form', req.body.nonce, req.path).then(result => {
         if(result == true){
             if(!user.hasPrivilege('change_username')){
-                showError("You do not have permission to change your username. Contact your administrator.");
+                showError("You do not have permission to change your username. Contact your administrator. Code: 12004");
             }
 
             // Validate fields
@@ -282,10 +284,10 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
                         if(result == true){
                             showSuccess("Successfully saved your details");
                         } else {
-                            showError("Error saving your details. Please try again.");
+                            showError("Error saving your details. Please try again. Code: 13004");
                         }
                     }, err => {
-                        showError("Error saving your details. Please try again.");
+                        showError("Error saving your details. Please try again. Code: 13003");
                     });
                 }
 
@@ -304,10 +306,10 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
                 }
             }
         } else {
-            showError("Error saving your details. Please try again.");
+            showError("Error saving your details. Please try again. Code: 11004");
         }
     }, err => {
-        showError("Error saving your details. Please try again.");
+        showError("Error saving your details. Please try again. Code: 11003");
     });
 }
 
@@ -320,7 +322,8 @@ exports.showMyAccountMyInfoDobPage = (req, res, next) => {
             title: "Permission Denied",
             error: {
                 title: "Permission Denied",
-                message: "You do not have permission to change your date of birth. Please contact your administrator."
+                message: "You do not have permission to change your date of birth. Please contact your administrator.",
+                code: 12005
             }
         });
     }
@@ -421,7 +424,7 @@ exports.performMyAccountSaveDob = (req, res, next) => {
     Nonce.verifyNonce('myaccount-my-info-dob-form', req.body.nonce, req.path).then(result => {
         if(result == true){
             if(!user.hasPrivilege('change_dob')){
-                showError("You do not have permission to change your date of birth. Contact your administrator.");
+                showError("You do not have permission to change your date of birth. Contact your administrator. Code: 12006");
             }
 
             // Validate fields
@@ -450,19 +453,19 @@ exports.performMyAccountSaveDob = (req, res, next) => {
                         if(result == true){
                             showSuccess("Successfully saved your details");
                         } else {
-                            showError("Error saving your details. Please try again.");
+                            showError("Error saving your details. Please try again. Code: 13006");
                         }
                     }, err => {
-                        showError("Error saving your details. Please try again.");
+                        showError("Error saving your details. Please try again. Code: 13005");
                     });
                 }
 
                 performSave();
             }
         } else {
-            showError("Error saving your details. Please try again.");
+            showError("Error saving your details. Please try again. Code: 11006");
         }
     }, err => {
-        showError("Error saving your details. Please try again.");
+        showError("Error saving your details. Please try again. Code: 11005");
     });
 }

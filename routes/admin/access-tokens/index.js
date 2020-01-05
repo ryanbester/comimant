@@ -8,21 +8,21 @@ const crypto = require('crypto');
 const argon2 = require('argon2');
 const multiparty = require('multiparty');
 
-const Util = require('../../core/util');
-const { Auth, AccessToken, User, Nonce } = require('../../core/auth');
-const app = require('../../app');
+const Util = require('../../../core/util');
+const { Auth, AccessToken, User, Nonce } = require('../../../core/auth');
+const app = require('../../../app');
 
-exports.showAdminDataPage = (req, res, next) => {
+exports.showAdminAccessTokensPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {
-        res.render('admin-data', {
+        res.render('admin-access-tokens', {
             useBootstrap: false,
             scriptsAfter: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
             ],
-            title: 'Data | Admin',
+            title: 'Access Tokens | Admin',
             logoutNonce: result,
-            activeItem: 'data',
-            subtitle: 'Data'
+            activeItem: 'access-tokens',
+            subtitle: 'Access Tokens'
         });
     });
 }

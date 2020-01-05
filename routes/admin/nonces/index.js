@@ -8,9 +8,9 @@ const crypto = require('crypto');
 const argon2 = require('argon2');
 const multiparty = require('multiparty');
 
-const Util = require('../../core/util');
-const { Auth, AccessToken, User, Nonce } = require('../../core/auth');
-const app = require('../../app');
+const Util = require('../../../core/util');
+const { Auth, AccessToken, User, Nonce } = require('../../../core/auth');
+const app = require('../../../app');
 
 exports.showAdminNoncesPage = (req, res, next) => {
     Nonce.createNonce('user-logout', '/accounts/logout/').then(result => {

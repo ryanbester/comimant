@@ -8,13 +8,13 @@ const crypto = require('crypto');
 const argon2 = require('argon2');
 const multiparty = require('multiparty');
 
-const Util = require('../../core/util');
-const { Auth, AccessToken, User, Nonce } = require('../../core/auth');
-const AuthUtil = require('../../core/auth-util')
-const app = require('../../app');
-const { Service, ServiceManager } = require('../../core/myaccount/servicemanager');
-const { PrivilegeTemplate, PrivilegeTemplates } = require('../../core/admin/privilege-templates');
-const { Widget, WidgetManager } = require('../../core/widgets');
+const Util = require('../../../core/util');
+const { Auth, AccessToken, User, Nonce } = require('../../../core/auth');
+const AuthUtil = require('../../../core/auth-util')
+const app = require('../../../app');
+const { Service, ServiceManager } = require('../../../core/myaccount/servicemanager');
+const { PrivilegeTemplate, PrivilegeTemplates } = require('../../../core/admin/privilege-templates');
+const { Widget, WidgetManager } = require('../../../core/widgets');
 
 exports.showAdminUsersPage = (req, res, next) => {
     var noncePromise = Nonce.createNonce('user-logout', '/accounts/logout/');
