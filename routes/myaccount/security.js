@@ -39,7 +39,8 @@ exports.showMyAccountPasswordsPage = (req, res, next) => {
                 title: 'Passwords | Security | My Account',
                 logoutNonce: result,
                 activeItem: 'security',
-                subtitle: 'Passwords'
+                subtitle: 'Passwords',
+                error: 'Cannot load services'
             });
         });
     }
