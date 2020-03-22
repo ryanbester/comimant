@@ -166,27 +166,27 @@ exports.performChangePassword = (req, res, next) => {
                                     if(result == true){
                                         showSuccess("Your password has been changed successfully");
                                     } else {
-                                        showError("Cannot set your new password. Your password will remain unchanged.");
+                                        showError("Cannot set your new password. Your password will remain unchanged. Code: 13011");
                                     }
                                 }, err => {
-                                    showError("Cannot set your new password. Your password will remain unchanged.");
+                                    showError("Cannot set your new password. Your password will remain unchanged. Code: 13010");
                                 });
                             }, err => {
-                                showError("Cannot set your new password. Your password will remain unchanged.");
+                                showError("Cannot set your new password. Your password will remain unchanged. Code: 13009");
                             });
                         }
                     }, err => {
-                        showError("Current password is incorrect");
+                        showError("Current password is incorrect. Code: 13008");
                     });
                 }, err => {
-                    showError("Error changing your password. Please try again.");
+                    showError("Error changing your password. Please try again. Code: 13007");
                 });
             }
         } else {
-            showError("Error changing your password. Please try again.");
+            showError("Error changing your password. Please try again. Code: 11008");
         }
     }, err => {
-        showError("Error changing your password. Please try again.");
+        showError("Error changing your password. Please try again. Code: 11007");
     });
 }
 
@@ -253,16 +253,16 @@ exports.performLogoutEverywhereAll = (req, res, next) => {
                 if(result == true){
                     showSuccess("Successfully logged you out on all your devices");
                 } else {
-                    showError("Error logging your out. Please try again.");
+                    showError("Error logging your out. Please try again. Code: 13013");
                 }
             }, err => {
-                showError("Error logging your out. Please try again.");
+                showError("Error logging your out. Please try again. Code 13012");
             });
         } else {
-            showError("Error logging your out. Please try again.");
+            showError("Error logging your out. Please try again. Code: 11010");
         }
     }, err => {
-        showError("Error logging you out. Please try again.");
+        showError("Error logging you out. Please try again. Code: 11009");
     });
 }
 
@@ -308,15 +308,15 @@ exports.performLogoutEverywhereOther = (req, res, next) => {
                 if(result == true){
                     showSuccess("Successfully logged you out on your other devices");
                 } else {
-                    showError("Error logging your out. Please try again.");
+                    showError("Error logging your out. Please try again. Code: 13015");
                 }
             }, err => {
-                showError("Error logging your out. Please try again.");
+                showError("Error logging your out. Please try again. Code: 13014");
             });
         } else {
-            showError("Error logging your out. Please try again.");
+            showError("Error logging your out. Please try again. Code: 11012");
         }
     }, err => {
-        showError("Error logging you out. Please try again.");
+        showError("Error logging you out. Please try again. Code: 11011");
     });
 }

@@ -26,3 +26,18 @@
 | 12006 | My Account - My Information - Change DOB | Permissions | User does not have change_dob permission on POST |
 | 13005 | My Account - My Information - Change DOB | Saving Data | User.saveUser() promise rejection |
 | 13006 | My Account - My Information - Change DOB | Saving Data | User.saveUser() promise result false |
+| 11007 | My Account - Security - Change Password | Nonce Verification | Nonce verification promise rejection |
+| 11008 | My Account - Security - Change Password | Nonce Verification | Nonce verification promise result false |
+| 13007 | My Account - Security - Change Password | Saving Data | Cannot read password from database |
+| 13008 | My Account - Security - Change Password | Saving Data | Current password is incorrect |
+| 13009 | My Account - Security - Change Password | Saving Data | Auth.encryptPassword() promise rejection |
+| 13010 | My Account - Security - Change Password | Saving Data | Auth.savePasswordToDatabase() promise rejection |
+| 13011 | My Account - Security - Change Password | Saving Data | Auth.savePasswordToDatabase() promise result false |
+| 11009 | My Account - Security - Logout Everywhere All Devices | Nonce Verification | Nonce verification promise rejection |
+| 11010 | My Account - Security - Logout Everywhere All Devices | Nonce Verification | Nonce verification promise result false |
+| 13012 | My Account - Security - Logout Everywhere All Devices | Saving Data | accessToken.deleteUserTokens() promise rejection |
+| 13013 | My Account - Security - Logout Everywhere All Devices | Saving Data | accessToken.deleteUserTokens promise result false |
+| 11011 | My Account - Security - Logout Everywhere Other Devices | Nonce Verification | Nonce verification promise rejection |
+| 11012 | My Account - Security - Logout Everywhere Other Devices | Nonce Verification | Nonce verification promise result false |
+| 13014 | My Account - Security - Logout Everywhere Other Devices | Saving Data | accessToken.deleteUserTokens() promise rejection |
+| 13015 | My Account - Security - Logout Everywhere Other Devices | Saving Data | accessToken.deleteUserTokens promise result false |
