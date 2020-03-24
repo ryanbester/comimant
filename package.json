@@ -21,6 +21,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node app.js",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --passWithNoTests --coverage"
   },

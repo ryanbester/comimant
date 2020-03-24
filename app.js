@@ -5,7 +5,7 @@ Copyright (C) 2019-2020 Bester Intranet
 /*jshint esversion: 8 */
 
 const path = require('path');
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const express = require('express');
 const connect = require('connect');
@@ -35,11 +35,6 @@ app.use(express.urlencoded({
 }));
 
 app.use(express.json());
-
-const options = {
-	key: fs.readFileSync("/etc/nginx/certs/*.besterintranet.com.key", 'utf8'),
-	cert: fs.readFileSync("/etc/nginx/certs/*.besterintranet.com.crt", 'utf8')
-};
 
 app.use(function(req, res, next){
 	res.locals.tld = Util.get_tld();
@@ -73,7 +68,7 @@ app.use(function(err, req, res, next){
 	res.render('error', {useBootstrap: false, title: "Error"});
 });
 
-var httpsServer = https.createServer(options, app);
-httpsServer.listen(process.env.PORT);
+var httpServer = http.createServer(app);
+httpServer.listen(process.env.PORT);
 
 module.exports = app;
