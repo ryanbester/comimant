@@ -269,6 +269,11 @@ label {
     color: #FFFFFF;
 }
 
+.modal__action-button.destructive {
+    background-color: #bb2a2a;
+    color: #FFFFFF;
+}
+
 .modal__action-button:hover {
     box-shadow: 0px 0px 17px 2px #0000006e;
 }
@@ -539,6 +544,12 @@ label {
 
 .home-page-grid-container__widget-menu-item {
     padding: 7px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+    cursor: default;
 }
 
 .home-page-grid-container__widget-menu-item:hover {

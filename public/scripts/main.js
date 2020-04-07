@@ -70,7 +70,151 @@ const loadSkeleton = _ => {
                 showAddWidgetDialog();
             });
 
-            widgetGrid.loadWidgets();
+            widgetGrid.loadWidgets(menuItemClick = (e, widget_id, action) => {
+                e.preventDefault();
+
+                var widget;
+                for(var i = 0; i < widgetGrid.widgets.length; i++) {
+                    if(widgetGrid.widgets[i].id == widget_id) {
+                        widget = widgetGrid.widgets[i];
+                    }
+                }
+
+                if(action == 'edit') {
+                    // show edit dialog
+
+                    var widgetEditDlg = new Dialog("Edit Widget", "<p>Edit Widget</p>", [
+                        {
+                            "title": "Cancel",
+                            "action": "cancel"
+                        },
+                        {
+                            "title": "Save",
+                            "action": "save",
+                            "primary": true
+                        }
+                    ]);
+
+                    widgetEditDlg.createModal(mainContainer, [], (action, content, e) => {
+                        Dialog.deleteAllDialogs();
+
+                        switch(action) {
+                            case 'save':
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    widgetEditDlg.show();
+                } else if(action == 'size') {
+                    // show size dialog
+
+                    var widgetSizeDlg = new Dialog("Widget Size", "<p>Height of widget:</p><br /><input type=\"number\" id=\"widget-size-dialog-height\" value=\"" + widget.height + "\">", [
+                        {
+                            "title": "Cancel",
+                            "action": "cancel"
+                        },
+                        {
+                            "title": "Save",
+                            "action": "save",
+                            "primary": true
+                        }
+                    ]);
+
+                    widgetSizeDlg.createModal(mainContainer, [
+                        {
+                            "id": "widget-size-dialog-height",
+                            "type": "value"
+                        }
+                    ], (action, content, e) => {
+                        Dialog.deleteAllDialogs();
+
+                        switch(action) {
+                            case 'save':
+                                content.forEach(value => {
+                                    if(value.id == "widget-size-dialog-height") {
+                                        widgetGrid.resizeWidget(widget.id, value.content, ids => {
+                                            // Update on database
+                                        });
+                                    }
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    widgetSizeDlg.show();
+                } else if (action == 'position') {
+                    // show position dialog
+
+                    var widgetPosDlg = new Dialog("Widget Position", "<p>Position of widget:</p><br /><input type=\"number\" id=\"widget-pos-dialog-position\" value=\"" + widget.position + "\">", [
+                        {
+                            "title": "Cancel",
+                            "action": "cancel"
+                        },
+                        {
+                            "title": "Save",
+                            "action": "save",
+                            "primary": true
+                        }
+                    ]);
+
+                    widgetPosDlg.createModal(mainContainer, [
+                        {
+                            "id": "widget-pos-dialog-position",
+                            "type": "value"
+                        }
+                    ], (action, content, e) => {
+                        Dialog.deleteAllDialogs();
+
+                        switch(action) {
+                            case 'save':
+                                content.forEach(value => {
+                                    if(value.id == "widget-pos-dialog-position") {
+                                        widgetGrid.moveWidget(widget.id, value.content, ids => {
+                                            // Update on database
+                                        });
+                                    }
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    widgetPosDlg.show();
+                } else if (action == 'delete') {
+                    var deleteWidgetDlg = new Dialog("Delete Widget", "<p>Are you sure you want to delete the widget with ID: " + widget.id + "?</p>", [
+                        {
+                            "title": "No",
+                            "action": "no",
+                            "primary": true
+                        },
+                        {
+                            "title": "Yes",
+                            "action": "yes",
+                            "destructive": true
+                        }
+                    ]);
+
+                    deleteWidgetDlg.createModal(mainContainer, [], (action, content, e) => {
+                        Dialog.deleteAllDialogs();
+
+                        switch(action) {                                
+                            case 'yes':
+                                console.log("Widget deleted");
+                                break;
+                            default:
+                                console.log("Widget deletion aborted by user");
+                                break;
+                        }
+                    });
+
+                    deleteWidgetDlg.show();
+                }
+            });
         });
     }).catch(e => {
         console.log(e);
@@ -118,7 +262,7 @@ const showAddWidgetDialog = _ => {
         }
     ]);
 
-    addWidgetDlg.createModal(mainContainer, (action, content, e) => {
+    addWidgetDlg.createModal(mainContainer, undefined, (action, content, e) => {
         switch(action) {
             case 'cancel':
                 Dialog.deleteAllDialogs();
@@ -127,6 +271,7 @@ const showAddWidgetDialog = _ => {
 
                 break;
             case 'add':
+                console.log(content);
                 alert(content);
                 break;
         }

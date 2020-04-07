@@ -27,7 +27,7 @@ class Dialog {
         });
     }
 
-    createModal(container, callback) {
+    createModal(container, returnData, callback) {
         var modal = document.createElement('div');
         modal.setAttribute('class', 'modal');
     
@@ -51,9 +51,36 @@ class Dialog {
             } else {
                 btn.setAttribute('class', 'modal__action-button');
             }
+
+            if(button.destructive) {
+                btn.classList.add('destructive');
+            }
     
             btn.addEventListener('click', (e) => {
-                callback(button.action, modalContent.innerHTML, e);
+                var content = [];
+                if(returnData !== undefined) {
+                    for(var i = 0; i < returnData.length; i++) {
+                        let id = returnData[i].id;
+                        let type = returnData[i].type;
+
+                        let data = "";
+
+                        if(type == 'value') {
+                            data = document.getElementById(id).value;
+                        } else if(type == 'outer-html') {
+                            data = document.getElementById(id).outerHTML;
+                        } else {
+                            data = document.getElementById(id).innerHTML;
+                        }
+
+                        content.push({
+                            "id": id,
+                            "content": data
+                        });
+                    }
+                }
+
+                callback(button.action, content, e);
             });
         
             var btnText = document.createTextNode(button.title);
