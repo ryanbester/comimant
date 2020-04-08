@@ -91,35 +91,40 @@ var widgetGrid = (function() {
                     var widget_id = widget.getAttribute('data-id');
 
                     fetch('/api/internal/widgets/' + widget_id).then(res => {
-                        res.json().then(json => {
-                            this.widgets.push({
-                                "id": widget_id,
-                                "title": json.widget.title,
-                                "type": json.widget.type,
-                                "position": json.widget.position,
-                                "height": json.widget.height
+                        if(res.ok) {
+                            res.json().then(json => {
+                                this.widgets.push({
+                                    "id": widget_id,
+                                    "title": json.widget.title,
+                                    "type": json.widget.type,
+                                    "position": json.widget.position,
+                                    "height": json.widget.height
+                                });
+                                
+                                var titleContainer = document.createElement('div');
+                                titleContainer.setAttribute('class', 'home-page-grid-container__widget-title');
+
+                                var title = document.createElement('h1');
+                                
+                                var titleText = document.createTextNode(json.widget.title);
+
+                                title.appendChild(titleText);
+
+                                titleContainer.appendChild(title);
+                                
+                                this.createWidgetMenu(widget_id, titleContainer, widgetMenuItemCallback);
+
+                                var widgetContent = document.createElement('div');
+                                widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
+                                widgetContent.innerHTML = "ID: " + widget_id + "<br />Position: " + json.widget.position;
+
+                                widget.setAttribute('class', 'home-page-grid-container__widget');
+                                widget.appendChild(titleContainer);
+                                widget.appendChild(widgetContent);
                             });
-                            
-                            var titleContainer = document.createElement('div');
-                            titleContainer.setAttribute('class', 'home-page-grid-container__widget-title');
-
-                            var title = document.createElement('h1');
-                            
-                            var titleText = document.createTextNode(json.widget.title);
-
-                            title.appendChild(titleText);
-
-                            titleContainer.appendChild(title);
-                            
-                            this.createWidgetMenu(widget_id, titleContainer, widgetMenuItemCallback);
-
-                            var widgetContent = document.createElement('div');
-                            widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
-
-                            widget.setAttribute('class', 'home-page-grid-container__widget');
-                            widget.appendChild(titleContainer);
-                            widget.appendChild(widgetContent);
-                        });
+                        } else {
+                            new BINotification('error', "Error loading widget").showNotification();
+                        }
                     }).catch(e => {
                         console.log(e);
                     });
@@ -198,7 +203,7 @@ var widgetGrid = (function() {
                             this.widgets[i].height = height;
                         }
                     }
-                    
+
                     updateCallback([
                         {
                             "id": widget_id,

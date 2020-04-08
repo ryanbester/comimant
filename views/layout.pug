@@ -36,6 +36,7 @@ html(lang='en-gb')
             each script in scriptsBefore
                 script(src= script)
         script(src='https://www.besterintranet.' + tld + '/scripts/dialog.js' async)
+        script(src='https://www.besterintranet.' + tld + '/scripts/notification.js' async)
         script(src='https://www.besterintranet.' + tld + '/scripts/main.js' async)
         script.
             if('serviceWorker' in navigator) {
@@ -52,3 +53,4 @@ html(lang='en-gb')
     body
         .container
             block content
+            .notification-container#notification-container

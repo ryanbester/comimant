@@ -41,181 +41,277 @@ const checkUser = _ => {
 
 const loadSkeleton = _ => {
     fetch('/api/internal/widgets/').then(res => {
-        res.json().then(json => {
-            json.widgets.sort((a, b) => {
-                return a.position - b.position;
-            });
-
-            for(var i = 0; i < json.widgets.length; i++) {
-                var widget = json.widgets[i];
-
-                if(widget.position === undefined || widget.position == null ) {
-                    continue;
-                }
-
-                if(widget.position == 0 || widget.position == '0') {
-                    continue;
-                }
-
-                widgetGrid.addWidget(widget.widget_id, widget.height);
-            }
-
-            widgetGrid.addWidgetBtn(addWidgetClick = (e) => {
-                e.preventDefault();
-                
-                navigateWithoutRefresh('/add', 'Add Widget | Bester Intranet', {
-                    'action': 'add-widget'
+        if(res.ok) {
+            res.json().then(json => {
+                json.widgets.sort((a, b) => {
+                    return a.position - b.position;
                 });
 
-                showAddWidgetDialog();
-            });
+                for(var i = 0; i < json.widgets.length; i++) {
+                    var widget = json.widgets[i];
 
-            widgetGrid.loadWidgets(menuItemClick = (e, widget_id, action) => {
-                e.preventDefault();
-
-                var widget;
-                for(var i = 0; i < widgetGrid.widgets.length; i++) {
-                    if(widgetGrid.widgets[i].id == widget_id) {
-                        widget = widgetGrid.widgets[i];
+                    if(widget.position === undefined || widget.position == null ) {
+                        continue;
                     }
+
+                    if(widget.position == 0 || widget.position == '0') {
+                        continue;
+                    }
+
+                    widgetGrid.addWidget(widget.widget_id, widget.height);
                 }
 
-                if(action == 'edit') {
-                    // show edit dialog
-
-                    var widgetEditDlg = new Dialog("Edit Widget", "<p>Edit Widget</p>", [
-                        {
-                            "title": "Cancel",
-                            "action": "cancel"
-                        },
-                        {
-                            "title": "Save",
-                            "action": "save",
-                            "primary": true
-                        }
-                    ]);
-
-                    widgetEditDlg.createModal(mainContainer, [], (action, content, e) => {
-                        Dialog.deleteAllDialogs();
-
-                        switch(action) {
-                            case 'save':
-                                break;
-                            default:
-                                break;
-                        }
+                widgetGrid.addWidgetBtn(addWidgetClick = (e) => {
+                    e.preventDefault();
+                    
+                    navigateWithoutRefresh('/add', 'Add Widget | Bester Intranet', {
+                        'action': 'add-widget'
                     });
 
-                    widgetEditDlg.show();
-                } else if(action == 'size') {
-                    // show size dialog
+                    showAddWidgetDialog();
+                });
 
-                    var widgetSizeDlg = new Dialog("Widget Size", "<p>Height of widget:</p><br /><input type=\"number\" id=\"widget-size-dialog-height\" value=\"" + widget.height + "\">", [
-                        {
-                            "title": "Cancel",
-                            "action": "cancel"
-                        },
-                        {
-                            "title": "Save",
-                            "action": "save",
-                            "primary": true
+                widgetGrid.loadWidgets(menuItemClick = (e, widget_id, action) => {
+                    e.preventDefault();
+
+                    var widget;
+                    for(var i = 0; i < widgetGrid.widgets.length; i++) {
+                        if(widgetGrid.widgets[i].id == widget_id) {
+                            widget = widgetGrid.widgets[i];
                         }
-                    ]);
+                    }
 
-                    widgetSizeDlg.createModal(mainContainer, [
-                        {
-                            "id": "widget-size-dialog-height",
-                            "type": "value"
-                        }
-                    ], (action, content, e) => {
-                        Dialog.deleteAllDialogs();
+                    if(action == 'edit') {
+                        // show edit dialog
 
-                        switch(action) {
-                            case 'save':
-                                content.forEach(value => {
-                                    if(value.id == "widget-size-dialog-height") {
-                                        widgetGrid.resizeWidget(widget.id, value.content, ids => {
-                                            // Update on database
-                                        });
-                                    }
-                                });
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                        var widgetEditDlg = new Dialog("Edit Widget", "<p>Edit Widget</p>", [
+                            {
+                                "title": "Cancel",
+                                "action": "cancel"
+                            },
+                            {
+                                "title": "Save",
+                                "action": "save",
+                                "primary": true
+                            }
+                        ]);
 
-                    widgetSizeDlg.show();
-                } else if (action == 'position') {
-                    // show position dialog
+                        widgetEditDlg.createModal(mainContainer, [], (action, content, e) => {
+                            Dialog.deleteAllDialogs();
 
-                    var widgetPosDlg = new Dialog("Widget Position", "<p>Position of widget:</p><br /><input type=\"number\" id=\"widget-pos-dialog-position\" value=\"" + widget.position + "\">", [
-                        {
-                            "title": "Cancel",
-                            "action": "cancel"
-                        },
-                        {
-                            "title": "Save",
-                            "action": "save",
-                            "primary": true
-                        }
-                    ]);
+                            switch(action) {
+                                case 'save':
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
 
-                    widgetPosDlg.createModal(mainContainer, [
-                        {
-                            "id": "widget-pos-dialog-position",
-                            "type": "value"
-                        }
-                    ], (action, content, e) => {
-                        Dialog.deleteAllDialogs();
+                        widgetEditDlg.show();
+                    } else if(action == 'size') {
+                        // show size dialog
 
-                        switch(action) {
-                            case 'save':
-                                content.forEach(value => {
-                                    if(value.id == "widget-pos-dialog-position") {
-                                        widgetGrid.moveWidget(widget.id, value.content, ids => {
-                                            // Update on database
-                                        });
-                                    }
-                                });
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                        var widgetSizeDlg = new Dialog("Widget Size", "<p>Height of widget:</p><br /><input type=\"number\" id=\"widget-size-dialog-height\" value=\"" + widget.height + "\">", [
+                            {
+                                "title": "Cancel",
+                                "action": "cancel"
+                            },
+                            {
+                                "title": "Save",
+                                "action": "save",
+                                "primary": true
+                            }
+                        ]);
 
-                    widgetPosDlg.show();
-                } else if (action == 'delete') {
-                    var deleteWidgetDlg = new Dialog("Delete Widget", "<p>Are you sure you want to delete the widget with ID: " + widget.id + "?</p>", [
-                        {
-                            "title": "No",
-                            "action": "no",
-                            "primary": true
-                        },
-                        {
-                            "title": "Yes",
-                            "action": "yes",
-                            "destructive": true
-                        }
-                    ]);
+                        widgetSizeDlg.createModal(mainContainer, [
+                            {
+                                "id": "widget-size-dialog-height",
+                                "type": "value"
+                            }
+                        ], (action, content, e) => {
+                            Dialog.deleteAllDialogs();
 
-                    deleteWidgetDlg.createModal(mainContainer, [], (action, content, e) => {
-                        Dialog.deleteAllDialogs();
+                            switch(action) {
+                                case 'save':
+                                    content.forEach(value => {
+                                        if(value.id == "widget-size-dialog-height") {
+                                            widgetGrid.resizeWidget(widget.id, value.content, async ids => {
+                                                var errorNotiSent = false;
 
-                        switch(action) {                                
-                            case 'yes':
-                                console.log("Widget deleted");
-                                break;
-                            default:
-                                console.log("Widget deletion aborted by user");
-                                break;
-                        }
-                    });
+                                                const save = async (id, height) => {
+                                                    var body = new URLSearchParams();
+                                                    body.append("height", ids[i].height);
 
-                    deleteWidgetDlg.show();
-                }
+                                                    await fetch('/api/internal/widgets/' + ids[i].id, {
+                                                        method: 'PUT',
+                                                        headers: {
+                                                            "Content-Type": "application/x-www-form-urlencoded",
+                                                            "pragma": "no-cache",
+                                                            "cache-control": "no-cache"
+                                                        },
+                                                        body: body,
+                                                        redirect: 'follow'
+                                                    }).then(res => {
+                                                        if(!res.ok) {
+                                                            if(!errorNotiSent) {
+                                                                new BINotification('error', "Error saving widget layout").showNotification();
+                                                                errorNotiSent = true;
+                                                            }
+                                                        }
+                                                    }).catch(e => {
+                                                        console.log(e);
+                                                        if(!errorNotiSent) {
+                                                            new BINotification('error', "Error saving widget layout").showNotification();
+                                                            errorNotiSent = true;
+                                                        }
+                                                    });
+                                                }
+
+                                                var headers = new Headers();
+                                                headers.append("Content-Type", "application/x-www-form-urlencoded");
+
+                                                for(var i = 0; i < ids.length; i++) {
+                                                    await save(ids[i].id, ids[i].height);
+                                                }
+
+                                                if(!errorNotiSent) {
+                                                    new BINotification('success', "Saved widget layout").showNotification();
+                                                    notificationSent = true;
+                                                }
+
+                                                // Invalid cache
+                                                caches.open('static-v1').then(cache => {
+                                                    fetch('/api/internal/widgets/').then(res => {
+                                                        cache.put('/api/internal/widgets/', res.clone());
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+
+                        widgetSizeDlg.show();
+                    } else if (action == 'position') {
+                        // show position dialog
+
+                        var widgetPosDlg = new Dialog("Widget Position", "<p>Position of widget:</p><br /><input type=\"number\" id=\"widget-pos-dialog-position\" value=\"" + widget.position + "\">", [
+                            {
+                                "title": "Cancel",
+                                "action": "cancel"
+                            },
+                            {
+                                "title": "Save",
+                                "action": "save",
+                                "primary": true
+                            }
+                        ]);
+
+                        widgetPosDlg.createModal(mainContainer, [
+                            {
+                                "id": "widget-pos-dialog-position",
+                                "type": "value"
+                            }
+                        ], (action, content, e) => {
+                            Dialog.deleteAllDialogs();
+
+                            switch(action) {
+                                case 'save':
+                                    content.forEach(value => {
+                                        if(value.id == "widget-pos-dialog-position") {
+                                            widgetGrid.moveWidget(widget.id, value.content, async ids => {
+                                                var errorNotiSent = false;
+
+                                                const save = async (id, position) => {
+                                                    var body = new URLSearchParams();
+                                                    body.append("position", position.toString().toLowerCase());
+
+                                                    await fetch('/api/internal/widgets/' + id, {
+                                                        method: 'PUT',
+                                                        headers: {
+                                                            "Content-Type": "application/x-www-form-urlencoded",
+                                                            "pragma": "no-cache",
+                                                            "cache-control": "no-cache"
+                                                        },
+                                                        body: body,
+                                                        redirect: 'follow'
+                                                    }).then(res => {
+                                                        if(!res.ok) {
+                                                            if(!errorNotiSent) {
+                                                                new BINotification('error', "Error saving widget layout").showNotification();
+                                                                errorNotiSent = true;
+                                                            }
+                                                        }
+                                                    }).catch(e => {
+                                                        console.log(e);
+                                                        if(!errorNotiSent) {
+                                                            new BINotification('error', "Error saving widget layout").showNotification();
+                                                            errorNotiSent = true;
+                                                        }
+                                                    });
+                                                }
+
+                                                for(var i = 0; i < ids.length; i++) {
+                                                    await save(ids[i].id, ids[i].position);
+                                                }
+
+                                                if(!errorNotiSent) {
+                                                    new BINotification('success', "Saved widget layout").showNotification();
+                                                }
+
+                                                // Invalid cache
+                                                caches.open('static-v1').then(cache => {
+                                                    fetch('/api/internal/widgets/').then(res => {
+                                                        cache.put('/api/internal/widgets/', res.clone());
+                                                    });
+                                                });
+                                            });
+                                        }
+                                    });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+
+                        widgetPosDlg.show();
+                    } else if (action == 'delete') {
+                        var deleteWidgetDlg = new Dialog("Delete Widget", "<p>Are you sure you want to delete the widget with ID: " + widget.id + "?</p>", [
+                            {
+                                "title": "No",
+                                "action": "no",
+                                "primary": true
+                            },
+                            {
+                                "title": "Yes",
+                                "action": "yes",
+                                "destructive": true
+                            }
+                        ]);
+
+                        deleteWidgetDlg.createModal(mainContainer, [], (action, content, e) => {
+                            Dialog.deleteAllDialogs();
+
+                            switch(action) {                                
+                                case 'yes':
+                                    console.log("Widget deleted");
+                                    break;
+                                default:
+                                    console.log("Widget deletion aborted by user");
+                                    break;
+                            }
+                        });
+
+                        deleteWidgetDlg.show();
+                    }
+                });
             });
-        });
+        } else {
+            new BINotification('error', "Error loading widgets").showNotification();
+        }
     }).catch(e => {
         console.log(e);
     });
