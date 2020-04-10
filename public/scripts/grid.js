@@ -34,6 +34,11 @@ $(document).ready(_ => {
 var widgetGrid = (function() {
     var grid = {
         widgets : [],
+        getNextPosition : function() {
+            return Math.max.apply(Math, this.widgets.map(widget => {
+                return widget.position;
+            })) + 1;
+        },
         addWidget : function(widget_id, height) {
             var widget = document.createElement('div');
             widget.setAttribute('class', 'home-page-grid-container__widget loading');
@@ -48,6 +53,35 @@ var widgetGrid = (function() {
             widget.style.gridRowEnd = "span " + rowSpan;
 
             container.appendChild(widget);
+        },
+        addLoadedWidget : function(widget_id, title, content, height, widgetMenuItemCallback) {
+            var widget = document.createElement('div');
+            widget.setAttribute('class', 'home-page-grid-container__widget');
+
+            widget.setAttribute('data-id', widget_id);
+
+            var container = document.getElementsByClassName('home-page-grid-container')[0];
+            var rowHeight = parseInt(window.getComputedStyle(container).getPropertyValue('grid-auto-rows'));
+            var rowGap = parseInt(window.getComputedStyle(container).getPropertyValue('grid-row-gap'));
+
+            var rowSpan = Math.ceil(height / (rowHeight + rowGap));
+            widget.style.gridRowEnd = "span " + rowSpan;
+
+            var titleContainer = document.createElement('div');
+            titleContainer.setAttribute('class', 'home-page-grid-container__widget-title');
+            titleContainer.innerHTML = title;
+            
+            this.createWidgetMenu(widget_id, titleContainer, widgetMenuItemCallback);
+
+            var widgetContent = document.createElement('div');
+            widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
+            
+            widgetContent.innerHTML = content;
+
+            widget.appendChild(titleContainer);
+            widget.appendChild(widgetContent);
+
+            container.insertBefore(widget, document.getElementsByClassName('home-page-grid-container__widget--add')[0]);
         },
         addWidgetBtn : function(addWidgetBtnCallback) {
             var widget = document.createElement('div');
@@ -116,7 +150,8 @@ var widgetGrid = (function() {
 
                                 var widgetContent = document.createElement('div');
                                 widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
-                                widgetContent.innerHTML = "ID: " + widget_id + "<br />Position: " + json.widget.position;
+
+                                getWidgetContent(json.widget.type, json.widget.data, widgetContent);
 
                                 widget.setAttribute('class', 'home-page-grid-container__widget');
                                 widget.appendChild(titleContainer);

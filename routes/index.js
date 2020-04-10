@@ -26,6 +26,7 @@ const { AccessToken, Nonce, User } = require('../core/auth');
 
 const internalAPIMain = require('../routes/api/internal/main');
 const internalAPIWidgets = require('../routes/api/internal/widgets');
+const internalAPIWeather = require('../routes/api/internal/weather');
 
 const showHomePage = (req, res, next) => {
     const renderHomePage = (nonce) => {
@@ -34,7 +35,9 @@ const showHomePage = (req, res, next) => {
             tld: Util.get_tld(),
             logoutNonce: nonce,
             scriptsBefore: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js'
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js',
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/widget.js',
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/add-widget-dialog.js'
             ]
         });
     }
@@ -138,6 +141,7 @@ router.get(myAccountPath + 'test/', (req, res, next) => {
 // Internal API
 const internalAPIPath = '/api/internal/';
 router.all(internalAPIPath + 'widgets/*', internalAPIMain.userCheck);
+router.all(internalAPIPath + '/weather/*', internalAPIMain.userCheck);
 
 router.get(internalAPIPath + 'widgets/', internalAPIWidgets.getAllWidgets);
 router.post(internalAPIPath + 'widgets/', internalAPIWidgets.addWidget);
@@ -145,6 +149,8 @@ router.post(internalAPIPath + 'widgets/', internalAPIWidgets.addWidget);
 router.get(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.getWidget);
 router.delete(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.deleteWidget);
 router.put(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.updateWidget);
+
+router.get(internalAPIPath + 'weather/', internalAPIWeather.getWeather);
 // Public API
 
 // Admin section

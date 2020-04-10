@@ -27,7 +27,7 @@ class Dialog {
         });
     }
 
-    createModal(container, returnData, callback) {
+    createModal(container, returnData, callback, createdCallback) {
         var modal = document.createElement('div');
         modal.setAttribute('class', 'modal');
     
@@ -97,6 +97,10 @@ class Dialog {
         container.appendChild(modal);
 
         this.modal = modal;
+        
+        if(createdCallback != undefined) {
+            createdCallback(modal);
+        }
     }
 
     createModeless() {

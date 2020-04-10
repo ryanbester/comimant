@@ -8,9 +8,9 @@ block content
                 tr
                     td
                         a.logo-link(href='https://www.besterintranet.' + (process.env.NODE_ENV == 'development' ? 'dev' : 'com') + '/')
-                            img(src="https://static.besterintranet.com/assets/images/logo_white.png" srcset="https://static.besterintranet.com/assets/images/logo_white96x96.png 2x" height="48" width="48")
+                            img(src="https://static.besterintranet.com/assets/images/logo_white.png" srcset="https://static.besterintranet.com/assets/images/logo_white96x96.png 2x" height="48" width="48" alt="Logo")
                     td
-                        a.logo-link(href='https://www.besterintranet.' + (process.env.NODE_ENV == 'development' ? 'dev' : 'com') + '/')
+                        a.logo-link(title="Homepage" href='https://www.besterintranet.' + (process.env.NODE_ENV == 'development' ? 'dev' : 'com') + '/')
                             h1 Bester Intranet
         if user
             .main-header-right
@@ -20,7 +20,7 @@ block content
                         img(src="https://static.besterintranet.com/assets/images/error.svg" height="22" width="22")
                         span.main-header-user-dropdown__error-tooltip-text Cannot confirm it's you
                     h1.main-header-dropdown__header#main-header-dropdown-header #{user.first_name} #{user.last_name}
-                    img.main-header-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
+                    img.main-header-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x" alt="Dropdown arrow")
                     .main-header-dropdown__content
                         ul.main-header-dropdown-content__list
                             li.main-header-dropdown__item

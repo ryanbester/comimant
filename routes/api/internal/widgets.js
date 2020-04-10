@@ -173,7 +173,7 @@ module.exports.addWidget = (req, res, next) => {
 
     if(data.length >= 1) {
         try {
-            JSON.parse(data);
+            data = JSON.parse(data);
         } catch {
             badRequest("Data is not valid JSON");
         }
