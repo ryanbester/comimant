@@ -37,7 +37,8 @@ const showHomePage = (req, res, next) => {
             scriptsBefore: [
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js',
                 'https://www.besterintranet.' + Util.get_tld() + '/scripts/widget.js',
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/add-widget-dialog.js'
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/add-widget-dialog.js',
+                'https://www.besterintranet.' + Util.get_tld() + '/scripts/edit-widget-dialog.js'
             ]
         });
     }

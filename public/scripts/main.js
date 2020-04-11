@@ -50,9 +50,22 @@ const widgetMenuItemClick = (e, widget_id, action) => {
     }
 
     if(action == 'edit') {
-        // show edit dialog
-
-        var widgetEditDlg = new Dialog("Edit Widget", "<p>Edit Widget</p>", [
+        var editWidgetDlg = new Dialog("Edit Widget", `
+            <label class="heading" for="widget-edit-dialog-title">Title</label>
+            <input type="text" id="widget-edit-dialog-title" placeholder="Title" value="` + widget.title + `">
+            <h2>Properties</h2>
+            <div id="widget-edit-dialog-properties-container">
+                <p id="widget-edit-dialog-properties-message"></p>
+            </div>
+            <h2>Preview</h2>
+            <div id="widget-edit-dialog-preview">
+                <div id="widget-edit-dialog-preview-title" class="home-page-grid-container__widget-title">
+                    <h1></h1>
+                </div>
+                <div id="widget-edit-dialog-preview-content" class="home-page-grid-container__widget-content">
+                </div>
+            </div>
+        `, [
             {
                 "title": "Cancel",
                 "action": "cancel"
@@ -64,18 +77,137 @@ const widgetMenuItemClick = (e, widget_id, action) => {
             }
         ]);
 
-        widgetEditDlg.createModal(mainContainer, [], (action, content, e) => {
-            Dialog.deleteAllDialogs();
-
+        editWidgetDlg.createModal(mainContainer, [
+            {
+                "id": "widget-edit-dialog-title",
+                "type": "value"
+            },
+            {
+                "id": "widget-edit-dialog-properties-container",
+                "type": "html"
+            },
+            {
+                "id": "widget-edit-dialog-preview-title",
+                "type": "html"
+            },
+            {
+                "id": "widget-edit-dialog-preview-content",
+                "type": "html"
+            }
+        ], (action, content, e) => {
             switch(action) {
-                case 'save':
+                case 'cancel':
+                    Dialog.deleteAllDialogs();
                     break;
-                default:
+                case 'save':
+                    var properties = [];
+
+                    $('#widget-edit-dialog-properties-container input').each(function(){
+                        var inputType = $(this).attr('type');
+
+                        if(inputType == 'radio') {
+                            if($(this).is(':checked')) {
+                                properties.push({
+                                    id: $(this).attr('name'),
+                                    value: $(this).val()
+                                });
+                            }
+                        } else if(inputType == 'checkbox') {
+                            if($(this).is(':checked')) {
+                                properties.push({
+                                    id: $(this).attr('id'),
+                                    value: true
+                                });
+                            } else {
+                                properties.push({
+                                    id: $(this).attr('id'),
+                                    value: false
+                                });
+                            }
+                        } else {
+                            properties.push({
+                                id: $(this).attr('id'),
+                                value: $(this).val()
+                            });
+                        }
+                    });
+
+                    $('#widget-edit-dialog-properties-container select').each(function(){
+                        properties.push({
+                            id: $(this).attr('id'),
+                            value: $(this).val()
+                        });
+                    });
+
+                    Dialog.deleteAllDialogs();
+
+                    var title, widgetContent, propertiesHtml;
+
+                    for(var i = 0; i < content.length; i++) {
+                        if(content[i].id == 'widget-edit-dialog-preview-title') {
+                            title = content[i].content;
+                        }
+
+                        if(content[i].id == 'widget-edit-dialog-properties-container') {
+                            propertiesHtml = content[i].content;
+                        }
+
+                        if(content[i].id == 'widget-edit-dialog-preview-content') {
+                            widgetContent = content[i].content;
+                        }
+                    }
+
+                    var data = parseProperties(widget.type, properties, propertiesHtml);
+                    var titleText = new DOMParser().parseFromString(title, 'text/xml').firstChild.innerHTML;
+
+                    var body = new URLSearchParams();
+                    body.append("title", titleText);
+                    body.append('data', JSON.stringify(data));
+
+                    fetch('/api/internal/widgets/' + widget.id, {
+                        method: 'PUT',
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "pragma": "no-cache",
+                            "cache-control": "no-cache"
+                        },
+                        body: body,
+                        redirect: 'follow'
+                    }).then(res => {
+                        if(!res.ok) {
+                            new BINotification('error', "Error saving widget").showNotification();
+                        } else {
+                            res.json().then(json => {
+                                for(var i = 0; i < widgetGrid.widgets.length; i++) {
+                                    if(widgetGrid.widgets[i].id == widget.id) {
+                                        widgetGrid.widgets[i].title = titleText;
+                                        widgetGrid.widgets[i].data = data;
+                                    }
+                                }
+
+                                widgetGrid.updateWidget(widget.id, titleText, widgetContent);
+
+                                // Invalid cache
+                                caches.open('static-v1').then(cache => {
+                                    fetch('/api/internal/widgets/').then(res => {
+                                        cache.put('/api/internal/widgets/', res.clone());
+                                    });
+                                });
+
+                                new BINotification('success', "Saved widget").showNotification();
+                            });
+                        }
+                    }).catch(e => {
+                        console.log(e);
+                        new BINotification('error', "Error saving widget").showNotification();
+                    });
                     break;
             }
+        }, modal => {
+            editWidgetDialog.created(widget);
         });
 
-        widgetEditDlg.show();
+        editWidgetDlg.show();
     } else if(action == 'size') {
         // show size dialog
 
@@ -247,7 +379,7 @@ const widgetMenuItemClick = (e, widget_id, action) => {
 
         widgetPosDlg.show();
     } else if (action == 'delete') {
-        var deleteWidgetDlg = new Dialog("Delete Widget", "<p>Are you sure you want to delete the widget with ID: " + widget.id + "?</p>", [
+        var deleteWidgetDlg = new Dialog("Delete Widget", "<p>Are you sure you want to delete the widget: " + widget.title + "?</p>", [
             {
                 "title": "No",
                 "action": "no",
@@ -265,10 +397,104 @@ const widgetMenuItemClick = (e, widget_id, action) => {
 
             switch(action) {                                
                 case 'yes':
-                    console.log("Widget deleted");
+                    var widgetFound = false;
+                    var widgetIndexToRemove;
+                    var widgetsToMove = [];
+
+                    widgetGrid.widgets.sort((a, b) => {
+                        return a.position - b.position;
+                    });
+
+                    for(var i = 0; i < widgetGrid.widgets.length; i++) {
+                        if(widgetFound == true) {
+                            widgetGrid.widgets[i].position -= 1;
+
+                            widgetsToMove.push({
+                                id: widgetGrid.widgets[i].id,
+                                position: widgetGrid.widgets[i].position
+                            });
+                        }
+
+                        if(widgetGrid.widgets[i].id == widget.id) {
+                            widgetIndexToRemove = i;
+                            widgetFound = true;
+                        }
+                    }
+
+                    widgetGrid.widgets.splice(widgetIndexToRemove, 1);
+                    widgetGrid.deleteWidget(widget.id);
+
+                    var errorNotiSent = false;
+
+                    fetch('/api/internal/widgets/' + widget.id, {
+                        method: 'DELETE',
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "pragma": "no-cache",
+                            "cache-control": "no-cache"
+                        },
+                        redirect: 'follow'
+                    }).then(async res => {
+                        if(!res.ok) {
+                            if(!errorNotiSent) {
+                                new BINotification('error', "Error deleting widget").showNotification();
+                                errorNotiSent = true;
+                            }
+                        } else {
+                            const move = async (id, position) => {
+                                var body = new URLSearchParams();
+                                body.append("position", position);
+        
+                                await fetch('/api/internal/widgets/' + id, {
+                                    method: 'PUT',
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded",
+                                        "pragma": "no-cache",
+                                        "cache-control": "no-cache"
+                                    },
+                                    body: body,
+                                    redirect: 'follow'
+                                }).then(res => {
+                                    if(!res.ok) {
+                                        if(!errorNotiSent) {
+                                            new BINotification('error', "Error saving widget layout").showNotification();
+                                            errorNotiSent = true;
+                                        }
+                                    }
+                                }).catch(e => {
+                                    console.log(e);
+                                    if(!errorNotiSent) {
+                                        new BINotification('error', "Error saving widget layout").showNotification();
+                                        errorNotiSent = true;
+                                    }
+                                });
+                            }
+
+                            for(var i = 0; i < widgetsToMove.length; i++) {
+                                await move(widgetsToMove[i].id, widgetsToMove[i].position);
+                            }
+        
+                            if(!errorNotiSent) {
+                                new BINotification('success', "Saved widget layout").showNotification();
+                                notificationSent = true;
+                            }
+        
+                            // Invalid cache
+                            caches.open('static-v1').then(cache => {
+                                fetch('/api/internal/widgets/').then(res => {
+                                    cache.put('/api/internal/widgets/', res.clone());
+                                });
+                            });
+                        }
+                    }).catch(e => {
+                        if(!errorNotiSent) {
+                            new BINotification('error', "Error deleting widget").showNotification();
+                            errorNotiSent = true;
+                        }
+                    });
+
                     break;
                 default:
-                    console.log("Widget deletion aborted by user");
                     break;
             }
         });
@@ -531,7 +757,6 @@ const showAddWidgetDialog = _ => {
                 }).then(res => {
                     if(!res.ok) {
                         new BINotification('error', "Error saving new widget").showNotification();
-                        errorNotiSent = true;
                     } else {
                         res.json().then(json => {
                             widgetGrid.widgets.push({
@@ -539,7 +764,8 @@ const showAddWidgetDialog = _ => {
                                 "title": titleText,
                                 "type": type,
                                 "position": position,
-                                "height": height
+                                "height": height,
+                                "data": data
                             });
             
                             widgetGrid.addLoadedWidget(json.widget.id, title, widgetContent, height, widgetMenuItemClick);
@@ -550,12 +776,13 @@ const showAddWidgetDialog = _ => {
                                     cache.put('/api/internal/widgets/', res.clone());
                                 });
                             });
+
+                            new BINotification('success', "Saved new widget").showNotification();
                         });
                     }
                 }).catch(e => {
                     console.log(e);
                     new BINotification('error', "Error saving new widget").showNotification();
-                    errorNotiSent = true;
                 });
                 break;
         }

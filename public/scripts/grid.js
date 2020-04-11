@@ -83,6 +83,31 @@ var widgetGrid = (function() {
 
             container.insertBefore(widget, document.getElementsByClassName('home-page-grid-container__widget--add')[0]);
         },
+        updateWidget : function(widget_id, title, content) {
+            var container = document.getElementsByClassName('home-page-grid-container')[0];
+            var widgets = container.childNodes;
+
+            widgets.forEach(widget => {
+                if(!widget.classList.contains('home-page-grid-container__widget--add')) {
+                    if(widget.getAttribute('data-id') == widget_id) {
+                        widget.getElementsByClassName('home-page-grid-container__widget-title')[0].getElementsByTagName('h1')[0].innerHTML = title;
+                        widget.getElementsByClassName('home-page-grid-container__widget-content')[0].innerHTML = content;
+                    }
+                }
+            });
+        },
+        deleteWidget : function(widget_id) {
+            var container = document.getElementsByClassName('home-page-grid-container')[0];
+            var widgets = container.childNodes;
+
+            widgets.forEach(widget => {
+                if(!widget.classList.contains('home-page-grid-container__widget--add')) {
+                    if(widget.getAttribute('data-id') == widget_id) {
+                        widget.remove();
+                    }
+                }
+            });
+        },
         addWidgetBtn : function(addWidgetBtnCallback) {
             var widget = document.createElement('div');
             widget.setAttribute('class', 'home-page-grid-container__widget home-page-grid-container__widget--add');
@@ -132,7 +157,8 @@ var widgetGrid = (function() {
                                     "title": json.widget.title,
                                     "type": json.widget.type,
                                     "position": json.widget.position,
-                                    "height": json.widget.height
+                                    "height": json.widget.height,
+                                    "data": json.widget.data
                                 });
                                 
                                 var titleContainer = document.createElement('div');

@@ -1195,7 +1195,7 @@ label {
     margin: 0;
 }
 
-#widget-add-dialog-preview {
+#widget-add-dialog-preview, #widget-edit-dialog-preview {
     min-height: 100px;
     border-radius: 7px;
     background-color: #FFFFFF;

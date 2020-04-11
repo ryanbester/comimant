@@ -55,15 +55,18 @@ const parseWeatherProperties = (properties, html) => {
     var data = {};
 
     for(var i = 0; i < properties.length; i++) {
-        if(properties[i].id == 'widget-add-dialog-weather-source') {
+        if(properties[i].id == 'widget-add-dialog-weather-source'
+            || properties[i].id == 'widget-edit-dialog-weather-source') {
             data.source = properties[i].value;
         }
 
-        if(properties[i].id == 'widget-add-dialog-weather-location') {
+        if(properties[i].id == 'widget-add-dialog-weather-location'
+            || properties[i].id == 'widget-edit-dialog-weather-location') {
             data.location = properties[i].value;
         }
 
-        if(properties[i].id == 'widget-add-dialog-weather-temperature') {
+        if(properties[i].id == 'widget-add-dialog-weather-temperature'
+            || properties[i].id == 'widget-edit-dialog-weather-temperature') {
             data.units = properties[i].value;
         }
     }
