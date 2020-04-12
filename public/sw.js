@@ -79,7 +79,22 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     // Only use service worker for GET requests
     if(event.request.method == 'GET') {
-        if(event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+        if(event.request.mode == 'cors' || event.request.mode == 'no-cors') {
+            if(event.request.url.endsWith('nc=1')) {
+                var newUrl = event.request.url.substr(0, event.request.url.length - 5);
+                event.respondWith(
+                    fetch(newUrl).catch(_ => {
+                        return caches.match('/offline-page.html');
+                    }).then(response => {
+                        caches.open(staticCacheName).then(cache => {
+                            cache.put(newUrl, response.clone());
+                        });
+
+                        return response.clone();
+                    })
+                );
+            }
+        } else if(event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
             if(event.request.url.startsWith("https://" + self.location.hostname + "/")) {
                 if(event.request.url.endsWith('nc=1')) {
                     var newUrl = event.request.url.substr(0, event.request.url.length - 5);

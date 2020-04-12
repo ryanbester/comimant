@@ -51,7 +51,27 @@ module.exports.getAllWidgets = (req, res, next) => {
             serverError("Cannot retrieve widgets list");
         })
     }, e => {
-        serverError('Cannot retrieve widgets list');
+        if(widgetManager.prepareUser()) {
+            widgetManager.saveLayout().then(result => {
+                if(result == true) {
+                    var layout = JSON.stringify(widgetManager.layout);
+                    
+                    res.status(200).json(JSON.parse(layout, (key, value) => {
+                        if(key == 'widget_id') {
+                            return value.toLowerCase();
+                        }
+                    
+                        return value;
+                    }));
+                } else {
+                    serverError("Cannot retrieve widgets list");
+                }
+            }, err => {
+                serverError("Cannot retrieve widgets list");
+            });
+        } else {
+            serverError("Cannot retrieve widgets list");
+        }
     });
 }
 

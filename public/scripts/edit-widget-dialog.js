@@ -20,6 +20,9 @@ var editWidgetDialog = function(){
                 case 'weather':
                     this.weatherProperties(container, widget);
                     break;
+                case 'news':
+                    this.newsProperties(container, widget);
+                    break;
                 default:
                     container.innerHTML = "<p id=\"widget-edit-dialog-properties-message\">Unknown widget type</p>"
             }
@@ -37,7 +40,6 @@ var editWidgetDialog = function(){
                 <label for="widget-edit-dialog-weather-source">Source</label>
                 <select id="widget-edit-dialog-weather-source">
                     <option ` + (widget.data.source == 'openweathermap' ? 'selected' : '') + ` value="openweathermap">OpenWeatherMap</option>
-                    <option ` + (widget.data.source == 'test' ? 'selected' : '') + ` value="test">Test</option>
                 </select>
                 <br />
                 <label for="widget-edit-dialog-weather-location">Location</label>
@@ -64,6 +66,26 @@ var editWidgetDialog = function(){
             }));
 
             $('input[name=widget-edit-dialog-weather-temperature]').change(e => {
+                updateWidgetContent();
+            });
+        },
+        newsProperties : function(container, widget) {
+            const updateWidgetContent = _ => {
+                getWidgetContent('news', {
+                    source: $('#widget-edit-dialog-news-source').val()
+                }, $('#widget-edit-dialog-preview .home-page-grid-container__widget-content').get(0));
+            }
+
+            container.innerHTML = `
+                <label for="widget-edit-dialog-news-source">Source</label>
+                <select id="widget-edit-dialog-news-source">
+                    <option ` + (widget.data.source == 'google-news' ? 'selected' : '') + ` value="google-news">Google News</option>
+                </select>
+            `
+            
+            updateWidgetContent();
+
+            $('#widget-edit-dialog-news-source').change(e => {
                 updateWidgetContent();
             });
         },

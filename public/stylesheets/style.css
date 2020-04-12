@@ -640,7 +640,7 @@ label {
 
 .home-page-grid-container__widget-content {
     height: calc(100% - 30px);
-    overflow-y: hidden;
+    overflow-y: auto;
 }
 
 .home-page-grid-container__widget-title {
@@ -1205,4 +1205,8 @@ label {
     padding: 15px;
     overflow: visible;
     animation: slide-up 0.4s ease;
+}
+
+.home-page-widget-news-container-item h2 {
+    font-size: 16px;
 }

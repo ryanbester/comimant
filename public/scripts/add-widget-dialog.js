@@ -29,6 +29,36 @@ var addWidgetDialog = function(){
                 case 'weather':
                     this.weatherProperties(container);
                     break;
+                case 'news':
+                    this.newsProperties(container);
+                    break;
+                case 'sports':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'heating':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'web-feed':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'ebay':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'bookmarks':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'todo':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'files':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'email':
+                    container.innerHTML = "<p>Coming soon</p>";
+                    break;
+                case 'rss':
+                    container.innerHTML = "<p>Coming soon</p>";
+                     break;
                 default:
                     container.innerHTML = "<p id=\"widget-add-dialog-properties-message\">Unknown widget type</p>"
             }
@@ -41,11 +71,11 @@ var addWidgetDialog = function(){
                     source: $('#widget-add-dialog-weather-source').val()
                 }, $('#widget-add-dialog-preview .home-page-grid-container__widget-content').get(0));
             }
+
             container.innerHTML = `
                 <label for="widget-add-dialog-weather-source">Source</label>
                 <select id="widget-add-dialog-weather-source">
                     <option value="openweathermap">OpenWeatherMap</option>
-                    <option value="test">Test</option>
                 </select>
                 <br />
                 <label for="widget-add-dialog-weather-location">Location</label>
@@ -70,6 +100,26 @@ var addWidgetDialog = function(){
             }));
 
             $('input[name=widget-add-dialog-weather-temperature]').change(e => {
+                updateWidgetContent();
+            });
+        },
+        newsProperties : function(container) {
+            const updateWidgetContent = _ => {
+                getWidgetContent('news', {
+                    source: $('#widget-add-dialog-news-source').val()
+                }, $('#widget-add-dialog-preview .home-page-grid-container__widget-content').get(0));
+            }
+
+            container.innerHTML = `
+                <label for="widget-add-dialog-news-source">Source</label>
+                <select id="widget-add-dialog-news-source">
+                    <option value="google-news">Google News</option>
+                </select>
+            `
+
+            updateWidgetContent();
+
+            $('#widget-add-dialog-news-source').change(e => {
                 updateWidgetContent();
             });
         },

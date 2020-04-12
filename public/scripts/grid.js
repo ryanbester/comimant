@@ -35,9 +35,13 @@ var widgetGrid = (function() {
     var grid = {
         widgets : [],
         getNextPosition : function() {
-            return Math.max.apply(Math, this.widgets.map(widget => {
-                return widget.position;
-            })) + 1;
+            if(this.widgets.length < 1) {
+                return 1;
+            } else {
+                return Math.max.apply(Math, this.widgets.map(widget => {
+                    return widget.position;
+                })) + 1;
+            }
         },
         addWidget : function(widget_id, height) {
             var widget = document.createElement('div');

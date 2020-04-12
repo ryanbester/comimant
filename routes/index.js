@@ -27,6 +27,7 @@ const { AccessToken, Nonce, User } = require('../core/auth');
 const internalAPIMain = require('../routes/api/internal/main');
 const internalAPIWidgets = require('../routes/api/internal/widgets');
 const internalAPIWeather = require('../routes/api/internal/weather');
+const internalAPIRSS = require('../routes/api/internal/rss');
 
 const showHomePage = (req, res, next) => {
     const renderHomePage = (nonce) => {
@@ -142,7 +143,8 @@ router.get(myAccountPath + 'test/', (req, res, next) => {
 // Internal API
 const internalAPIPath = '/api/internal/';
 router.all(internalAPIPath + 'widgets/*', internalAPIMain.userCheck);
-router.all(internalAPIPath + '/weather/*', internalAPIMain.userCheck);
+router.all(internalAPIPath + 'weather/*', internalAPIMain.userCheck);
+router.all(internalAPIPath + 'rss/*', internalAPIMain.userCheck);
 
 router.get(internalAPIPath + 'widgets/', internalAPIWidgets.getAllWidgets);
 router.post(internalAPIPath + 'widgets/', internalAPIWidgets.addWidget);
@@ -152,6 +154,8 @@ router.delete(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.deleteWi
 router.put(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.updateWidget);
 
 router.get(internalAPIPath + 'weather/', internalAPIWeather.getWeather);
+
+router.get(internalAPIPath + 'rss/', internalAPIRSS.getRSSFeed);
 // Public API
 
 // Admin section
