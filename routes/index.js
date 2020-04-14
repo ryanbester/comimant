@@ -10,6 +10,7 @@ const path = require('path');
 
 const app = require('../app');
 const Util = require("../core/util");
+const redis = require('../db/redis');
 const accounts = require('../routes/accounts');
 const myAccountMyInfo = require('../routes/myaccount/my-info');
 const myAccountSecurity = require('../routes/myaccount/security');
@@ -28,6 +29,8 @@ const internalAPIMain = require('../routes/api/internal/main');
 const internalAPIWidgets = require('../routes/api/internal/widgets');
 const internalAPIWeather = require('../routes/api/internal/weather');
 const internalAPIRSS = require('../routes/api/internal/rss');
+
+const { PluginManager } = require('../core/plugins');
 
 const showHomePage = (req, res, next) => {
     const renderHomePage = (nonce) => {
@@ -83,6 +86,8 @@ const showHomePage = (req, res, next) => {
 
 router.get('/', showHomePage);
 router.get('/add', showHomePage);
+
+router.use('/scripts/plugins/:plugin/:script', PluginManager.handleScriptRequest);
 
 router.get('/accounts/login/', accounts.showLoginPage);
 router.post('/accounts/login/', accounts.login);

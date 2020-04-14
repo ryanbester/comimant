@@ -16,6 +16,9 @@ const cookieParser = require('cookie-parser');
 const routes = require('./routes/index');
 const { User, AccessToken} = require('./core/auth');
 const Util = require('./core/util');
+const redis = require('./db/redis');
+
+const { Plugin, PluginManager } = require('./core/plugins');
 
 const app = module.exports = express();
 
@@ -68,7 +71,31 @@ app.use(function(err, req, res, next){
 	res.render('error', {useBootstrap: false, title: "Error"});
 });
 
-var httpServer = http.createServer(app);
-httpServer.listen(process.env.PORT);
+const startServer = _ => {
+	var httpServer = http.createServer(app);
+	httpServer.listen(process.env.PORT);
+	
+	httpServer.on('listening', _ => {
+		console.log(Util.log_colors.FG_GREEN + 'HTTP Server listening for connections...' + Util.log_colors.RESET);
+	});
+}
+
+console.log(Util.log_colors.BG_GREEN + 'Welcome to Comimant' + Util.log_colors.RESET);
+
+console.log(Util.log_colors.DIM + 'Activating plugins...' + Util.log_colors.RESET);
+
+// Activate plugins
+var subscriber = redis.getSubscriber();
+
+subscriber.subscribe('plugin-manager');
+redis.handleMessages(subscriber);
+
+PluginManager.getEnabledPlugins().then(_ => {
+	PluginManager.activateEnabledPlugins();
+
+	startServer();
+}, e => {
+	console.log(e);
+});
 
 module.exports = app;
