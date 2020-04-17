@@ -17,7 +17,7 @@ exports.showAdminAccessTokensPage = (req, res, next) => {
         res.render('admin-access-tokens', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Access Tokens | Admin',
             logoutNonce: result,

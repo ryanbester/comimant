@@ -17,7 +17,7 @@ exports.showAdminDataPage = (req, res, next) => {
         res.render('admin-data', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Data | Admin',
             logoutNonce: result,

@@ -27,7 +27,7 @@ exports.showAdminUsersPage = (req, res, next) => {
         res.render('admin-users', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Users | Admin',
             logoutNonce: nonce,
@@ -47,7 +47,7 @@ exports.showAdminNewUserPage = (req, res, next) => {
         res.render('admin-users-new', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'New User | Users | Admin',
             logoutNonce: results[0],
@@ -112,7 +112,7 @@ exports.performAdminNewUser = (req, res, next) => {
             res.render('admin-users-new', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'New User | Users | Admin',
                 logoutNonce: results[0],
@@ -148,7 +148,7 @@ exports.performAdminNewUser = (req, res, next) => {
             res.render('admin-users-new', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'New User | Users | Admin',
                 logoutNonce: results[0],
@@ -284,7 +284,7 @@ exports.loadUserInfo = (req, res, next) => {
             res.render('admin-users-user', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Unknown User | Users | Admin',
                 logoutNonce: result,
@@ -315,7 +315,7 @@ exports.showAdminUserPage = (req, res, next) => {
         res.render('admin-users-user', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -337,7 +337,7 @@ exports.showAdminUsersNamePage = (req, res, next) => {
         res.render('admin-users-user-name', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -376,7 +376,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
             res.render('admin-users-user-name', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -400,7 +400,7 @@ exports.performAdminUsersSaveName = (req, res, next) => {
             res.render('admin-users-user-name', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Name | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -465,7 +465,7 @@ exports.showAdminUsersUsernamePage = (req, res, next) => {
         res.render('admin-users-user-username', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -498,7 +498,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
             res.render('admin-users-user-username', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -520,7 +520,7 @@ exports.performAdminUsersSaveUsername = (req, res, next) => {
             res.render('admin-users-user-username', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Username | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -591,7 +591,7 @@ exports.showAdminUsersEmailAddressPage = (req, res, next) => {
         res.render('admin-users-user-email-address', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -624,7 +624,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
             res.render('admin-users-user-email-address', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -646,7 +646,7 @@ exports.performAdminUsersSaveEmailAddress = (req, res, next) => {
             res.render('admin-users-user-email-address', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Email Address | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -712,7 +712,7 @@ exports.showAdminUsersDobPage = (req, res, next) => {
         res.render('admin-users-user-dob', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -757,7 +757,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
             res.render('admin-users-user-dob', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -783,7 +783,7 @@ exports.performAdminUsersSaveDob = (req, res, next) => {
             res.render('admin-users-user-dob', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change User\'s Date of Birth | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -884,7 +884,7 @@ exports.showAdminUserWidgetsPage = (req, res, next) => {
                     res.render('admin-users-user-widgets', {
                         useBootstrap: false,
                         scriptsAfter: [
-                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                            'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                         ],
                         title: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                         logoutNonce: results[0],
@@ -901,7 +901,7 @@ exports.showAdminUserWidgetsPage = (req, res, next) => {
             res.render('admin-users-user-widgets', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Widgets | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -924,7 +924,7 @@ exports.showAdminUserAddWidgetPage = (req, res, next) => {
         res.render('admin-users-user-widgets-add', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -976,7 +976,7 @@ exports.performAdminUserAddWidget = (req, res, next) => {
             res.render('admin-users-user-widgets-add', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -1006,7 +1006,7 @@ exports.performAdminUserAddWidget = (req, res, next) => {
             res.render('admin-users-user-widgets-add', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Add Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -1120,7 +1120,7 @@ exports.loadUserWidgetInfo = (req, res, next) => {
             res.render('admin-users-user-widgets-widget', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Unknown Widget | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 logoutNonce: result,
@@ -1150,7 +1150,7 @@ exports.showAdminUserWidgetPage = (req, res, next) => {
             res.render('admin-users-user-widgets-widget', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 logoutNonce: result,
@@ -1180,7 +1180,7 @@ exports.showAdminUserWidgetPage = (req, res, next) => {
                     res.render('admin-users-user-widgets-widget', {
                         useBootstrap: false,
                         scriptsAfter: [
-                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                            'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                         ],
                         title: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                         logoutNonce: nonce,
@@ -1205,7 +1205,7 @@ exports.showAdminUserWidgetPage = (req, res, next) => {
                 res.render('admin-users-user-widgets-widget', {
                     useBootstrap: false,
                     scriptsAfter: [
-                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                     ],
                     title: 'Widget | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                     logoutNonce: nonce,
@@ -1231,7 +1231,7 @@ exports.showAdminUserDeleteWidgetPage = (req, res, next) => {
         res.render('admin-users-user-widget-delete', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Delete Widget | Users | Admin',
             logoutNonce: results[0],
@@ -1256,7 +1256,7 @@ exports.performAdminUserDeleteWidget = (req, res, next) => {
             res.render('admin-users-user-widget-delete', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Delete Widget | Users | Admin',
                 logoutNonce: results[0],
@@ -1320,7 +1320,7 @@ exports.showAdminUserWidgetTitlePage = (req, res, next) => {
         res.render('admin-users-user-widget-title', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Title | Users | Admin',
             logoutNonce: results[0],
@@ -1356,7 +1356,7 @@ exports.performAdminUserWidgetSaveTitle = (req, res, next) => {
             res.render('admin-users-user-widget-title', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Title | Users | Admin',
                 logoutNonce: results[0],
@@ -1380,7 +1380,7 @@ exports.performAdminUserWidgetSaveTitle = (req, res, next) => {
             res.render('admin-users-user-widget-title', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Title | Users | Admin',
                 logoutNonce: results[0],
@@ -1441,7 +1441,7 @@ exports.showAdminUserWidgetTypePage = (req, res, next) => {
         res.render('admin-users-user-widget-type', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Type | Users | Admin',
             logoutNonce: results[0],
@@ -1477,7 +1477,7 @@ exports.performAdminUserWidgetSaveType = (req, res, next) => {
             res.render('admin-users-user-widget-type', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Type | Users | Admin',
                 logoutNonce: results[0],
@@ -1501,7 +1501,7 @@ exports.performAdminUserWidgetSaveType = (req, res, next) => {
             res.render('admin-users-user-widget-type', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Type | Users | Admin',
                 logoutNonce: results[0],
@@ -1562,7 +1562,7 @@ exports.showAdminUserWidgetDataPage = (req, res, next) => {
         res.render('admin-users-user-widget-data', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Data (JSON) | Users | Admin',
             logoutNonce: results[0],
@@ -1598,7 +1598,7 @@ exports.performAdminUserWidgetSaveData = (req, res, next) => {
             res.render('admin-users-user-widget-data', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Data (JSON) | Users | Admin',
                 logoutNonce: results[0],
@@ -1622,7 +1622,7 @@ exports.performAdminUserWidgetSaveData = (req, res, next) => {
             res.render('admin-users-user-widget-data', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Data (JSON) | Users | Admin',
                 logoutNonce: results[0],
@@ -1686,7 +1686,7 @@ exports.showAdminUserWidgetPositionPage = (req, res, next) => {
             res.render('admin-users-user-widget-position', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 logoutNonce: result,
@@ -1710,7 +1710,7 @@ exports.showAdminUserWidgetPositionPage = (req, res, next) => {
                     res.render('admin-users-user-widget-position', {
                         useBootstrap: false,
                         scriptsAfter: [
-                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                            'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                         ],
                         title: 'Position | Users | Admin',
                         logoutNonce: results[0],
@@ -1732,7 +1732,7 @@ exports.showAdminUserWidgetPositionPage = (req, res, next) => {
                 res.render('admin-users-user-widget-position', {
                     useBootstrap: false,
                     scriptsAfter: [
-                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                     ],
                     title: 'Position | Users | Admin',
                     logoutNonce: results[0],
@@ -1772,7 +1772,7 @@ exports.performAdminUserWidgetSavePosition = (req, res, next) => {
             res.render('admin-users-user-widget-position', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Position | Users | Admin',
                 logoutNonce: results[0],
@@ -1796,7 +1796,7 @@ exports.performAdminUserWidgetSavePosition = (req, res, next) => {
             res.render('admin-users-user-widget-position', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Position | Users | Admin',
                 logoutNonce: results[0],
@@ -1866,7 +1866,7 @@ exports.showAdminUserWidgetHeightPage = (req, res, next) => {
             res.render('admin-users-user-widget-height', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Error | ' + targetUser.first_name + ' ' + targetUser.last_name,
                 logoutNonce: result,
@@ -1890,7 +1890,7 @@ exports.showAdminUserWidgetHeightPage = (req, res, next) => {
                     res.render('admin-users-user-widget-height', {
                         useBootstrap: false,
                         scriptsAfter: [
-                            'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                            'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                         ],
                         title: 'Height | Users | Admin',
                         logoutNonce: results[0],
@@ -1912,7 +1912,7 @@ exports.showAdminUserWidgetHeightPage = (req, res, next) => {
                 res.render('admin-users-user-widget-height', {
                     useBootstrap: false,
                     scriptsAfter: [
-                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                     ],
                     title: 'Height | Users | Admin',
                     logoutNonce: results[0],
@@ -1952,7 +1952,7 @@ exports.performAdminUserWidgetSaveHeight = (req, res, next) => {
             res.render('admin-users-user-widget-height', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Height | Users | Admin',
                 logoutNonce: results[0],
@@ -1976,7 +1976,7 @@ exports.performAdminUserWidgetSaveHeight = (req, res, next) => {
             res.render('admin-users-user-widget-height', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Height | Users | Admin',
                 logoutNonce: results[0],
@@ -2044,7 +2044,7 @@ exports.showAdminUserPrivilegesPage = (req, res, next) => {
         res.render('admin-users-user-privileges', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -2067,7 +2067,7 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
             res.render('admin-users-user-privileges', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2088,7 +2088,7 @@ exports.performAdminUserSavePrivileges = (req, res, next) => {
             res.render('admin-users-user-privileges', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Privileges | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2144,7 +2144,7 @@ exports.showAdminUserAddPrivilegePage = (req, res, next) => {
         res.render('admin-users-user-privileges-add', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -2178,7 +2178,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
             res.render('admin-users-user-privileges-add', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2201,7 +2201,7 @@ exports.performAdminUserAddPrivilege = (req, res, next) => {
             res.render('admin-users-user-privileges-add', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Add Privilege | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2266,7 +2266,7 @@ exports.showAdminUserApplyPrivilegeTemplatePage = (req, res, next) => {
         res.render('admin-users-user-privileges-apply-template', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -2292,7 +2292,7 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
             res.render('admin-users-user-privileges-apply-template', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2314,7 +2314,7 @@ exports.performAdminUserApplyPrivilegeTemplate = (req, res, next) => {
             res.render('admin-users-user-privileges-apply-template', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                    'https://' + res.locals.main_domain + '/scripts/admin.js'
                 ],
                 title: 'Apply Privilege Template | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2372,7 +2372,7 @@ exports.showAdminDeleteUserPage = (req, res, next) => {
         res.render('admin-users-user-delete', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -2395,7 +2395,7 @@ exports.performAdminDeleteUser = (req, res, next) => {
             res.render('admin-users-user-delete', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2416,7 +2416,7 @@ exports.performAdminDeleteUser = (req, res, next) => {
             res.render('admin-users-user-delete', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Delete User: ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2462,7 +2462,7 @@ exports.showAdminUserPasswordsPage = (req, res, next) => {
             res.render('admin-users-user-security-passwords', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: result,
@@ -2490,7 +2490,7 @@ exports.showAdminUserPasswordsPage = (req, res, next) => {
             res.render('admin-users-user-security-passwords', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: result,
@@ -2512,7 +2512,7 @@ exports.showUserChangePasswordPage = (req, res, next) => {
         res.render('admin-users-user-security-change-password', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
             logoutNonce: results[0],
@@ -2534,7 +2534,7 @@ exports.performUserChangePassword = (req, res, next) => {
             res.render('admin-users-user-security-change-password', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],
@@ -2554,7 +2554,7 @@ exports.performUserChangePassword = (req, res, next) => {
             res.render('admin-users-user-security-change-password', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | ' + targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
                 logoutNonce: results[0],

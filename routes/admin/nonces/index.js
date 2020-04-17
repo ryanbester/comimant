@@ -17,7 +17,7 @@ exports.showAdminNoncesPage = (req, res, next) => {
         res.render('admin-nonces', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Nonces | Admin',
             logoutNonce: result,

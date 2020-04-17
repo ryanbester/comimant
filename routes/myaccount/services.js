@@ -24,7 +24,7 @@ exports.showMyAccountServicesPage = (req, res, next) => {
         res.render('myaccount-services', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Services | My Account',
             logoutNonce: results[0],
@@ -42,7 +42,7 @@ exports.showMyAccountServiceDetailsPage = (req, res, next) => {
             res.render('myaccount-services', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Services | My Account',
                 logoutNonce: result,

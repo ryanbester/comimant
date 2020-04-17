@@ -17,7 +17,7 @@ exports.showMyAccountMyInfoPage = (req, res, next) => {
         res.render('myaccount-my-info', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'My Information | My Account',
             logoutNonce: result,
@@ -49,7 +49,7 @@ exports.showMyAccountMyInfoNamePage = (req, res, next) => {
         res.render('myaccount-my-info-name', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Name | My Information | My Account',
             logoutNonce: results[0],
@@ -88,7 +88,7 @@ exports.performMyAccountSaveName = (req, res, next) => {
             res.render('myaccount-my-info-name', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Name | My Information | My Account',
                 logoutNonce: results[0],
@@ -112,7 +112,7 @@ exports.performMyAccountSaveName = (req, res, next) => {
             res.render('myaccount-my-info-name', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Name | My Information | My Account',
                 logoutNonce: results[0],
@@ -193,7 +193,7 @@ exports.showMyAccountMyInfoUsernamePage = (req, res, next) => {
         res.render('myaccount-my-info-username', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Username | My Information | My Account',
             logoutNonce: results[0],
@@ -226,7 +226,7 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
             res.render('myaccount-my-info-username', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Username | My Information | My Account',
                 logoutNonce: results[0],
@@ -248,7 +248,7 @@ exports.performMyAccountSaveUsername = (req, res, next) => {
             res.render('myaccount-my-info-username', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Username | My Information | My Account',
                 logoutNonce: results[0],
@@ -335,7 +335,7 @@ exports.showMyAccountMyInfoDobPage = (req, res, next) => {
         res.render('myaccount-my-info-dob', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Date of Birth | My Information | My Account',
             logoutNonce: results[0],
@@ -380,7 +380,7 @@ exports.performMyAccountSaveDob = (req, res, next) => {
             res.render('myaccount-my-info-dob', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Date of Birth | My Information | My Account',
                 logoutNonce: results[0],
@@ -406,7 +406,7 @@ exports.performMyAccountSaveDob = (req, res, next) => {
             res.render('myaccount-my-info-dob', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Date of Birth | My Information | My Account',
                 logoutNonce: results[0],

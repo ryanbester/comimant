@@ -10,11 +10,65 @@ const get_tld = () => {
     }
 }
 
+const get_domain_object = (host) => {
+    var domains = JSON.parse(process.env.DOMAINS);
+
+    for(var i = 0; i < domains.length; i++) {
+        if(host.endsWith(domains[i].root_domain)) {
+            return domains[i];
+        }
+    }
+    
+    return undefined;
+}
+
+const get_root_domain = (host, domain_object) => {
+    if(domain_object === undefined) {
+        return host;
+    }
+
+    return domain_object.root_domain;
+}
+
+const get_domain = (host, domain_object) => {
+    if(domain_object === undefined) {
+        return host;
+    }
+
+    return domain_object.domain;
+}
+
+const get_auth_domain = (host, domain_object) => {
+    if(domain_object === undefined) {
+        return host;
+    }
+
+    return domain_object.auth;
+}
+
+const get_static_domain = (host, domain_object) => {
+    if(domain_object === undefined) {
+        return host;
+    }
+
+    return domain_object.static;
+}
+
+const get_accounts_domain = (host, domain_object) => {
+    if(domain_object === undefined) {
+        return host;
+    }
+
+    return domain_object.accounts;
+}
+
 const url_rewrite = (host, url) => {
     var newUrl;
 
     if(url.startsWith('/accounts/')){
-        if(host == 'accounts.besterintranet.' + get_tld()){
+        let domainObject = get_domain_object(host);
+        let accountsDomain = get_accounts_domain(host, domainObject);
+        if(host == accountsDomain){
             url = url.replace('/accounts', '');
             newUrl = host + url;
         }
@@ -84,6 +138,12 @@ const getCallerFile = () => {
 
 module.exports = {
     get_tld: get_tld,
+    get_domain_object: get_domain_object,
+    get_root_domain: get_root_domain,
+    get_domain: get_domain,
+    get_auth_domain: get_auth_domain,
+    get_static_domain: get_static_domain,
+    get_accounts_domain: get_accounts_domain,
     url_rewrite: url_rewrite,
     log_colors: log_colors,
     getCallerFile: getCallerFile

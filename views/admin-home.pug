@@ -9,7 +9,7 @@ block content
                     tr
                         td
                             a.logo-link(href='/')
-                                img(src="https://static.besterintranet.com/assets/images/logo.png" srcset="https://static.besterintranet.com/assets/images/logo96x96.png 2x" height="48" width="48")
+                                img(src="https://" + static_domain + "/assets/images/logo.png" srcset="https://" + static_domain + "/assets/images/logo96x96.png 2x" height="48" width="48")
                         td
                             a.logo-link(href='/')
                                 h1 Bester Intranet
@@ -17,7 +17,7 @@ block content
                 .basic-header-right
                     .user-dropdown
                         h1.user-dropdown__header#user-dropdown-header #{user.first_name} #{user.last_name}
-                        img.user-dropdown__image(src="https://static.besterintranet.com/assets/images/downarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/downarrow32x32.png 2x")
+                        img.user-dropdown__image(src="https://" + static_domain + "/assets/images/downarrow16x16.png" srcset="https://" + static_domain + "/assets/images/downarrow32x32.png 2x")
                         .user-dropdown__content
                             ul.user-dropdown-content__list
                                 li.user-dropdown__item

@@ -17,7 +17,7 @@ exports.showAdminWidgetsPage = (req, res, next) => {
         res.render('admin-widgets', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Widgets | Admin',
             logoutNonce: result,

@@ -39,10 +39,10 @@ const showHomePage = (req, res, next) => {
             tld: Util.get_tld(),
             logoutNonce: nonce,
             scriptsBefore: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/grid.js',
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/widget.js',
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/add-widget-dialog.js',
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/edit-widget-dialog.js'
+                'https://' + res.locals.main_domain + '/scripts/grid.js',
+                'https://' + res.locals.main_domain + '/scripts/widget.js',
+                'https://' + res.locals.main_domain + '/scripts/add-widget-dialog.js',
+                'https://' + res.locals.main_domain + '/scripts/edit-widget-dialog.js'
             ]
         });
     }
@@ -83,6 +83,19 @@ const showHomePage = (req, res, next) => {
         }
     });
 }
+
+router.all('/*', (req, res, next) => {
+    let host = req.get('host');
+    let domain = Util.get_domain_object(host);
+
+    res.locals.root_domain = Util.get_root_domain(host, domain);
+    res.locals.main_domain = Util.get_domain(host, domain);
+    res.locals.auth_domain = Util.get_auth_domain(host, domain);
+    res.locals.static_domain = Util.get_static_domain(host, domain);
+    res.locals.accounts_domain = Util.get_accounts_domain(host, domain);
+
+    next();
+});
 
 router.get('/', showHomePage);
 router.get('/add', showHomePage);

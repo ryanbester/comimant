@@ -20,7 +20,7 @@ exports.userCheck = (req, res, next) => {
     const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
 
     if(req.signedCookies['AUTHTOKEN'] === undefined){
-        res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+        res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
     } else {
         const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
         accessToken.checkToken().then(result => {
@@ -69,16 +69,16 @@ exports.userCheck = (req, res, next) => {
                             });
                         });
                     } else {
-                        res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                        res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
                     }
                 }, err => {
-                    res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                    res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
                 });
             } else {
-                res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
             }
         }, err => {
-            res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+            res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
         });
     }
 }
@@ -88,7 +88,7 @@ exports.showAdminPanel = (req, res, next) => {
         res.render('admin-home', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/admin.js'
+                'https://' + res.locals.main_domain + '/scripts/admin.js'
             ],
             title: 'Admin',
             logoutNonce: result,

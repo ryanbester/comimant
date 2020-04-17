@@ -21,7 +21,7 @@ exports.showLoginPage = (req, res, next) => {
             res.render('login', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/login-page.js'
+                    'https://' + res.locals.main_domain + '/scripts/login-page.js'
                 ],
                 title: 'Login',
                 message: 'Login to the Bester Intranet',
@@ -37,7 +37,7 @@ exports.showLoginPage = (req, res, next) => {
                 const user = new User(accessToken.user_id);
                 user.verifyUser().then(result => {
                     if (result == true) {
-                        res.redirect(301, 'https://www.besterintranet.' + Util.get_tld());
+                        res.redirect(301, 'https://' + res.locals.main_domain);
                     } else {
                         renderLoginPage();
                     }
@@ -61,7 +61,7 @@ exports.login = (req, res, next) => {
             res.render('login', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/login-page.js'
+                    'https://' + res.locals.main_domain + '/scripts/login-page.js'
                 ],
                 title: 'Login',
                 message: 'Login to the Bester Intranet',
@@ -122,7 +122,7 @@ exports.login = (req, res, next) => {
                                         var maxAge = accessToken.lifetime * 60 * 1000;
                                         var expires = accessToken.expiry;
                                         res.cookie('AUTHTOKEN', accessToken.id, {
-                                            domain: 'besterintranet.' + Util.get_tld(),
+                                            domain: res.locals.root_domain,
                                             maxAge: maxAge,
                                             expires: expires,
                                             httpOnly: true,
@@ -131,7 +131,7 @@ exports.login = (req, res, next) => {
                                         });
                                     } else {
                                         res.cookie('AUTHTOKEN', accessToken.id, {
-                                            domain: 'besterintranet.' + Util.get_tld(),
+                                            domain: res.locals.root_domain,
                                             httpOnly: true,
                                             secure: true,
                                             signed: true
@@ -139,7 +139,7 @@ exports.login = (req, res, next) => {
                                     }
 
                                     if(req.query.continue === undefined){
-                                        res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + "/?nc=1");
+                                        res.redirect(301, 'https://' + res.locals.main_domain + "/?nc=1");
                                     } else {
                                         res.redirect(301, decodeURIComponent(req.query.continue));
                                     }
@@ -175,7 +175,7 @@ exports.showPasswordConfirmationPage = (req, res, next) => {
             res.render('password-confirm', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
+                    'https://' + res.locals.main_domain + '/scripts/password-confirm-page.js'
                 ],
                 title: 'Confirm it\'s you',
                 message: 'Confirm it\'s you',
@@ -210,7 +210,7 @@ exports.checkPassword = (req, res, next) => {
             res.render('password-confirm', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/password-confirm-page.js'
+                    'https://' + res.locals.main_domain + '/scripts/password-confirm-page.js'
                 ],
                 title: 'Confirm it\'s you',
                 message: 'Confirm it\'s you',
@@ -243,7 +243,7 @@ exports.checkPassword = (req, res, next) => {
 
                         accessToken.saveTokenToDatabase().then(result => {
                             res.cookie('SATOKEN', accessToken.id, {
-                                domain: 'accounts.besterintranet.' + Util.get_tld(),
+                                domain: res.locals.accounts_domain,
                                 httpOnly: true,
                                 secure: true,
                                 signed: true
@@ -273,15 +273,15 @@ exports.logout = (req, res, next) => {
     Nonce.verifyNonce('user-logout', req.query.nonce, req.path).then(result => {
         if(result == true){
             if(req.signedCookies['AUTHTOKEN'] === undefined){
-                res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
+                res.redirect(301, 'https://' + res.locals.main_domain + '/?nc=1');
             } else {
                 const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
                 accessToken.deleteToken().then(result => {
-                    res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
-                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
+                    res.clearCookie('AUTHTOKEN', {domain: res.locals.root_domain, httpOnly: true, secure: true, signed: true});
+                    res.redirect(301, 'https://' + res.locals.main_domain + '/?nc=1');
                 }, err => {
-                    res.clearCookie('AUTHTOKEN', {domain: 'besterintranet.' + Util.get_tld(), httpOnly: true, secure: true, signed: true});
-                    res.redirect(301, 'https://www.besterintranet.' + Util.get_tld() + '/?nc=1');
+                    res.clearCookie('AUTHTOKEN', {domain: res.locals.root_domain, httpOnly: true, secure: true, signed: true});
+                    res.redirect(301, 'https://' + res.locals.main_domain + '/?nc=1');
                 })
             }
         } else {
@@ -305,7 +305,7 @@ exports.userCheck = (req, res, next) => {
     const fullUrl = req.protocol + '://' + Util.url_rewrite(req.get('host'), req.url);
 
     if(req.signedCookies['AUTHTOKEN'] === undefined){
-        res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+        res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
     } else {
         const accessToken = new AccessToken(null, null, req.signedCookies['AUTHTOKEN']);
         accessToken.checkToken().then(result => {
@@ -320,16 +320,16 @@ exports.userCheck = (req, res, next) => {
                             next();
                         });
                     } else {
-                        res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                        res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
                     }
                 }, err => {
-                    res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                    res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
                 });
             } else {
-                res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+                res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
             }
         }, err => {
-            res.redirect(301, 'https://accounts.besterintranet.' + Util.get_tld() + '/login/?continue=' + encodeURIComponent(fullUrl));
+            res.redirect(301, 'https://' + res.locals.accounts_domain + '/login/?continue=' + encodeURIComponent(fullUrl));
         });
     }
 }
@@ -378,7 +378,7 @@ exports.showMyAccountPage = (req, res, next) => {
         res.render('myaccount-home', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'My Account',
             logoutNonce: result,

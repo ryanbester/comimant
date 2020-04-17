@@ -17,7 +17,7 @@ exports.showMyAccountDataPage = (req, res, next) => {
         res.render('myaccount-data', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Data | My Account',
             logoutNonce: result,

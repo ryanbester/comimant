@@ -18,7 +18,7 @@ exports.showMyAccountSecurityPage = (req, res, next) => {
         res.render('myaccount-security', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Security | My Account',
             logoutNonce: result,
@@ -34,7 +34,7 @@ exports.showMyAccountPasswordsPage = (req, res, next) => {
             res.render('myaccount-security-passwords', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | Security | My Account',
                 logoutNonce: result,
@@ -63,7 +63,7 @@ exports.showMyAccountPasswordsPage = (req, res, next) => {
             res.render('myaccount-security-passwords', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Passwords | Security | My Account',
                 logoutNonce: result,
@@ -85,7 +85,7 @@ exports.showChangePasswordPage = (req, res, next) => {
         res.render('myaccount-security-change-password', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Change Password | Passwords | Security | My Account',
             logoutNonce: results[0],
@@ -105,7 +105,7 @@ exports.performChangePassword = (req, res, next) => {
             res.render('myaccount-security-change-password', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | Passwords | Security | My Account',
                 logoutNonce: results[0],
@@ -125,7 +125,7 @@ exports.performChangePassword = (req, res, next) => {
             res.render('myaccount-security-change-password', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Change Password | Passwords | Security | My Account',
                 logoutNonce: results[0],
@@ -199,7 +199,7 @@ exports.showLogoutEverywhereConfirmation = (req, res, next) => {
         res.render('myaccount-security-logout-everywhere', {
             useBootstrap: false,
             scriptsAfter: [
-                'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                'https://' + res.locals.main_domain + '/scripts/myaccount.js'
             ],
             title: 'Logout of all Devices | Security | My Account',
             logoutNonce: results[0],
@@ -217,7 +217,7 @@ exports.performLogoutEverywhereAll = (req, res, next) => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
                 logoutNonce: result,
@@ -233,7 +233,7 @@ exports.performLogoutEverywhereAll = (req, res, next) => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
                 logoutNonce: result,
@@ -272,7 +272,7 @@ exports.performLogoutEverywhereOther = (req, res, next) => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
                 logoutNonce: result,
@@ -288,7 +288,7 @@ exports.performLogoutEverywhereOther = (req, res, next) => {
             res.render('myaccount-security-logout-everywhere-done', {
                 useBootstrap: false,
                 scriptsAfter: [
-                    'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                    'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                 ],
                 title: 'Logout of all Devices | Security | My Account',
                 logoutNonce: result,

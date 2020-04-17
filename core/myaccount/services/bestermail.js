@@ -21,7 +21,7 @@ module.exports.BesterMail = class BesterMail extends Service {
                 res.render('myaccount-service-bestermail', {
                     useBootstrap: false,
                     scripts: [
-                        'https://www.besterintranet.' + Util.get_tld() + '/scripts/myaccount.js'
+                        'https://' + res.locals.main_domain + '/scripts/myaccount.js'
                     ],
                     title: this.title + ' Services | My Account',
                     logoutNonce: result,

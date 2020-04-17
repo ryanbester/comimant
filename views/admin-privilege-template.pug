@@ -7,18 +7,18 @@ block admin-content
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="name/")
                 span Name
                 span.myaccount-stack-view__box-value= privilegeTemplate.name
-                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+                img.myaccount-stack-view__box-image(src="https://" + static_domain + "/assets/images/rightarrow16x16.png" srcset="https://" + static_domain + "/assets/images/rightarrow32x32.png 2x")
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="title/")
                 span Title
                 span.myaccount-stack-view__box-value= privilegeTemplate.title
-                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+                img.myaccount-stack-view__box-image(src="https://" + static_domain + "/assets/images/rightarrow16x16.png" srcset="https://" + static_domain + "/assets/images/rightarrow32x32.png 2x")
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="default/")
                 span Default
                 span.myaccount-stack-view__box-value= privilegeTemplate.default_template == 1 ? "Yes" : "No"
-                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+                img.myaccount-stack-view__box-image(src="https://" + static_domain + "/assets/images/rightarrow16x16.png" srcset="https://" + static_domain + "/assets/images/rightarrow32x32.png 2x")
             a.myaccount-stack-view__box.myaccount-stack-view__box--related(href="delete-privilege-template/")
                 span.red-text Delete Privilege Template
-                img.myaccount-stack-view__box-image(src="https://static.besterintranet.com/assets/images/rightarrow16x16.png" srcset="https://static.besterintranet.com/assets/images/rightarrow32x32.png 2x")
+                img.myaccount-stack-view__box-image(src="https://" + static_domain + "/assets/images/rightarrow16x16.png" srcset="https://" + static_domain + "/assets/images/rightarrow32x32.png 2x")
         h3 Privileges
         if error
             h2.error= error
