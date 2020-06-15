@@ -1,0 +1,9 @@
+//- Copyright (C) 2019-2020 Bester Intranet
+extends home-header
+
+block main-content
+    .main-container--blank
+        h1 Files
+        h2.files-browser-header #{currentLocation} | #{currentPath}
+        .files-container
+            table.files-browser-table.files-browser-table__files#file-files-table

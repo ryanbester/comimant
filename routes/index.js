@@ -25,10 +25,13 @@ const adminNonces = require('../routes/admin/nonces');
 const adminData = require('../routes/admin/data');
 const { AccessToken, Nonce, User } = require('../core/auth');
 
+const filesRoutes = require('../routes/files');
+
 const internalAPIMain = require('../routes/api/internal/main');
 const internalAPIWidgets = require('../routes/api/internal/widgets');
 const internalAPIWeather = require('../routes/api/internal/weather');
 const internalAPIRSS = require('../routes/api/internal/rss');
+const internalAPIFiles = require('../routes/api/internal/files');
 
 const { PluginManager } = require('../core/plugins');
 
@@ -111,6 +114,13 @@ router.get('/usercheck/', accounts.userLoggedIn);
 
 router.all('/accounts/myaccount*', accounts.userCheck);
 
+router.all('/files', accounts.userCheck);
+router.all('/files/*', accounts.userCheck);
+
+router.get('/files', filesRoutes.showFileLocationsPage);
+router.get('/files/:location', filesRoutes.showFilesPage);
+router.get('/files/:location/*', filesRoutes.showFilesPage);
+
 // My Account routes
 
 // TODO: Refactor code
@@ -163,6 +173,7 @@ const internalAPIPath = '/api/internal/';
 router.all(internalAPIPath + 'widgets/*', internalAPIMain.userCheck);
 router.all(internalAPIPath + 'weather/*', internalAPIMain.userCheck);
 router.all(internalAPIPath + 'rss/*', internalAPIMain.userCheck);
+router.all(internalAPIPath + 'files/*', internalAPIMain.userCheck);
 
 router.get(internalAPIPath + 'widgets/', internalAPIWidgets.getAllWidgets);
 router.post(internalAPIPath + 'widgets/', internalAPIWidgets.addWidget);
@@ -174,6 +185,9 @@ router.put(internalAPIPath + 'widgets/:widgetId', internalAPIWidgets.updateWidge
 router.get(internalAPIPath + 'weather/', internalAPIWeather.getWeather);
 
 router.get(internalAPIPath + 'rss/', internalAPIRSS.getRSSFeed);
+
+router.get(internalAPIPath + 'files/locations', internalAPIFiles.getFileLocations);
+router.get(internalAPIPath + 'files/locations/:location/files', internalAPIFiles.getFiles);
 // Public API
 
 // Admin section

@@ -135,6 +135,11 @@ module.exports.Service = class Service {
 
                 service = new BesterMail(this.user_id, this.type, this.name, this.title, this.service_user_id);
                 break;
+            case 'fileserver':
+                const { FileServer } = require('../../core/myaccount/services/fileserver');
+
+                service = new FileServer(this.user_id, this.type, this.name, this.title, this.service_user_id);
+                break;
             default:
                 return "Service not found"
                 break;

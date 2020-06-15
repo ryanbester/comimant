@@ -27,7 +27,7 @@ exports.showLoginPage = (req, res, next) => {
                 message: 'Login to the Bester Intranet',
                 nonce: result
             });
-        });
+        }); 
     }
     
     if(req.signedCookies['AUTHTOKEN'] !== undefined){

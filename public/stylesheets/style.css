@@ -595,6 +595,11 @@ label {
     text-shadow: 0px 0px 20px #0000006e;
 }
 
+.main-container--blank {
+    background-color: #FFFFFF;
+    padding: 15px;
+}
+
 .home-page-grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -790,7 +795,7 @@ label {
     flex-direction: column;
 }
 
-.logo-link {
+.logo-link, .header-link {
     text-decoration: none;
     color: inherit;
 }
@@ -1210,3 +1215,35 @@ label {
 .home-page-widget-news-container-item h2 {
     font-size: 16px;
 }
+
+/* FILES */
+
+.files-browser-header {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.files-browser-table {
+    width: 100%;
+    font-size: 18px;
+}
+
+.files-browser-table tr:hover {
+    background-color: #BBBBBB;
+}
+
+.files-browser-table a {
+    text-decoration: none;
+    color: inherit;
+    padding: 15px;
+    display: inline-block;
+}
+
+.files-browser-table a:hover {
+    text-decoration: underline;
+}
+
+.files-browser-table tr td {
+    
+}
+

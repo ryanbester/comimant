@@ -1,34 +1,7 @@
 //- Copyright (C) 2019-2020 Bester Intranet
-extends layout
+extends home-header
 
-block content
-    #main-header
-        .main-header-left
-            table
-                tr
-                    td
-                        a.logo-link(href='https://' + main_domain + '/')
-                            img(src="https://" + static_domain + "/assets/images/logo_white.png" srcset="https://" + static_domain + "/assets/images/logo_white96x96.png 2x" height="48" width="48" alt="Logo")
-                    td
-                        a.logo-link(title="Homepage" href='https://' + main_domain + '/')
-                            h1 Bester Intranet
-        if user
-            .main-header-right
-                .main-header-dropdown
-                    img#main-header-user-dropdown__loading(src="https://" + static_domain + "/assets/images/loading196x196.gif" height="22" width="22")
-                    .main-header-user-dropdown__error-tooltip#main-header-user-dropdown__error
-                        img(src="https://" + static_domain + "/assets/images/error.svg" height="22" width="22")
-                        span.main-header-user-dropdown__error-tooltip-text Cannot confirm it's you
-                    h1.main-header-dropdown__header#main-header-dropdown-header #{user.first_name} #{user.last_name}
-                    img.main-header-dropdown__image(src="https://" + static_domain + "/assets/images/downarrow16x16.png" srcset="https://" + static_domain + "/assets/images/downarrow32x32.png 2x" alt="Dropdown arrow")
-                    .main-header-dropdown__content
-                        ul.main-header-dropdown-content__list
-                            li.main-header-dropdown__item
-                                a(href="https://" + accounts_domain + "/myaccount/") My Account
-                            li.main-header-dropdown__item
-                                a(href="") Help
-                            li.main-header-dropdown__item
-                                a(href="https://" + accounts_domain + "/logout/?nonce=" + logoutNonce) Logout
+block main-content
     .main-container
         if user
             h1 Hello, #{user.first_name} #{user.last_name}

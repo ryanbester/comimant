@@ -872,7 +872,7 @@ module.exports.AccessToken = class AccessToken {
                     connection.connect();
 
                     // Execute the delete query
-                    connection.query("DELETE FROM " + this.table + " WHERE36|bester-intranet-prod  | Error: connect ECONNREFUSED 127.0.0.1:3309 access_token = UNHEX(" + connection.escape(hash) + ")",
+                    connection.query("DELETE FROM " + this.table + " WHERE access_token = UNHEX(" + connection.escape(hash) + ")",
                     (error, results, fields) => {
                         // Close the connection
                         connection.end();
