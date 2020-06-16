@@ -2,11 +2,10 @@
 ._*
 node_modules
 coverage
-plugins
+/plugins
 .idea
 jsdoc
+config.json
 
 *.css
 *.css.map
-
-config.json
