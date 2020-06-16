@@ -40,20 +40,20 @@ const staticUrls = [
 const dynamicUrls = [
     '/',
     '/scripts/grid.js',
-    '/scripts/dialog.js', 
+    '/scripts/dialog.js',
     '/scripts/main.js',
     '/api/internal/widgets/'
 ];
 
 const arrayIncludesPrefix = (url, safeUrls) => {
-    for(var i = 0; i < safeUrls.length; i++) {
-        if(url.startsWith(safeUrls[i])) {
+    for (var i = 0; i < safeUrls.length; i++) {
+        if (url.startsWith(safeUrls[i])) {
             return true;
         }
     }
 
     return false;
-}
+};
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -73,14 +73,14 @@ self.addEventListener('activate', event => {
                 }
             })
         ))
-    )
+    );
 });
 
 self.addEventListener('fetch', event => {
     // Only use service worker for GET requests
-    if(event.request.method == 'GET') {
-        if(event.request.mode == 'cors' || event.request.mode == 'no-cors') {
-            if(event.request.url.endsWith('nc=1')) {
+    if (event.request.method == 'GET') {
+        if (event.request.mode == 'cors' || event.request.mode == 'no-cors') {
+            if (event.request.url.endsWith('nc=1')) {
                 var newUrl = event.request.url.substr(0, event.request.url.length - 5);
                 event.respondWith(
                     fetch(newUrl).catch(_ => {
@@ -94,9 +94,9 @@ self.addEventListener('fetch', event => {
                     })
                 );
             }
-        } else if(event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
-            if(event.request.url.startsWith("https://" + self.location.hostname + "/")) {
-                if(event.request.url.endsWith('nc=1')) {
+        } else if (event.request.mode === 'navigate' || (event.request.method == 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+            if (event.request.url.startsWith('https://' + self.location.hostname + '/')) {
+                if (event.request.url.endsWith('nc=1')) {
                     var newUrl = event.request.url.substr(0, event.request.url.length - 5);
                     event.respondWith(
                         fetch(newUrl).catch(_ => {
@@ -114,30 +114,30 @@ self.addEventListener('fetch', event => {
 
                     var urls = staticUrls.concat(dynamicUrls);
 
-                    for(var i = 0; i < urls.length; i++) {
+                    for (var i = 0; i < urls.length; i++) {
                         url = urls[i];
-                        if(url.startsWith('/')) {
-                            url = "https://" + self.location.hostname + url;
+                        if (url.startsWith('/')) {
+                            url = 'https://' + self.location.hostname + url;
                         }
 
-                        if(url == event.request.url) {
+                        if (url == event.request.url) {
                             urlFound = true;
 
                             event.respondWith(
                                 caches.open(staticCacheName).then(cache => {
-                                    return cache.match(event.request).then(response => {
-                                        if(arrayIncludesPrefix(event.request.url, safeUrls)){
-                                            var fetchPromise = fetch(event.request).then(networkResponse => {
-                                                cache.put(event.request, networkResponse.clone());
-                                                return networkResponse;
-                                            });
-                                            return response || fetchPromise;
-                                        }
-                                        
-                                        return response;
-                                    });
-                                }
-                            ));
+                                        return cache.match(event.request).then(response => {
+                                            if (arrayIncludesPrefix(event.request.url, safeUrls)) {
+                                                var fetchPromise = fetch(event.request).then(networkResponse => {
+                                                    cache.put(event.request, networkResponse.clone());
+                                                    return networkResponse;
+                                                });
+                                                return response || fetchPromise;
+                                            }
+
+                                            return response;
+                                        });
+                                    }
+                                ));
                         }
                     }
 
@@ -163,34 +163,34 @@ self.addEventListener('fetch', event => {
 
             var urls = staticUrls.concat(dynamicUrls);
 
-            for(var i = 0; i < urls.length; i++) {
+            for (var i = 0; i < urls.length; i++) {
                 url = urls[i];
-                if(url.startsWith('/')) {
-                    url = "https://" + self.location.hostname + url;
+                if (url.startsWith('/')) {
+                    url = 'https://' + self.location.hostname + url;
                 }
 
-                if(url == event.request.url) {
+                if (url == event.request.url) {
                     urlFound = true;
                     event.respondWith(
                         caches.open(staticCacheName).then(cache => {
-                            return cache.match(event.request).then(response => {
-                                if(arrayIncludesPrefix(event.request.url, safeUrls)){
+                                return cache.match(event.request).then(response => {
+                                    if (arrayIncludesPrefix(event.request.url, safeUrls)) {
 
-                                    var fetchPromise = fetch(event.request).then(networkResponse => {
-                                        cache.put(event.request, networkResponse.clone());
-                                        return networkResponse;
-                                    });
-                                    return response || fetchPromise;
-                                }
-                                
-                                return response;
-                            });
-                        }
-                    ));
+                                        var fetchPromise = fetch(event.request).then(networkResponse => {
+                                            cache.put(event.request, networkResponse.clone());
+                                            return networkResponse;
+                                        });
+                                        return response || fetchPromise;
+                                    }
+
+                                    return response;
+                                });
+                            }
+                        ));
                 }
             }
 
-            if(!urlFound) {
+            if (!urlFound) {
                 return false;
             }
         }

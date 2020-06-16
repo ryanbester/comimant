@@ -1,0 +1,149 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+@import (reference) "variables";
+
+.myaccount-container {
+    h2 {
+        text-align: center;
+    }
+
+    h3 {
+        text-align: left;
+    }
+}
+
+.myaccount-stack-view__box {
+    display: flex;
+    border: 1px solid #666;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    padding: 15px;
+    color: #000;
+    text-decoration: none;
+    flex-wrap: wrap;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        background-color: @input-hover-color;
+    }
+
+    span {
+        margin: 0 15px 0 0;
+
+        &:first-child {
+            flex-grow: 1;
+        }
+    }
+}
+
+.myaccount-stack-view__box-value {
+    color: #666;
+}
+
+.myaccount-stack-view__box-container {
+    flex: 0 0 100%;
+}
+
+.myaccount-stack-view__box--related {
+    margin: 0;
+
+    &:not(:last-child) {
+        #border-bottom-radius(0);
+        border-bottom: none;
+    }
+
+    &:not(:first-child) {
+        #border-top-radius(0);
+    }
+}
+
+.myaccount-table-view {
+    border-radius: 7px;
+    border: 1px solid #666;
+    overflow: hidden;
+}
+
+.myaccount-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-style: hidden;
+
+    tr {
+        border-radius: 7px;
+        border: 1px solid #666;
+
+        &:hover {
+            background-color: @input-hover-color;
+        }
+    }
+
+    td, th {
+        padding: 15px;
+    }
+
+    a {
+        #reset-link();
+    }
+}
+
+.myaccount-table__cell--align-left {
+    text-align: left;
+}
+
+.myaccount-table__cell--align-right {
+    text-align: right;
+}
+
+.myaccount-form input[type='text'],
+.myaccount-form input[type='password'],
+.myaccount-form input[type='email'] {
+    width: calc(100% - 20px);
+}
+
+.myaccount-form input {
+    width: 100%;
+}
+
+#myaccount-data-usage-bar {
+    height: 20px;
+    position: relative;
+    margin-top: 15px;
+    background-color: #BBB;
+    border-radius: 7px;
+}
+
+.myaccount-data-usage-bar__used {
+    position: absolute;
+    height: 100%;
+    background-color: #002DB3;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+#myaccount-name-form-day,
+#admin-user-form-day {
+    width: 25%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#myaccount-name-form-month,
+#admin-user-form-month {
+    width: 50%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
+#myaccount-name-form-year,
+#admin-user-form-year {
+    width: 25%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

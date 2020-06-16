@@ -1,15 +1,16 @@
 /*
-Copyright (C) 2019-2020 Bester Intranet
-*/
+ * Copyright (C) 2019 - 2020 Bester Intranet
+ */
 
 const redis = require('redis');
-const { PluginManager } = require('../core/plugins');
+const { PluginManager } = require('../core/plugins/pluginmanager');
+//const { PluginManager } = require('../core/plugins');
 
-var client;
-var subscriber;
+let client;
+let subscriber;
 
 module.exports.getConnection = () => {
-    if(client !== undefined) {
+    if (client !== undefined) {
         return client;
     }
 
@@ -24,10 +25,10 @@ module.exports.getConnection = () => {
     });
 
     return client;
-}
+};
 
 module.exports.getSubscriber = () => {
-    if(subscriber !== undefined) {
+    if (subscriber !== undefined) {
         return subscriber;
     }
 
@@ -42,14 +43,14 @@ module.exports.getSubscriber = () => {
     });
 
     return subscriber;
-}
+};
 
 module.exports.handleMessages = (subscriber) => {
     subscriber.on('message', (channel, message) => {
-        switch(channel) {
+        switch (channel) {
             case 'plugin-manager':
                 PluginManager.handleMessage(message);
                 break;
         }
     });
-}
+};

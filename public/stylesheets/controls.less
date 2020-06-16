@@ -1,0 +1,243 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+@import (reference) "variables";
+
+#input-hover() {
+    border: 1px solid #000;
+    background-color: @input-hover-color;
+}
+
+#input-focus() {
+    border: 1px solid #000;
+    outline: none;
+    background-color: @input-focus-color;
+}
+
+input, .button {
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #666;
+    border-radius: 7px;
+    -webkit-appearance: none;
+
+    &:focus {
+        #input-focus();
+    }
+
+    &:hover:not(:disabled) {
+        #input-hover();
+    }
+
+    &:disabled {
+        background-color: @input-disabled-color;
+    }
+}
+
+input[type="submit"] {
+    color: #FFF;
+    background-color: #002DB3;
+}
+
+input.is-invalid {
+    border-color: #721C24;
+    background-color: #F8D7DA;
+}
+
+input.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.button {
+    font-size: 16px;
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+
+    &:not(:only-child) {
+        margin-right: 15px;
+    }
+}
+
+.form-button {
+    font-size: 20px;
+    width: calc(100% - 20px);
+    text-align: center;
+}
+
+select {
+    background-color: #FFF;
+    margin-bottom: 15px;
+    border: 1px solid #666;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 7px;
+
+    &:focus {
+        #input-focus();
+    }
+
+    &:hover:not(:disabled) {
+        #input-hover();
+    }
+
+    &:disabled {
+        background-color: @input-disabled-color;
+    }
+}
+
+.invalid-feedback {
+    display: none;
+    color: #721C24;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.checkbox-container, .radio-container {
+    display: block;
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 0;
+    margin-top: 0;
+    cursor: pointer;
+    #disable-user-select();
+}
+
+.checkbox-container.inline, .radio-container.inline {
+    display: inline-block;
+}
+
+.checkbox-container input, .radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkbox-container:hover .checkbox-checkmark, .radio-container:hover .radio-checkmark {
+    #input-hover();
+}
+
+.checkbox-checkmark, .radio-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #FFF;
+    border: 1px solid #666;
+    border-radius: 7px;
+    font-size: 20px;
+}
+
+.radio-checkmark {
+    border-radius: 50%;
+
+    &:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 4px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        background-color: #FFF;
+        border-radius: 50%;
+    }
+}
+
+.checkbox-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #FFF;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkbox-checkmark, .radio-container input:checked ~ .radio-checkmark {
+    background-color: #002DB3;
+}
+
+.checkbox-container input:checked ~ .checkbox-checkmark:after, .radio-container input:checked ~ .radio-checkmark:after {
+    display: block;
+}
+
+.checkbox-container--table-cell {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+.checkbox-container__input--table-cell {
+    position: relative !important;
+    display: block;
+}
+
+.user-dropdown {
+    position: relative;
+    border: 1px solid transparent;
+    padding-left: 7px;
+    padding-right: 7px;
+    #disable-user-select();
+
+    &:hover {
+        background-color: #CFDBFF;
+        border: 1px solid #000;
+        #border-top-radius(7px);
+
+        .user-dropdown__content {
+            display: block;
+        }
+    }
+}
+
+.user-dropdown__header {
+    display: inline-block;
+}
+
+.user-dropdown__image {
+    position: relative;
+    margin-left: 12px;
+}
+
+.user-dropdown__content {
+    position: absolute;
+    left: -1px;
+    width: 100%;
+    background-color: #FFF;
+    display: none;
+    border: 1px solid #000;
+    border-top: none;
+    #border-bottom-radius(7px);
+}
+
+.user-dropdown-content__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.user-dropdown__item {
+    &:last-child {
+        #border-bottom-radius(7px);
+    }
+
+    &:hover {
+        background-color: @input-hover-color;
+    }
+
+    a {
+        display: block;
+        padding: 7px;
+        text-decoration: none;
+        color: #000;
+    }
+}

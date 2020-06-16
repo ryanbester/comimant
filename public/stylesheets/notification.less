@@ -1,0 +1,83 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+
+.notification-container {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: calc(100% - 30px);
+    max-width: 300px;
+}
+
+.notification-container__notification {
+    border-radius: 7px;
+    background-color: #FFF;
+    color: #000;
+    box-shadow: 0 0 9px 3px #0000006E;
+    text-shadow: none;
+    #transition(box-shadow, 0.25s);
+    padding: 0;
+    overflow: visible;
+    animation: slide-left 0.4s ease;
+    margin-top: 15px;
+
+    h1 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 200;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 200;
+    }
+}
+
+.notification-container__notification--success {
+    background-color: #06D606;
+}
+
+.notification-container__notification--warning {
+    background-color: #DEDE1E;
+}
+
+.notification-container__notification--error {
+    background-color: #DC2F2F;
+    color: #FFF;
+}
+
+.notification-container__notification-content {
+    display: block;
+    overflow-y: hidden;
+    padding: 15px;
+}
+
+.notification-container__notification-close {
+    position: absolute;
+    top: -3px;
+    right: 0;
+    font-size: 26px;
+    cursor: pointer;
+
+    &::after {
+        content: '\00D7';
+    }
+}
+
+.notification-container__notification-title {
+    position: relative;
+}
+
+.notification-container__notification-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+}
+
+.notification-container__notification-button {
+    text-align: center;
+    padding: 5px;
+    text-decoration: underline;
+    cursor: pointer;
+}

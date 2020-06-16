@@ -1,0 +1,21 @@
+{
+  "recurseDepth": 10,
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "sourceType": "module",
+  "source": {
+    "include": [
+      "../"
+    ],
+    "exclude": [
+      "../node_modules"
+    ],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+    "plugins/markdown",
+    "plugins/summarize"
+  ]
+}

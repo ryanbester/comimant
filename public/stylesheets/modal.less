@@ -1,0 +1,104 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #FFF;
+    padding: 15px;
+    width: 50%;
+    margin: 25px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 4px 0 #0000006E;
+    text-shadow: none;
+    color: #000;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    label {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        font-size: 16px;
+
+        &:extend(.heading) {
+            font-size: 18px;
+        }
+    }
+
+    h2 {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    @media screen and (max-width: 940px) {
+        width: 75%;
+    }
+
+    @media screen and (max-width: 560px) {
+        width: calc(100% - 30px);
+    }
+}
+
+.modal-content input:not([type='radio']):not([type='checkbox']) {
+    width: calc(100% - 30px);
+    margin: 0;
+    font-size: 16px;
+}
+
+.modal-content input.inline:not([type='radio']):not([type='checkbox']) {
+    width: initial;
+}
+
+.modal__title {
+    margin: 0;
+    color: #000;
+    font-size: 30px;
+}
+
+.modal__actions {
+    text-align: right;
+}
+
+.modal__action-button {
+    padding: 10px;
+    background: none;
+    color: #000;
+    border: none;
+    font: inherit;
+    font-size: 20px;
+    outline: none;
+    margin: 10px 0 0 10px;
+
+    border-radius: 5px;
+    box-shadow: 0 0 4px 0 #0000006E;
+    text-shadow: none;
+    #transition(box-shadow color, 0.25s);
+
+    &.primary {
+        background-color: #002DB3;
+        color: #FFF;
+    }
+
+    &.destructive {
+        background-color: #BB2A2A;
+        color: #FFF;
+    }
+
+    &:hover {
+        box-shadow: 0 0 17px 2px #0000006E;
+    }
+}

@@ -1,0 +1,100 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+@import (reference) "variables";
+
+.login-form input:not([type="checkbox"]) {
+    width: calc(500px - 20px);
+}
+
+.login-form input[type="submit"] {
+    width: 500px;
+}
+
+#login-form__error-message {
+    color: #721C24;
+    background-color: #F8D7DA;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+#login-form__input-username {
+    display: inline-block;
+    width: 280px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#login-form__input-email-domain {
+    width: 180px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    margin-bottom: 0;
+}
+
+.login-form__email-domain-dropdown {
+    display: inline-block;
+    width: 200px;
+    position: absolute;
+}
+
+.login-form__email-domain-dropdown__image {
+    position: absolute;
+    top: 14px;
+    right: 8px;
+}
+
+.login-form__email-domain-dropdown__image:hover + #login-form__input-email-domain {
+    border-color: #000;
+    background-color: #DDD;
+}
+
+.login-form__email-domain-dropdown__content {
+    background-color: #FFF;
+    display: none;
+    border: 1px solid #000;
+    border-top: none;
+    #border-bottom-radius(7px);
+}
+
+.login-form__email-domain-dropdown-content__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form__email-domain-dropdown__item {
+    padding: 7px;
+
+    &:last-child {
+        #border-bottom-radius(7px);
+    }
+}
+
+.login-form__email-domain-dropdown__item:hover, .login-form__email-domain-dropdown__item--active {
+    background-color: @input-hover-color;
+}
+
+@media screen and (max-width: 680px) {
+    .login-form-container {
+        width: 100%;
+    }
+
+    .login-form input:not([type="checkbox"]) {
+        width: calc(100% - 20px)
+    }
+
+    .login-form input[type="submit"] {
+        width: 100%;
+    }
+
+    #login-form__input-username {
+        width: calc(100% - 220px);
+    }
+
+    #login-form__input-email-domain {
+        width: 180px;
+    }
+}

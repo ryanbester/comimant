@@ -1,0 +1,75 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@keyframes slide-left {
+    0% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: -468px 0
+    }
+    100% {
+        background-position: 468px 0
+    }
+}
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+* {
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+pre {
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+label {
+    display: inline-block;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.clear {
+    clear: both;
+}
+
+.error {
+    color: #721C24;
+    background-color: #F8D7DA;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.success {
+    color: #155724;
+    background-color: #D4EDDA;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.red-text {
+    color: #721C24;
+}

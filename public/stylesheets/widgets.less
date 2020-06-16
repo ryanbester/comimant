@@ -1,0 +1,52 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+@import (reference) "variables";
+
+.widget-add-dialog-type-container {
+    display: grid;
+    border: 1px dashed #000;
+    border-radius: 7px;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    overflow: hidden;
+}
+
+.widget-add-dialog-type-container__item {
+    display: inline-block;
+    text-align: center;
+    border-radius: 6px;
+
+    &:hover {
+        background-color: @input-hover-color;
+    }
+
+    &:active {
+        background-color: #002DB3;
+        color: #FFF;
+    }
+}
+
+.widget-add-dialog-type-container__item-image {
+    width: 50px;
+    height: 50px;
+}
+
+.widget-add-dialog-type-container__item-text {
+    margin: 0;
+}
+
+#widget-add-dialog-preview, #widget-edit-dialog-preview {
+    min-height: 100px;
+    border-radius: 7px;
+    background-color: #FFF;
+    color: #000;
+    box-shadow: 0 0 4px 0 #0000006E;
+    text-shadow: none;
+    padding: 15px;
+    overflow: visible;
+    animation: slide-up 0.4s ease;
+}
+
+.home-page-widget-news-container-item h2 {
+    font-size: 16px;
+}

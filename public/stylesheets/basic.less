@@ -1,0 +1,28 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+
+.basic-container {
+    padding: 15px 10%;
+
+    @media screen and (max-width: 840px) {
+        padding-left: 7%;
+        padding-right: 7%;
+    }
+}
+
+#basic-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#basic-header table tr td h1 {
+    padding-left: 15px;
+}
+
+.basic-header-left, .basic-header-right {
+    display: flex;
+    flex-direction: column;
+}

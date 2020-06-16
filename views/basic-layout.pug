@@ -1,0 +1,13 @@
+//- Copyright (C) 2019 - 2020 Bester Intranet
+extends head
+
+block layout
+    .basic-container
+        #basic-header
+            table
+                tr
+                    td
+                        img(src='https://' + staticDomain + '/assets/images/logo.png' srcset='https://' + staticDomain + '/assets/images/logo96x96.png 2x' height='48' width='48')
+                    td
+                        h1= app.settings.title
+        block content

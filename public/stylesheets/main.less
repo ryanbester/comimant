@@ -1,0 +1,41 @@
+// Copyright (C) 2019 - 2020 Bester Intranet
+
+@import (reference) "mixins";
+@import (reference) "variables";
+@import "global";
+@import "controls";
+@import "modal";
+@import "notification";
+
+@import "main-header";
+@import "navigation";
+
+@import "basic";
+
+.main-container {
+    height: 100%;
+    padding: 15px;
+    background-attachment: fixed;
+    background-size: 100vw 100vh;
+    background-image: radial-gradient(circle, rgba(0, 45, 179, 1) 0%, rgba(207, 219, 255, 1) 100%);;
+    min-height: 100vh;
+    color: #FFF;
+    text-shadow: 0 0 20px #0000006E;
+}
+
+.main-container--blank {
+    background-color: #FFF;
+    padding: 15px;
+}
+
+.logo-link, .header-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container--center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

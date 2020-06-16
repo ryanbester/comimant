@@ -3,3 +3,10 @@
 node_modules
 coverage
 plugins
+.idea
+jsdoc
+
+*.css
+*.css.map
+
+config.json
