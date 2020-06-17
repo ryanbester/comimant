@@ -1,0 +1,49 @@
+//- Copyright (C) 2019 - 2020 Comimant
+
+extends ../basic-layout
+block content
+    .container--center.basic-header-body-container
+        h1= message
+        .login-form-container
+            if error
+                h2#login-form__error-message= error
+            form.login-form(method='POST' action='')
+                input.login-form__input#login-form__input-username(
+                    type='text'
+                    name='username'
+                    placeholder='Username'
+                    value= username
+                )
+                .login-form__email-domain-dropdown
+                    img.login-form__email-domain-dropdown__image(src='https://' + staticDomain + '/assets/images/downarrow16x16.png' srcset='https://' + staticDomain + '/assets/images/downarrow32x32.png 2x')
+                    input.login-form__input#login-form__input-email-domain(
+                        type='text'
+                        name='emailDomain'
+                        tabindex='-1'
+                        value= (emailDomain != null ? emailDomain : '@ryanbester.com')
+                    )
+                    .login-form__email-domain-dropdown__content
+                        ul.login-form__email-domain-dropdown-content__list#login-form__email-dropdown-content__list
+                            li.login-form__email-domain-dropdown__item= '@ryanbester.com'
+                            li.login-form__email-domain-dropdown__item= '@gmail.com'
+                br
+                input.login-form__input#login-form__input-password(
+                    type='password'
+                    name='password'
+                    placeholder='Password'
+                )
+                br
+                label.login-form__checkbox.checkbox-container Remember me
+                    input#login-form__checkbox-remember(
+                        type='checkbox'
+                        name='remember_me'
+                        checked
+                        tabindex='-1'
+                    )
+                    span.checkbox-checkmark
+                input(type='hidden' name='nonce' value=nonce)
+                br
+                input.login-form__button#login-form__button-login(
+                    type='submit'
+                    value='Login'
+                )

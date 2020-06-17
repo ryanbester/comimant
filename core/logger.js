@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - 2020 Bester Intranet
+ * Copyright (C) 2019 - 2020 Comimant
  */
 
 module.exports.Logger = class Logger {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - 2020 Bester Intranet
+ * Copyright (C) 2019 - 2020 Comimant
  */
 
 const path = require('path');
@@ -53,7 +53,7 @@ module.exports.Config = class Config {
 
             return true;
         } catch (e) {
-            Logger.error('Cannot load Comimant configuration file' + e);
+            Logger.error('Cannot load Comimant configuration file');
             return false;
         }
     }
@@ -61,16 +61,17 @@ module.exports.Config = class Config {
     /**
      * Gets an option from the configuration file.
      * @param {string} name The fully qualified path of the configuration option.
+     * @param {any} defaultValue The default value to return if the option is null.
      * @return {null|any} Returns the option as an object or primitive type, or null on failure.
      */
-    getOption(name) {
+    getOption(name, defaultValue = null) {
         const parts = name.split('.');
 
         let lastObj = this.config;
         for (let i = 0; i < parts.length; i++) {
             const part = parts[i];
             if (!lastObj.hasOwnProperty(part)) {
-                return null;
+                return defaultValue;
             }
 
             lastObj = lastObj[part];

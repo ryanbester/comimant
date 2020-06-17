@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - 2020 Bester Intranet
+ * Copyright (C) 2019 - 2020 Comimant
  */
 
 const fs = require('fs');
@@ -32,7 +32,7 @@ module.exports.PluginManager = class PluginManager {
     /**
      * Queries the database to get a list of enabled plugins. Each plugin in the database will automatically have its
      * manifest file validated, and be added to the Redis cache.
-     * @return {Promise<boolean|Error>}
+     * @return {Promise<boolean>|Promise<Error>}
      */
     static getEnabledPlugins() {
         return new Promise((resolve, reject) => {
@@ -44,7 +44,10 @@ module.exports.PluginManager = class PluginManager {
                     (error, results) => {
                         connection.end();
 
-                        if (error) reject(error);
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
 
                         if (results.length > 0) {
                             const client = redis.getConnection();
@@ -114,7 +117,7 @@ module.exports.PluginManager = class PluginManager {
      * sending a
      * `callOnEnable:[pluginID]` signal.
      * @param {string} id The plugin ID.
-     * @return {Promise<boolean|Error>} True on success.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
      */
     static enablePlugin(id) {
         const caller = Util.getCallerFile();
@@ -152,7 +155,10 @@ module.exports.PluginManager = class PluginManager {
                         (error) => {
                             connection.end();
 
-                            if (error) reject(error);
+                            if (error) {
+                                reject(error);
+                                return;
+                            }
 
                             const client = redis.getConnection();
                             client.sadd('plugins', id);
@@ -175,7 +181,7 @@ module.exports.PluginManager = class PluginManager {
      * Disables the plugin, removing the plugin from the database and the Redis cache, before sending a
      * `callOnDisable:[pluginID]` signal.
      * @param {string} id The plugin ID.
-     * @return {Promise<boolean|Error>} True on success.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
      */
     static disablePlugin(id) {
         const caller = Util.getCallerFile();
@@ -198,7 +204,10 @@ module.exports.PluginManager = class PluginManager {
                 (error) => {
                     connection.end();
 
-                    if (error) reject(error);
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
 
                     const client = redis.getConnection();
                     client.hget('plugin:' + id, 'main', (err, res) => {

@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2019-2020 Bester Intranet
-*/
+ * Copyright (C) 2019 - 2020 Comimant
+ */
 
 const staticCacheName = 'static-v1';
 

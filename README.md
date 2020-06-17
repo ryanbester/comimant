@@ -1,4 +1,4 @@
-Bester Intranet
+Comimant
 
 [![pipeline status](https://gitlab.ryanbester.com/ryan/bester-intranet/badges/master/pipeline.svg)](https://gitlab.ryanbester.com/ryan/bester-intranet/commits/master)
 

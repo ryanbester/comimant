@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - 2020 Bester Intranet
+ * Copyright (C) 2019 - 2020 Comimant
  */
 
 /*jshint esversion: 8 */
@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 
 const routes = require('./routes/index');
 const redis = require('./db/redis');
+const { Config } = require('./core/config');
 const { PluginManager } = require('./core/plugins/pluginmanager');
 const { Util } = require('./core/util');
 const { Logger, LoggerColors } = require('./core/logger');
@@ -21,7 +22,7 @@ const app = module.exports = express();
 
 global.__approot = path.resolve(__dirname);
 
-app.set('title', 'Bester Intranet');
+app.set('title', 'Comimant');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -37,7 +38,6 @@ app.use(express.urlencoded({
 }));
 
 app.use(function (req, res, next) {
-    res.locals.tld = Util.getTLD();
     res.locals.app = app;
     next();
 });
@@ -84,6 +84,18 @@ const startServer = _ => {
 };
 
 Logger.log(LoggerColors.BG_GREEN + 'Welcome to Comimant');
+
+Logger.log(LoggerColors.DIM + 'Loading configuration...');
+
+// Load configuration
+const config = Config.getInstance();
+
+if (!config.getOption('security.ssl_enabled', true)) {
+    Logger.securityWarning(
+        'SSL is not enabled. Consider setting security.ssl_enabled in your configuration file to true.');
+}
+
+app.set('title', Util.coalesceString(config.getOption('title'), 'Comimant'));
 
 Logger.log(LoggerColors.DIM + 'Activating plugins...');
 

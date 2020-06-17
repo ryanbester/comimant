@@ -9,3 +9,4 @@ config.json
 
 *.css
 *.css.map
+/public/help/

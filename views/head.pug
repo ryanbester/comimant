@@ -1,4 +1,4 @@
-//- Copyright (C) 2019 - 2020 Bester Intranet
+//- Copyright (C) 2019 - 2020 Comimant
 doctype html
 html(lang='en-gb')
     head
@@ -9,25 +9,26 @@ html(lang='en-gb')
         link(rel='stylesheet' href='https://' + mainDomain + '/stylesheets/main.css' type='text/css')
         if stylesheets
             each stylesheet in stylesheets
-                link(ref='stylesheet' href= stylesheet type='text/css')
-        link(rel='mainifest' href='https://' + mainDomain + '/manifest.webmanifest')
+                link(rel='stylesheet' href= stylesheet type='text/css')
+        if sendManifest
+            link(rel='manifest' href='https://' + mainDomain + '/manifest.webmanifest')
         meta(charset='UTF-8')
         meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
         meta(name='mobile-web-app-capable' content='yes')
         link(rel='shortcut icon' href='https://' + staticDomain + '/favicon.ico' type='image/x-icon')
-        link(rel='apple-touch-icon' sizes='180x180' href='https://' + domain + '/assets/images/logo180x180.png')
-        link(rel='apple-touch-startup-image' href='https://' + domain + '/assets/images/logo192x192.png')
-        link(rel='icon' href='https://' + domain + '/assets/images/logo48x48.png' type='image/png' sizes='48x48')
-        link(rel='icon' href='https://' + domain + '/assets/images/logo192x192.png' type='image/png' sizes='192x192')
+        link(rel='apple-touch-icon' sizes='180x180' href='https://' + staticDomain + '/assets/images/logo180x180.png')
+        link(rel='apple-touch-startup-image' href='https://' + staticDomain + '/assets/images/logo192x192.png')
+        link(rel='icon' href='https://' + staticDomain + '/assets/images/logo48x48.png' type='image/png' sizes='48x48')
+        link(rel='icon' href='https://' + staticDomain + '/assets/images/logo192x192.png' type='image/png' sizes='192x192')
         meta(name='author' content='Ryan Bester')
-        meta(name='keywords' content='bester intranet home')
-        meta(name='description' content='Bester Intranet')
-        meta(property='og:description' content='Bester Intranet')
-        meta(property='og:title' content='Bester Intranet')
+        meta(name='keywords' content= keywords)
+        meta(name='description' content= description)
+        meta(property='og:description' content= description)
+        meta(property='og:title' content= app.settings.title)
         meta(property='og:type' content='website')
         meta(property='og:image' content='https://' + staticDomain + '/assets/images/logo512x512.png')
         meta(property='og:url' content='https://' + mainDomain)
-        meta(name='theme-color' content='#FFFFFF')
+        meta(name='theme-color' content='#FFF')
         meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
         meta(name='apple-mobile-web-app-title' content= app.settings.title)
         meta(name='application-name' content= app.settings.title)
@@ -39,13 +40,14 @@ html(lang='en-gb')
                 script(src= script)
         script(src='https://' + mainDomain + '/scripts/dialog.js')
         script(src='https://' + mainDomain + '/scripts/notification.js')
-        script(src='https://' + mainDimaon + '/scripts/main.js')
-        script.
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js').then(function () {
-                    console.log("Service Worker Registered");
-                })
-            }
+        script(src='https://' + mainDomain + '/scripts/main.js')
+        if sendSw
+            script.
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js').then(function () {
+                        console.log("Service Worker Registered");
+                    });
+                }
         if scriptsAfter
             each script in scriptsAfter
                 script(src= script)
