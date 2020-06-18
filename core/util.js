@@ -3,7 +3,7 @@
  */
 
 const { Config } = require('./config');
-const { Domains } = require('./domains');
+//const { Domains } = require('./domains');
 
 /**
  * Class containing various helper methods.
@@ -17,7 +17,8 @@ module.exports.Util = class Util {
      * @param url The URL.
      * @return {string} The new URL.
      */
-    static urlRewrite(host, url) {
+
+    /*static urlRewrite(host, url) {
         let newUrl;
 
         if (url.startsWith('/accounts/')) {
@@ -34,7 +35,7 @@ module.exports.Util = class Util {
         }
 
         return newUrl;
-    }
+    }*/
 
     /**
      * Gets the full path including the mount point
@@ -84,8 +85,11 @@ module.exports.Util = class Util {
      * Gets the current protocol depending if SSL is enabled or not.
      * @return {string} The current protocol.
      */
-    static getProtocol() {
-        return (Config.getInstance().getOption('security.ssl_enabled', true)) ? 'https://' : 'http://';
+    static getProtocol(domain) {
+        const { security } = domain;
+        const { ssl_enabled } = security;
+
+        return (ssl_enabled === false ? 'http://' : 'https://');
     }
 
     /**

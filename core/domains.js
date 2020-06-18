@@ -2,16 +2,17 @@
  * Copyright (C) 2019 - 2020 Comimant
  */
 
+const { Util } = require('./util');
 const { Config } = require('./config');
 
 module.exports.Domains = class Domains {
     constructor(host) {
         this.host = host;
-        const domains = Config.getInstance().getOption("domains");
+        const domains = Config.getInstance().getOption('domains');
 
         for (let i = 0; i < domains.length; i++) {
-            const { root_domain } = domains[i];
-            if (host.endsWith(root_domain)) {
+            const { root } = domains[i];
+            if (host.endsWith(root.domain)) {
                 this.domainObject = domains[i];
             }
         }
@@ -22,17 +23,17 @@ module.exports.Domains = class Domains {
             return this.host;
         }
 
-        const { root_domain } = this.domainObject;
-        return root_domain;
+        const { root } = this.domainObject;
+        return root;
     }
 
-    getDomain() {
+    getMainDomain() {
         if (this.domainObject === undefined) {
             return this.host;
         }
 
-        const { domain } = this.domainObject;
-        return domain;
+        const { main } = this.domainObject;
+        return main;
     }
 
     getAuthDomain() {

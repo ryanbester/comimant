@@ -1,0 +1,14 @@
+//- Copyright (C) 2019 - 2020 Comimant
+
+extends ../home-layout
+
+block main-content
+    .main-container
+        if user
+            h1 Hello, #{user.first_name} #{user.last_name}
+        else
+            h1 Login to customise your Dashboard
+            p
+                a(href= accountsProtocol + accountsDomain + "/login") Login
+        block home-content
+            .home-page-grid-container

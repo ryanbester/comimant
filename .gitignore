@@ -4,9 +4,8 @@ node_modules
 coverage
 /plugins
 .idea
-jsdoc
 config.json
-
+jsdoc
 *.css
 *.css.map
-/public/help/
+/public/help

@@ -3,7 +3,14 @@
  */
 
 $(function () {
-    $('#login-form__input-username').focus();
+    let usernameInput = $('#login-form__input-username');
+    let passwordInput = $('#login-form__input-password');
+
+    if (usernameInput.val().length >= 1) {
+        passwordInput.focus();
+    } else {
+        usernameInput.focus();
+    }
 
     const emailDomainInput = $('#login-form__input-email-domain');
     let currentFocus;

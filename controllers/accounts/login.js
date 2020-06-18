@@ -14,17 +14,29 @@ exports.showLoginPage = (req, res) => {
     res.set('Cache-Control', 'no-store');
 
     const renderLoginPage = () => {
+        let error = req.query.error;
+        if (error !== undefined) {
+            error = Sanitizer.string(error);
+        }
+        let errorMsg;
+        switch (error) {
+            case 'account_locked':
+                errorMsg = 'Your account is locked';
+                break;
+        }
+
         Nonce.createNonce('user-login', '/accounts/login').then(nonce => {
             res.render('accounts/login', {
                 stylesheets: [
-                    Util.getProtocol() + res.locals.mainDomain + '/stylesheets/login.css'
+                    res.locals.protocol + res.locals.mainDomain + '/stylesheets/login.css'
                 ],
                 scriptsAfter: [
-                    Util.getProtocol() + res.locals.mainDomain + '/scripts/login-page.js'
+                    res.locals.protocol + res.locals.mainDomain + '/scripts/login-page.js'
                 ],
                 title: 'Login',
                 message: Util.coalesceString(Config.getInstance().getOption('messages.login'), 'Login to Comimant'),
-                nonce: nonce
+                nonce: nonce,
+                error: errorMsg
             });
         });
     };
@@ -34,7 +46,16 @@ exports.showLoginPage = (req, res) => {
         accessToken.checkToken().then(_ => {
             const user = new User(accessToken.user_id);
             user.verifyUser().then(_ => {
-                res.redirect(Util.getProtocol() + res.locals.mainDomain);
+                user.loadInfo().then(_ => {
+                    if (user.locked) {
+                        renderLoginPage();
+                        return;
+                    }
+
+                    res.redirect(res.locals.protocol + res.locals.mainDomain);
+                }, _ => {
+                    renderLoginPage();
+                });
             }, _ => {
                 renderLoginPage();
             });
@@ -51,10 +72,10 @@ exports.performLogin = (req, res) => {
         Nonce.createNonce('user-login', '/accounts/login').then(nonce => {
             res.render('accounts/login', {
                 stylesheets: [
-                    Util.getProtocol() + res.locals.mainDomain + '/stylesheets/login.css'
+                    res.locals.protocol + res.locals.mainDomain + '/stylesheets/login.css'
                 ],
                 scriptsAfter: [
-                    Util.getProtocol() + res.locals.mainDomain + '/scripts/login-page.js'
+                    res.locals.protocol + res.locals.mainDomain + '/scripts/login-page.js'
                 ],
                 title: 'Login',
                 message: Util.coalesceString(Config.getInstance().getOption('messages.login'), 'Login to Comimant'),
@@ -74,14 +95,17 @@ exports.performLogin = (req, res) => {
 
     if (!username) {
         renderError('Your username or password is incorrect');
+        return;
     }
 
     if (!emailDomain) {
         renderError('Your username or password is incorrect');
+        return;
     }
 
     if (!password) {
         renderError('Your username or password is incorrect');
+        return;
     }
 
     if (rememberMe !== 'on') {
@@ -97,6 +121,11 @@ exports.performLogin = (req, res) => {
                 const user = result;
 
                 user.loadInfo().then(_ => {
+                    if (user.locked) {
+                        renderError('Your account is locked');
+                        return;
+                    }
+
                     // If authentication is successful, generate an access token
                     const accessToken = new AccessToken(user.user_id);
 
@@ -123,7 +152,7 @@ exports.performLogin = (req, res) => {
                         }
 
                         if (req.query.continue === undefined) {
-                            res.redirect(301, Util.getProtocol() + res.locals.mainDomain + '/?nc=1');
+                            res.redirect(301, res.locals.protocol + res.locals.mainDomain + '?nc=1');
                         } else {
                             res.redirect(301, decodeURIComponent(req.query.continue));
                         }

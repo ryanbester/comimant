@@ -41,7 +41,7 @@ const dynamicUrls = [
     '/',
     '/scripts/grid.js',
     '/scripts/dialog.js',
-    '/scripts/main.js',
+    '/scripts/index.js',
     '/api/internal/widgets/'
 ];
 

@@ -22,10 +22,10 @@ module.exports.User = class User {
      * @param {Date} date_added The date joined.
      * @param {Date} dob The date of birth.
      * @param {string} image_url Path to the profile image.
-     * @param {Object} privileges Privileges object.
+     * @param {boolean} locked Whether the account is locked or not.
      */
     constructor(user_id, username = undefined, email_address = undefined, first_name = undefined, last_name = undefined,
-                date_added = undefined, dob = undefined, image_url = undefined, privileges = undefined) {
+                date_added = undefined, dob = undefined, image_url = undefined, locked = undefined) {
         this.user_id = user_id;
         this.username = username;
         this.email_address = email_address;
@@ -34,7 +34,7 @@ module.exports.User = class User {
         this.date_added = date_added;
         this.dob = dob;
         this.image_url = image_url;
-        this.privileges = privileges;
+        this.locked = locked;
     }
 
     /**
@@ -59,7 +59,7 @@ module.exports.User = class User {
             connection.query('SELECT username,' +
                 ' CONVERT(AES_DECRYPT(email_address, UNHEX(' + connection.escape(
                     process.env.DATABASE_KEY) + ')) USING utf8) AS email_address,' +
-                ' first_name, last_name, date_added, dob, image_url' +
+                ' first_name, last_name, date_added, dob, image_url, locked' +
                 ' FROM users WHERE user_id = UNHEX(' + connection.escape(this.user_id) + ')',
                 (error, results) => {
                     // Close the connection
@@ -80,6 +80,7 @@ module.exports.User = class User {
                         this.date_added = new Date(results[0].date_added);
                         this.dob = new Date(results[0].dob);
                         this.image_url = results[0].image_url;
+                        this.locked = results[0].locked == 1 ? true : false;
 
                         resolve(true);
                     } else {
@@ -168,7 +169,8 @@ module.exports.User = class User {
                                 + 'last_name = ' + connection.escape(this.last_name) + ', '
                                 + 'date_added = ' + connection.escape(date_added) + ', '
                                 + 'dob = ' + connection.escape(dob) + ', '
-                                + 'image_url = ' + connection.escape(this.image_url)
+                                + 'image_url = ' + connection.escape(this.image_url) + ', '
+                                + 'locked = ' + connection.escape(this.locked == true ? 1 : 0)
                                 + ' WHERE user_id = UNHEX(' + connection.escape(this.user_id) + ')',
                                 (error) => {
                                     // Close the connection
@@ -193,7 +195,8 @@ module.exports.User = class User {
                                 + connection.escape(this.last_name) + ', '
                                 + connection.escape(date_added) + ', '
                                 + connection.escape(dob) + ', '
-                                + connection.escape(this.image_url) + ')',
+                                + connection.escape(this.image_url) + ', '
+                                + connection.escape(this.locked == true ? 1 : 0) + ')',
                                 (error) => {
                                     // Close the connection
                                     connection.end();
@@ -333,6 +336,193 @@ module.exports.User = class User {
         });
     }
 
-    // TODO: Add privileges code
+    /**
+     * Gets all the privileges the user has.
+     * @return {Promise<Array>|Promise<Error>} The array of privileges.
+     */
+    getAllPrivileges() {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection();
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'SELECT privilege_name FROM privileges WHERE user_id = UNHEX(' + connection.escape(this.user_id) + ')',
+                (error, results) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    let privileges = [];
+                    for (let i = 0; i < results.length; i++) {
+                        privileges.push(results[i].privilege_name);
+                    }
+
+                    resolve(privileges);
+                });
+        });
+    }
+
+    /**
+     * Grants the user a privilege.
+     * @param {string} name The privilege name.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
+     */
+    grantPrivilege(name) {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection('modify');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'INSERT INTO privileges VALUES ('
+                + 'UNHEX(' + connection.escape(this.user_id) + '), '
+                + connection.escape(name) + ')',
+                (error) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(true);
+                });
+        });
+    }
+
+    /**
+     * Revokes a privilege from the user.
+     * @param {string} name The privilege name.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
+     */
+    revokePrivilege(name) {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'DELETE FROM privileges WHERE user_id = '
+                + 'UNHEX(' + connection.escape(this.user_id) + ') '
+                + 'AND privilege_name = ' + connection.escape(name),
+                (error) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(true);
+                });
+        });
+    }
+
+    /**
+     * Checks if the user has a privilege.
+     * @param {string} name The name of the privilege.
+     * @return {Promise<boolean>|Promise<Error>} True if the user has the privilege or false if they don't.
+     */
+    hasPrivilege(name) {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection();
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'SELECT COUNT(*) AS PrivilegeCount FROM privileges WHERE '
+                + 'user_id = UNHEX(' + connection.escape(this.user_id) + ') AND '
+                + 'privilege_name = ' + connection.escape(name),
+                (error, results) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    if (results[0].PrivilegeCount > 0) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                });
+        });
+    }
+
+    /**
+     * Counts the number of privileges the user has been granted.
+     * @return {Promise<number>|Promise<Error>} The number of privileges.
+     */
+    countGrantedPrivileges() {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection();
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'SELECT COUNT(*) AS PrivilegeCount FROM privileges WHERE user_id = UNHEX(' + connection.escape(
+                this.user_id) + ')',
+                (error, results) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(results[0].PrivilegeCount);
+                });
+        });
+    }
 
 };

@@ -7,7 +7,6 @@ const { Config } = require('../core/config');
 
 module.exports.loadManifest = (req, res) => {
     const config = Config.getInstance();
-    const protocol = Util.getProtocol();
 
     res.header('Access-Control-Allow-Origin', '*');
     res.json({
@@ -19,31 +18,31 @@ module.exports.loadManifest = (req, res) => {
         description: Util.coalesceString(config.getOption('description'), 'Comimant'),
         icons: [
             {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo48x48.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo48x48.png',
                 sizes: '48x48',
                 type: 'image/png'
             },
             {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo72x72.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo72x72.png',
                 sizes: '72x72',
                 type: 'image/png'
             },
             {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo96x96.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo96x96.png',
                 sizes: '96x96',
                 type: 'image/png'
             },
             {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo144x144.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo144x144.png',
                 sizes: '144x144',
                 type: 'image/png'
             },
             {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo168x168.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo168x168.png',
                 sizes: '168x168',
                 type: 'image/png'
             }, {
-                src: protocol + res.locals.staticDomain + '/assets/images/logo192x192.png',
+                src: res.locals.staticProtocol + res.locals.staticDomain + '/assets/images/logo192x192.png',
                 sizes: '192x192',
                 type: 'image/png'
             }

@@ -6,41 +6,41 @@ html(lang='en-gb')
             title #{title} | #{app.settings.title}
         else
             title #{app.settings.title}
-        link(rel='stylesheet' href='https://' + mainDomain + '/stylesheets/main.css' type='text/css')
+        link(rel='stylesheet' href= protocol + mainDomain + '/stylesheets/main.css' type='text/css')
         if stylesheets
             each stylesheet in stylesheets
                 link(rel='stylesheet' href= stylesheet type='text/css')
         if sendManifest
-            link(rel='manifest' href='https://' + mainDomain + '/manifest.webmanifest')
+            link(rel='manifest' href= protocol + mainDomain + '/manifest.webmanifest')
         meta(charset='UTF-8')
         meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
         meta(name='mobile-web-app-capable' content='yes')
-        link(rel='shortcut icon' href='https://' + staticDomain + '/favicon.ico' type='image/x-icon')
-        link(rel='apple-touch-icon' sizes='180x180' href='https://' + staticDomain + '/assets/images/logo180x180.png')
-        link(rel='apple-touch-startup-image' href='https://' + staticDomain + '/assets/images/logo192x192.png')
-        link(rel='icon' href='https://' + staticDomain + '/assets/images/logo48x48.png' type='image/png' sizes='48x48')
-        link(rel='icon' href='https://' + staticDomain + '/assets/images/logo192x192.png' type='image/png' sizes='192x192')
+        link(rel='shortcut icon' href= staticProtocol + staticDomain + '/favicon.ico' type='image/x-icon')
+        link(rel='apple-touch-icon' sizes='180x180' href= staticProtocol + staticDomain + '/assets/images/logo180x180.png')
+        link(rel='apple-touch-startup-image' href= staticProtocol + staticDomain + '/assets/images/logo192x192.png')
+        link(rel='icon' href= staticProtocol + staticDomain + '/assets/images/logo48x48.png' type='image/png' sizes='48x48')
+        link(rel='icon' href= staticProtocol + staticDomain + '/assets/images/logo192x192.png' type='image/png' sizes='192x192')
         meta(name='author' content='Ryan Bester')
         meta(name='keywords' content= keywords)
         meta(name='description' content= description)
         meta(property='og:description' content= description)
         meta(property='og:title' content= app.settings.title)
         meta(property='og:type' content='website')
-        meta(property='og:image' content='https://' + staticDomain + '/assets/images/logo512x512.png')
-        meta(property='og:url' content='https://' + mainDomain)
+        meta(property='og:image' content= staticProtocol + staticDomain + '/assets/images/logo512x512.png')
+        meta(property='og:url' content= protocol + mainDomain)
         meta(name='theme-color' content='#FFF')
         meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
         meta(name='apple-mobile-web-app-title' content= app.settings.title)
         meta(name='application-name' content= app.settings.title)
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
-        script(src='https://' + mainDomain + '/scripts/lib/jquery.ba-throttle-debounce.min.js')
+        script(src= protocol + mainDomain + '/scripts/lib/jquery.ba-throttle-debounce.min.js')
         if scriptsBefore
             each script in scriptsBefore
                 script(src= script)
-        script(src='https://' + mainDomain + '/scripts/dialog.js')
-        script(src='https://' + mainDomain + '/scripts/notification.js')
-        script(src='https://' + mainDomain + '/scripts/main.js')
+        script(src= protocol + mainDomain + '/scripts/dialog.js')
+        script(src= protocol + mainDomain + '/scripts/notification.js')
+        script(src= protocol + mainDomain + '/scripts/main.js')
         if sendSw
             script.
                 if ('serviceWorker' in navigator) {
