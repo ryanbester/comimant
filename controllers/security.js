@@ -137,9 +137,11 @@ exports.processLayers = (req, res, next) => {
                                                 }
                                             });
 
+                                            Logger.debug('JWT validation failed for ' + Util.getClientIP(req));
                                             reject('Cannot validate JWT');
                                         });
                                     } else {
+                                        Logger.debug('JWT token not set ' + Util.getClientIP(req));
                                         reject('JWT token not set');
                                     }
                                 }

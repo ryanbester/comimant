@@ -40,7 +40,10 @@ block layout
                         li.navigation-bar--center__item
                             a.navigation-bar--center__link(class=(activeItem === 'data' ? 'navigation-bar--center__link--active' : undefined) href='/myaccount/data') Data
                 if subtitle
-                    h2= subtitle
+                    div.myaccount-subtitle-container
+                        if showBack
+                            a.button(href= (backUrl !== undefined ? backUrl : '../')) Back
+                        h2= subtitle
                 block my-account-content
                 p.copyright-left= copyright
                     span.copyright-right= 'Powered by '

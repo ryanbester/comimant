@@ -55,6 +55,17 @@ module.exports.Logger = class Logger {
             exports.LoggerColors.BG_RED + exports.LoggerColors.FG_WHITE + 'Security Warning:' + exports.LoggerColors.RESET + exports.LoggerColors.FG_RED + ' ' + message);
     }
 
+    /**
+     * Logs a debug message to the console. This will only be displayed if debug mode is turned on in the configuration
+     * file, and will be prefixed with [DEBUG] in the console.
+     * @param {string} message The message to log.
+     */
+    static debug(message) {
+        if (global.debugMode) {
+            Logger.log('[DEBUG] ' + message);
+        }
+    }
+
 };
 
 /**

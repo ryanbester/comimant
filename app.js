@@ -97,7 +97,9 @@ const startServer = _ => {
     });
 };
 
-Logger.log(LoggerColors.BG_GREEN + 'Welcome to Comimant');
+Logger.log(LoggerColors.FG_GREEN + '-------------------');
+Logger.log(LoggerColors.FG_GREEN + 'Welcome to Comimant');
+Logger.log(LoggerColors.FG_GREEN + '-------------------');
 
 Logger.log(LoggerColors.DIM + 'Loading configuration...');
 
@@ -115,6 +117,8 @@ Logger.log(LoggerColors.DIM + 'Loading configuration...');
 
 // Load configuration
 const config = Config.getInstance();
+
+global.debugMode = config.getOption('debug_mode', false);
 
 if (!config.getOption('security.ssl_enabled', true)) {
     Logger.securityWarning(

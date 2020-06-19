@@ -27,6 +27,9 @@ const status = require('../controllers/accounts/status');
 const main = require('../controllers/accounts/my-account/index');
 const myInfo = require('../controllers/accounts/my-account/my-info/index');
 
+const myInfoName = require('../controllers/accounts/my-account/my-info/name');
+const myInfoUsername = require('../controllers/accounts/my-account/my-info/username');
+
 router.all('/*', status.userCheck);
 router.all('/*', (req, res, next) => {
     // Set stylesheet and script to prevent typing it out every time
@@ -44,5 +47,11 @@ router.all('/*', (req, res, next) => {
 
 router.get('/', main.showMyAccountPage);
 router.get('/my-info', myInfo.showMyInfoPage);
+
+router.get('/my-info/name', myInfoName.showNamePage);
+router.post('/my-info/name', myInfoName.saveName);
+
+router.get('/my-info/username', myInfoUsername.showUsernamePage);
+router.post('/my-info/username', myInfoUsername.saveUsername);
 
 module.exports = router;

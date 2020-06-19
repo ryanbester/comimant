@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const { Logger } = require('../../core/logger');
 const { Sanitizer } = require('../../core/sanitizer');
 const { AccessToken } = require('../../core/auth/access-token');
 const { User } = require('../../core/auth/user');
@@ -112,16 +113,19 @@ exports.performLogin = (req, res) => {
     password = Sanitizer.string(password);
 
     if (!username) {
+        Logger.debug(Util.getClientIP(req) + ' entered an incorrect username or password.');
         renderError('Your username or password is incorrect');
         return;
     }
 
     if (!emailDomain) {
+        Logger.debug(Util.getClientIP(req) + ' entered an incorrect username or password.');
         renderError('Your username or password is incorrect');
         return;
     }
 
     if (!password) {
+        Logger.debug(Util.getClientIP(req) + ' entered an incorrect username or password.');
         renderError('Your username or password is incorrect');
         return;
     }
@@ -140,6 +144,7 @@ exports.performLogin = (req, res) => {
 
                 user.loadInfo().then(_ => {
                     if (user.locked) {
+                        Logger.debug(Util.getClientIP(req) + ' tried to login but their account is locked.');
                         renderError('Your account is locked');
                         return;
                     }
@@ -175,18 +180,23 @@ exports.performLogin = (req, res) => {
                             res.redirect(301, decodeURIComponent(req.query.continue));
                         }
                     }, _ => {
+                        Logger.debug(Util.getClientIP(req) + ' tried to login but could not save the access token to the database.');
                         renderError('Your username or password is incorrect');
                     });
                 }, _ => {
+                    Logger.debug(Util.getClientIP(req) + ' tried to login but could not load the user info.');
                     renderError('Your username or password is incorrect');
                 });
             }, _ => {
+                Logger.debug(Util.getClientIP(req) + ' entered an incorrect username or password.');
                 renderError('Your username or password is incorrect');
             });
         }, _ => {
+            Logger.debug(Util.getClientIP(req) + ' tried to login but the password could not be read from the database.');
             renderError('Your username or password is incorrect');
         });
     }, _ => {
+        Logger.debug(Util.getClientIP(req) + ' tried to login but the nonce verification failed.');
         renderError('Your username or password is incorrect');
     });
 };

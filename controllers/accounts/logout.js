@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const { Logger } = require('../../core/logger');
 const { Nonce } = require('../../core/auth/nonce');
 const { AccessToken } = require('../../core/auth/access-token');
 const { Util } = require('../../core/util');
@@ -37,6 +38,7 @@ exports.logout = (req, res) => {
             });
         }
     }, _ => {
+        Logger.debug(Util.getClientIP(req) + ' tried to logout but the nonce verification failed.');
         res.render('error-custom', {
             title: 'Error',
             error: {

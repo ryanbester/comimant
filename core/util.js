@@ -107,6 +107,15 @@ module.exports.Util = class Util {
     }
 
     /**
+     * Gets the IP address of the client. This will be the X-Forwarded-For header if it is set.
+     * @param {Request} req The Express request object.
+     * @return {string} The IP address.
+     */
+    static getClientIP(req) {
+        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    }
+
+    /**
      * Returns the string if it is not null or empty, otherwise returns a default value.
      * @param {string} string The string.
      * @param {string} defaultValue The default value.

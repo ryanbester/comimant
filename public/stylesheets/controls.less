@@ -51,7 +51,11 @@ input, .button {
 
 input[type="submit"] {
     color: #FFF;
-    background-color: #002DB3;
+    background-color: @input-primary-color;
+
+    &:hover {
+        background-color: @input-primary-hover-color;
+    }
 }
 
 input.is-invalid {
@@ -131,7 +135,7 @@ select {
 }
 
 .checkbox-container:hover .checkbox-checkmark, .radio-container:hover .radio-checkmark {
-    #input-hover();
+    background-color: @input-primary-color;
 }
 
 .checkbox-checkmark, .radio-checkmark {
@@ -178,7 +182,7 @@ select {
 }
 
 .checkbox-container input:checked ~ .checkbox-checkmark, .radio-container input:checked ~ .radio-checkmark {
-    background-color: #002DB3;
+    background-color: @input-primary-color;
 }
 
 .checkbox-container input:checked ~ .checkbox-checkmark:after, .radio-container input:checked ~ .radio-checkmark:after {
