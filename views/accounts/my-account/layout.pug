@@ -1,4 +1,4 @@
-//- Copyright (C) 2019 - 2020 Comimant
+//- Copyright (C) 2019 - 2020 Ryan Bester
 extends ../../head
 
 block layout
@@ -42,4 +42,6 @@ block layout
                 if subtitle
                     h2= subtitle
                 block my-account-content
-                p= copyright
+                p.copyright-left= copyright
+                    span.copyright-right= 'Powered by '
+                        a(href='https://github.com/ryanbester/comimant') Comimant

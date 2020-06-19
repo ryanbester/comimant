@@ -1,5 +1,19 @@
 /*
- * Copyright (C) 2019 - 2020 Comimant
+ * Comimant
+ * Copyright (C) 2019 - 2020 Ryan Bester
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*jshint esversion: 8 */
@@ -86,6 +100,18 @@ const startServer = _ => {
 Logger.log(LoggerColors.BG_GREEN + 'Welcome to Comimant');
 
 Logger.log(LoggerColors.DIM + 'Loading configuration...');
+
+// TODO: Add configuration scanner, that checks value and issues a warning (not error) if they are invalid. API for plugins
+// to register the configurationscanner event that allows them to receive the key and value of the current
+// property to stop the warning.
+
+// e.g.
+// onConfigurationScannerEvent(e, key, value) {
+// if (key == 'domains.accounts_domain.security.type') {
+//     return value == 'test';
+// }
+// Returns true for accepted value or false to issue a warning (default). If false and built in value accepted,
+// false return type will be ignored.
 
 // Load configuration
 const config = Config.getInstance();

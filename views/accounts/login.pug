@@ -1,4 +1,4 @@
-//- Copyright (C) 2019 - 2020 Comimant
+//- Copyright (C) 2019 - 2020 Ryan Bester
 
 extends ../basic-layout
 block content
@@ -20,12 +20,13 @@ block content
                         type='text'
                         name='emailDomain'
                         tabindex='-1'
-                        value= (emailDomain != null ? emailDomain : '@ryanbester.com')
+                        value= (emailDomain != null ? emailDomain : (emailDomains !== undefined ? emailDomains[0] : ''))
                     )
                     .login-form__email-domain-dropdown__content
                         ul.login-form__email-domain-dropdown-content__list#login-form__email-dropdown-content__list
-                            li.login-form__email-domain-dropdown__item= '@ryanbester.com'
-                            li.login-form__email-domain-dropdown__item= '@gmail.com'
+                            if emailDomains
+                                each emailDomain in emailDomains
+                                    li.login-form__email-domain-dropdown__item= emailDomain
                 br
                 input.login-form__input#login-form__input-password(
                     type='password'
@@ -33,7 +34,7 @@ block content
                     placeholder='Password'
                 )
                 br
-                label.login-form__checkbox.checkbox-container Remember me
+                label.login-form__checkbox.checkbox-container(style='width: 200px') Remember me
                     input#login-form__checkbox-remember(
                         type='checkbox'
                         name='remember_me'
@@ -47,3 +48,6 @@ block content
                     type='submit'
                     value='Login'
                 )
+            p.copyright-left= copyright
+                span.copyright-right= 'Powered by '
+                    a(href='https://github.com/ryanbester/comimant') Comimant
