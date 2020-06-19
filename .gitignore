@@ -9,3 +9,4 @@ jsdoc
 *.css
 *.css.map
 /public/help
+/public/offline-page.html

@@ -45,7 +45,6 @@ router.all('*', ((req, res, next) => {
     res.locals.staticDomainObj = domain.getStaticDomain();
     res.locals.accountsDomainObj = domain.getAccountsDomain();
 
-    // TODO: Cache domain object in Domains class to prevent reading from config.json on every request.
     // Domains
     res.locals.rootDomain = domain.getRootDomain().domain;
     res.locals.mainDomain = res.locals.mainDomainObj.domain;

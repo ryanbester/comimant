@@ -16,25 +16,54 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * Utility class for logging to the console.
+ * @type {Logger}
+ */
 module.exports.Logger = class Logger {
+
+    /**
+     * Log a message to the console.
+     * @param {string} message The message to log.
+     */
     static log(message) {
         console.log(message + exports.LoggerColors.RESET);
     }
 
+    /**
+     * Logs an error message to the console. The text will be formatted in red.
+     * @param {string} message The message to log.
+     */
     static error(message) {
         this.log(exports.LoggerColors.FG_RED + message);
     }
 
+    /**
+     * Logs a warning message to the console. The text will be formatted in yellow.
+     * @param {string} message The message to log.
+     */
     static warning(message) {
         this.log(exports.LoggerColors.FG_YELLOW + message);
     }
 
+    /**
+     * Losg a security warning message to the console. The text will have a red background.
+     * @param {string} message The message to log.
+     */
     static securityWarning(message) {
         this.log(
             exports.LoggerColors.BG_RED + exports.LoggerColors.FG_WHITE + 'Security Warning:' + exports.LoggerColors.RESET + exports.LoggerColors.FG_RED + ' ' + message);
     }
+
 };
 
+/**
+ * Utility class containing log colour codes.
+ * @type {{BG_CYAN: string, UNDERSCORE: string, BG_MAGENTA: string, BG_RED: string, DIM: string, BG_BLUE: string,
+ *     RESET: string, HIDDEN: string, BG_BLACK: string, FG_BLUE: string, FG_BLACK: string, FG_GREEN: string, FG_CYAN:
+ *     string, FG_MAGENTA: string, BLINK: string, BG_YELLOW: string, BG_GREEN: string, REVERSE: string, FG_RED: string,
+ *     FG_YELLOW: string, BRIGHT: string, FG_WHITE: string, BG_WHITE: string}}
+ */
 module.exports.LoggerColors = {
     RESET: '\x1b[0m',
     BRIGHT: '\x1b[1m',
