@@ -97,7 +97,7 @@ exports.saveUsername = (req, res) => {
         }
 
         Nonce.verifyNonce('myaccount-my-info-username-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            username = Sanitizer.string(username);
+            username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
 
             let invalidFields = [];
             if (!username) {

@@ -29,6 +29,7 @@ const myInfo = require('../controllers/accounts/my-account/my-info/index');
 
 const myInfoName = require('../controllers/accounts/my-account/my-info/name');
 const myInfoUsername = require('../controllers/accounts/my-account/my-info/username');
+const myInfoDob = require('../controllers/accounts/my-account/my-info/dob');
 
 router.all('/*', status.userCheck);
 router.all('/*', (req, res, next) => {
@@ -53,5 +54,8 @@ router.post('/my-info/name', myInfoName.saveName);
 
 router.get('/my-info/username', myInfoUsername.showUsernamePage);
 router.post('/my-info/username', myInfoUsername.saveUsername);
+
+router.get('/my-info/dob', myInfoDob.showDobPage);
+router.post('/my-info/dob', myInfoDob.saveDob);
 
 module.exports = router;

@@ -47,6 +47,11 @@ module.exports.Sanitizer = class Sanitizer {
         // Strip HTML tags
         string = string.replace(/(<([^>]+)>)/ig, '');
 
+        // If new string is empty
+        if (string === '') {
+            return false;
+        }
+
         return string;
     }
 
@@ -69,6 +74,48 @@ module.exports.Sanitizer = class Sanitizer {
         }
 
         return number;
+    }
+
+    /**
+     * Strips whitespace from a string. This should be called after the string method.
+     * @param {string} string The string.
+     * @return {boolean|string} The sanitized string or false on failure.
+     */
+    static whitespace(string) {
+        if (string === false) {
+            return false;
+        }
+
+        // Strip whitespace
+        string = string.replace(/\s/g, '');
+
+        // If new string is empty
+        if (string === '') {
+            return false;
+        }
+
+        return string;
+    }
+
+    /**
+     * Strips non ASCII characters from a string. This should be called after the string method.
+     * @param {string} string The string.
+     * @return {boolean|string} The sanitized string or false on failure.
+     */
+    static ascii(string) {
+        if (string === false) {
+            return false;
+        }
+
+        // Strip non ASCII characters
+        string = string.replace(/[^\x00-\x7F]/g, '');
+
+        // If new string is empty
+        if (string === '') {
+            return false;
+        }
+
+        return string;
     }
 
 };
