@@ -1,0 +1,12 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../layout
+
+block my-account-content
+    p Would you like to stay logged in on this device?
+        .myaccount-stack-view
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href='/myaccount/security/logout-everywhere/other-devices/?nonce=' + otherDevicesNonce)
+                span Keep me logged in
+                img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            a.myaccount-stack-view__box.myaccount-stack-view__box--related(href='/myaccount/security/logout-everywhere/all-devices/?nonce=' + allDevicesNonce)
+                span Log me out everywhere
+                img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')

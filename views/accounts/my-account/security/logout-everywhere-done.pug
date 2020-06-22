@@ -1,0 +1,10 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../layout
+
+block my-account-content
+    if error
+        h2.error= error
+    if success
+        h2.success= success
+    if allDevices
+        a.button(href='/login') Log back in

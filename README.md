@@ -8,7 +8,7 @@ Comimant requires the following to run:
 
 - Node.js 12 or later
 - PM2
-- A web server to use a reverse proxy
+- A web server to use as a reverse proxy
 - MySQL 8 or later
 - Redis
 
@@ -85,16 +85,16 @@ Below are some configuration file templates. For more details, see the docs.
         "domain": "example.com"
       },
       "main": {
-        "domain": "www.example.dev"
+        "domain": "www.example.com"
       },
       "static": {
         "domain": "static.example.com"
       },
       "accounts": {
-        "domain": "accounts.example.dev"
+        "domain": "accounts.example.com"
       },
       "auth": {
-        "domain": "auth.example.dev"
+        "domain": "auth.example.com"
       }
     }
   ],

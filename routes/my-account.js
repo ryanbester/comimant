@@ -26,10 +26,15 @@ const router = express.Router();
 const status = require('../controllers/accounts/status');
 const main = require('../controllers/accounts/my-account/index');
 const myInfo = require('../controllers/accounts/my-account/my-info/index');
+const security = require('../controllers/accounts/my-account/security/index');
 
 const myInfoName = require('../controllers/accounts/my-account/my-info/name');
 const myInfoUsername = require('../controllers/accounts/my-account/my-info/username');
 const myInfoDob = require('../controllers/accounts/my-account/my-info/dob');
+
+const securityPasswords = require('../controllers/accounts/my-account/security/passwords');
+const securityPassword = require('../controllers/accounts/my-account/security/password');
+const securityLogoutEverywhere = require('../controllers/accounts/my-account/security/logout-everywhere');
 
 router.all('/*', status.userCheck);
 router.all('/*', (req, res, next) => {
@@ -47,6 +52,7 @@ router.all('/*', (req, res, next) => {
 });
 
 router.get('/', main.showMyAccountPage);
+
 router.get('/my-info', myInfo.showMyInfoPage);
 
 router.get('/my-info/name', myInfoName.showNamePage);
@@ -57,5 +63,16 @@ router.post('/my-info/username', myInfoUsername.saveUsername);
 
 router.get('/my-info/dob', myInfoDob.showDobPage);
 router.post('/my-info/dob', myInfoDob.saveDob);
+
+router.get('/security', security.showSecurityPage);
+
+router.get('/security/passwords', securityPasswords.showPasswordsPage);
+
+router.get('/security/passwords/change-password', securityPassword.showPasswordPage);
+router.post('/security/passwords/change-password', securityPassword.savePassword);
+
+router.get('/security/logout-everywhere', securityLogoutEverywhere.showLogoutEverywherePage);
+router.get('/security/logout-everywhere/all-devices', securityLogoutEverywhere.performLogoutEverywhereAll);
+router.get('/security/logout-everywhere/other-devices', securityLogoutEverywhere.performLogoutEverywhereOther);
 
 module.exports = router;
