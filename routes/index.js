@@ -31,6 +31,7 @@ const router = express.Router();
 const accountRoutes = require('./accounts');
 const apiRoutes = require('./api');
 const homeRoutes = require('./home');
+const adminRoutes = require('./admin');
 
 const securityController = require('../controllers/security');
 const manifestController = require('../controllers/manifest');
@@ -88,5 +89,8 @@ router.get('/usercheck', accountStatus.userLoggedIn);
 
 // Home routes
 router.use('/', homeRoutes);
+
+// Admin routes
+router.use('/admin', adminRoutes);
 
 module.exports = router;

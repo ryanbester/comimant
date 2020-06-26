@@ -114,7 +114,7 @@ exports.saveDob = (req, res) => {
             }
 
             if (year < 1) {
-                month = false;
+                year = false;
             }
 
             let invalidFields = [];

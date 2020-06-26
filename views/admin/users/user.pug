@@ -1,0 +1,83 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../layout
+
+block admin-content
+    if targetUser
+        if hasPermission
+            h3 General
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/name')
+                    span Name
+                    span.myaccount-stack-view__box-value #{targetUser.first_name} #{targetUser.last_name}
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/username')
+                    span Username
+                    span.myaccount-stack-view__box-value #{targetUser.username}
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/email-address')
+                    span Email Address
+                    span.myaccount-stack-view__box-value #{targetUser.email_address}
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/dob')
+                    span Date of Birth
+                    span.myaccount-stack-view__box-value #{targetUser.dob.getDate()}/#{targetUser.dob.getMonth() + 1}/#{targetUser.dob.getFullYear()}
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/image')
+                    span Profile Image
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            h3 Widgets
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/widgets')
+                    span Manage Widgets
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            h3 Security
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/security/privileges')
+                    span Privileges
+                    span.myaccount-stack-view__box-value #{grantedPrivileges} Granted
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/security/passwords')
+                    span Passwords
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/security/twofa')
+                    span 2 Factor Authentication
+                    span.myaccount-stack-view__box-value [Enabled/Disabled]
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            h3 Services
+            a.button(href= targetUser.user_id.toLowerCase() + '/services/add') Add service
+            if services
+                .myaccount-stack-view
+                    each service in services
+                        a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/services/' + service.name)
+                            span #{service.title}
+                            img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            else
+                p No services
+            h3 Data
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/data')
+                    span Data Usage
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            h3 Actions
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/logout')
+                    span Logout
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/revoke-nonces')
+                    span Revoke Nonces
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/lock-account')
+                    span #{targetUser.locked ? 'Unlock' : 'Lock'} Account
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+            h3 Danger Zone
+            .myaccount-stack-view
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/clear-user-data')
+                    span.red-text Clear User Data
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+                a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/delete-user')
+                    span.red-text Delete User
+                    img.myaccount-stack-view__box-image(src= staticProtocol + staticDomain + '/assets/images/rightarrow16x16.png' srcset= staticProtocol + staticDomain + '/assets/images/rightarrow32x32.png 2x')
+        else
+            p You do not have permission to see user details.
+    else
+        p Could not find a user with that user ID.

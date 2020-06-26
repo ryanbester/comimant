@@ -1,0 +1,132 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../layout
+
+block admin-content
+    if hasPermission
+        if error
+            h2.error= error
+        if success
+            h2.success= success
+        form.myaccount-form(method='POST' action='')
+            .form-row
+                label(for='admin-user-form-privilege-template') Privilege Template
+                br
+                select#admin-user-form-privilege-template(
+                    class=(ptInvalid ? 'is-invalid' : undefined)
+                    name='pt'
+                )
+                    - let defaultSet = false;
+                    if pt
+                        if pt.length > 0
+                            each template in pt
+                                if defaultSet
+                                    option(value=template.name)= template.title
+                                else
+                                    option(value=template.name selected=(template.defaultTemplate === 1 ? 'true' : undefined))= template.title
+                                    - defaultSet = (template.defaultTemplate === 1)
+                    option(value='none' selected=(defaultSet === false ? 'true' : undefined))= 'None'
+            br
+            .form-row
+                label(for='admin-user-form-email-address') Email Address
+                input#admin-user-form-email-address(
+                    class=(emailAddressInvalid ? 'is-invalid' : undefined)
+                    type='email'
+                    name='emailAddress'
+                    placeholder='Email Address'
+                    value= emailAddress
+                )
+                .invalid-feedback Enter a valid email address
+            br
+            .form-row
+                label(for='admin-user-form-first-name') First name
+                input#admin-user-form-first-name(
+                    class=(firstNameInvalid ? 'is-invalid' : undefined)
+                    type='text'
+                    name='firstName'
+                    placeholder='First name'
+                    value= firstName
+                )
+                .invalid-feedback Enter a valid first name
+            br
+            .form-row
+                label(for='admin-user-form-last-name') Last name
+                input#admin-user-form-last-name(
+                    class=(lastNameInvalid ? 'is-invalid' : undefined)
+                    type='text'
+                    name='lastName'
+                    placeholder='Last name'
+                    value= lastName
+                )
+                .invalid-feedback Enter a valid last name
+            br
+            .form-row
+                label(for='admin-user-form-username') Username
+                input#admin-user-form-username(
+                    class=(usernameInvalid ? 'is-invalid' : undefined)
+                    type='text'
+                    name='username'
+                    placeholder='Username'
+                    value= username
+                )
+                .invalid-feedback Enter a valid username
+            br
+            .form-row
+                label Date of Birth
+                br
+                select#admin-user-form-day(
+                    class=(dayInvalid ? 'is-invalid' : undefined)
+                    name='day'
+                )
+                    - for(let i = 1; i <= 31; i++)
+                        option(value=i selected=(day === i ? 'true' : undefined))= i
+                select#admin-user-form-month(
+                    class=(monthInvalid ? 'is-invalid' : undefined)
+                    name='month'
+                )
+                    option(value='1' selected=(month === '1' ? 'true' : undefined)) January
+                    option(value='2' selected=(month === '2' ? 'true' : undefined)) February
+                    option(value='3' selected=(month === '3' ? 'true' : undefined)) March
+                    option(value='4' selected=(month === '4' ? 'true' : undefined)) April
+                    option(value='5' selected=(month === '5' ? 'true' : undefined)) May
+                    option(value='6' selected=(month === '6' ? 'true' : undefined)) June
+                    option(value='7' selected=(month === '7' ? 'true' : undefined)) July
+                    option(value='8' selected=(month === '8' ? 'true' : undefined)) August
+                    option(value='9' selected=(month === '9' ? 'true' : undefined)) September
+                    option(value='10' selected=(month === '10' ? 'true' : undefined)) October
+                    option(value='11' selected=(month === '11' ? 'true' : undefined)) November
+                    option(value='12' selected=(month === '12' ? 'true' : undefined)) December
+                select#admin-user-form-year(
+                    class=(yearInvalid ? 'is-invalid' : undefined)
+                    name='year'
+                )
+                    - for(let i = (new Date()).getFullYear(); i >= 1890; i--)
+                        option(value=i selected=(year === i ? 'true' : undefined))= i
+                .invalid-feedback Invalid date
+            br
+            .form-row
+                label(for='admin-user-form-password') Password
+                input#admin-user-form-password(
+                    class=(passwordInvalid ? 'is-invalid' : undefined)
+                    type='password'
+                    name='password'
+                    placeholder='Password'
+                )
+                .invalid-feedback Invalid password
+            br
+            .form-row
+                label(for='admin-user-form-confirm-password') Confirm Password
+                input#admin-user-form-confirm-password(
+                    class=(confirmPasswordInvalid ? 'is-invalid' : undefined)
+                    type='password'
+                    name='confirmPassword'
+                    placeholder='Confirm Password'
+                )
+                .invalid-feedback Invalid password
+            br
+            input(type='hidden' name='nonce' value=formNonce)
+            input(
+                type='submit'
+                value='Save'
+            )
+    else
+        p You do not have permission to create new users.

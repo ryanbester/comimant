@@ -163,7 +163,8 @@ module.exports.User = class User {
                     // Update the existing user
                     // Prepare date joined and dob
                     let date_added = this.date_added.getFullYear() + '-' + ('0' + (this.date_added.getMonth() + 1)).slice(
-                        -2) + '-' + ('0' + this.date_added.getDate()).slice(-2);
+                        -2) + '-' + ('0' + this.date_added.getDate()).slice(
+                        -2) + ' ' + this.date_added.getUTCHours() + ':' + this.date_added.getUTCMinutes() + ':' + this.date_added.getUTCSeconds();
                     let dob = this.dob.getFullYear() + '-' + ('0' + (this.dob.getMonth() + 1)).slice(
                         -2) + '-' + ('0' + this.dob.getDate()).slice(-2);
 
@@ -181,10 +182,10 @@ module.exports.User = class User {
                                     process.env.DATABASE_KEY) + ')), '
                                 + 'first_name = ' + connection.escape(this.first_name) + ', '
                                 + 'last_name = ' + connection.escape(this.last_name) + ', '
-                                + 'date_added = ' + connection.escape(date_added) + ', '
                                 + 'dob = ' + connection.escape(dob) + ', '
+                                + 'date_added = ' + connection.escape(date_added) + ', '
                                 + 'image_url = ' + connection.escape(this.image_url) + ', '
-                                + 'locked = ' + connection.escape(this.locked == true ? 1 : 0)
+                                + 'locked = ' + connection.escape(this.locked === true ? 1 : 0)
                                 + ' WHERE user_id = UNHEX(' + connection.escape(this.user_id) + ')',
                                 (error) => {
                                     // Close the connection
@@ -207,10 +208,10 @@ module.exports.User = class User {
                                     process.env.DATABASE_KEY) + ')), '
                                 + connection.escape(this.first_name) + ', '
                                 + connection.escape(this.last_name) + ', '
-                                + connection.escape(date_added) + ', '
                                 + connection.escape(dob) + ', '
+                                + connection.escape(date_added) + ', '
                                 + connection.escape(this.image_url) + ', '
-                                + connection.escape(this.locked == true ? 1 : 0) + ')',
+                                + connection.escape(this.locked === true ? 1 : 0) + ')',
                                 (error) => {
                                     // Close the connection
                                     connection.end();
@@ -369,7 +370,8 @@ module.exports.User = class User {
             connection.connect();
 
             connection.query(
-                'SELECT privilege_name FROM privileges WHERE user_id = UNHEX(' + connection.escape(this.user_id) + ')',
+                'SELECT privilege_name, granted FROM privileges WHERE user_id = UNHEX(' + connection.escape(
+                this.user_id) + ')',
                 (error, results) => {
                     // Close the connection
                     connection.end();
@@ -379,9 +381,9 @@ module.exports.User = class User {
                         return;
                     }
 
-                    let privileges = [];
+                    let privileges = {};
                     for (let i = 0; i < results.length; i++) {
-                        privileges.push(results[i].privilege_name);
+                        privileges[results[i].privilege_name] = results[i].granted === 1;
                     }
 
                     resolve(privileges);
@@ -392,9 +394,10 @@ module.exports.User = class User {
     /**
      * Grants the user a privilege.
      * @param {string} name The privilege name.
+     * @param {boolean} granted Whether the privilege is granted or not.
      * @return {Promise<boolean>|Promise<Error>} True on success.
      */
-    grantPrivilege(name) {
+    addPrivilege(name, granted = true) {
         return new Promise((resolve, reject) => {
             // Check if user ID is set
             if (this.user_id === undefined) {
@@ -411,7 +414,45 @@ module.exports.User = class User {
             connection.query(
                 'INSERT INTO privileges VALUES ('
                 + 'UNHEX(' + connection.escape(this.user_id) + '), '
-                + connection.escape(name) + ')',
+                + connection.escape(name) + ', '
+                + connection.escape(granted === true ? 1 : 0) + ')',
+                (error) => {
+                    // Close the connection
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(true);
+                });
+        });
+    }
+
+    /**
+     * Deletes a privilege from the user.
+     * @param {string} name The privilege name.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
+     */
+    deletePrivilege(name) {
+        return new Promise((resolve, reject) => {
+            // Check if user ID is set
+            if (this.user_id === undefined) {
+                reject('User ID not set');
+                return;
+            }
+
+            // Create a connection to the database
+            const connection = mysql.getConnection('delete');
+
+            // Open the connection
+            connection.connect();
+
+            connection.query(
+                'DELETE FROM privileges WHERE user_id = '
+                + 'UNHEX(' + connection.escape(this.user_id) + ') '
+                + 'AND privilege_name = ' + connection.escape(name),
                 (error) => {
                     // Close the connection
                     connection.end();
@@ -446,7 +487,8 @@ module.exports.User = class User {
             connection.connect();
 
             connection.query(
-                'DELETE FROM privileges WHERE user_id = '
+                'UPDATE privileges SET granted = 0 '
+                + 'WHERE user_id = '
                 + 'UNHEX(' + connection.escape(this.user_id) + ') '
                 + 'AND privilege_name = ' + connection.escape(name),
                 (error) => {
@@ -485,7 +527,8 @@ module.exports.User = class User {
             connection.query(
                 'SELECT COUNT(*) AS PrivilegeCount FROM privileges WHERE '
                 + 'user_id = UNHEX(' + connection.escape(this.user_id) + ') AND '
-                + 'privilege_name = ' + connection.escape(name),
+                + 'privilege_name = ' + connection.escape(name) + ' AND '
+                + 'granted = 1',
                 (error, results) => {
                     // Close the connection
                     connection.end();
@@ -524,7 +567,8 @@ module.exports.User = class User {
 
             connection.query(
                 'SELECT COUNT(*) AS PrivilegeCount FROM privileges WHERE user_id = UNHEX(' + connection.escape(
-                this.user_id) + ')',
+                this.user_id) + ') AND '
+                + 'granted = 1',
                 (error, results) => {
                     // Close the connection
                     connection.end();

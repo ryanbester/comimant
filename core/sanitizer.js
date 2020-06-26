@@ -118,4 +118,24 @@ module.exports.Sanitizer = class Sanitizer {
         return string;
     }
 
+    /**
+     * Checks if an email address is valid. This should be called after the string method.
+     * @param {string} string The string.
+     * @return {boolean|string} The string or false if it is not valid.
+     */
+    static email(string) {
+        if (string === false) {
+            return false;
+        }
+
+        // Validate the email address
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (re.test(string.toLowerCase())) {
+            return string;
+        }
+
+        return false;
+    }
+
 };
