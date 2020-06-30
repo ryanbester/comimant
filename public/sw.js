@@ -44,7 +44,6 @@ const staticUrls = [
     'https://static.besterintranet.com/assets/images/downarrow16x16.png',
     'https://static.besterintranet.com/assets/images/downarrow32x32.png',
     'https://static.besterintranet.com/assets/images/error.svg',
-    'https://static.besterintranet.com/assets/images/error20x20.png',
     'https://static.besterintranet.com/assets/images/loading196x196.gif',
     '/stylesheets/style.css'
 ];

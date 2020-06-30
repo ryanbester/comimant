@@ -39,6 +39,8 @@ exports.showUsersPage = (req, res) => {
             }
 
             AuthUtil.getUsers().then(users => {
+                const message = handleMessage(req.query.message);
+
                 res.render('admin/users/index', {
                     ...res.locals.stdArgs,
                     title: 'Users | Admin',
@@ -46,7 +48,8 @@ exports.showUsersPage = (req, res) => {
                     activeItem: 'users',
                     subtitle: 'Users',
                     hasPermission: true,
-                    users: users
+                    users: users,
+                    message: message
                 });
             });
 
@@ -64,3 +67,14 @@ exports.showUsersPage = (req, res) => {
         });
     });
 };
+
+const handleMessage = (messageID) => {
+    if (messageID !== undefined) {
+        switch (messageID) {
+            case 'user_deleted':
+                return 'The user has been successfully deleted';
+        }
+    }
+
+    return undefined;
+}

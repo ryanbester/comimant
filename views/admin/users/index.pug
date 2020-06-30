@@ -2,6 +2,8 @@
 extends ../layout
 
 block admin-content
+    if message
+        h2.success= message
     a.button(href='users/new') New user
     if hasPermission
         if users

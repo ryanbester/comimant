@@ -29,6 +29,7 @@ const users = require('../controllers/admin/users/index');
 
 const usersNew = require('../controllers/admin/users/new');
 const user = require('../controllers/admin/users/user');
+const usersDelete = require('../controllers/admin/users/delete');
 
 router.all('/*', status.userCheck);
 router.all('/*', main.userCheck);
@@ -54,6 +55,11 @@ router.get('/users/new', usersNew.showNewUserPage);
 router.post('/users/new', usersNew.saveNewUser);
 
 router.all('/users/:userId', user.loadUserInfo);
+router.all('/users/:userId/*', user.loadUserInfo);
+
 router.get('/users/:userId', user.showUserPage);
+
+router.get('/users/:userId/delete-user', usersDelete.showDeletePage);
+router.post('/users/:userId/delete-user', usersDelete.deleteUser);
 
 module.exports = router;
