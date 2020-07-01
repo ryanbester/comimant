@@ -140,7 +140,9 @@ PluginManager.getEnabledPlugins().then(_ => {
 
     startServer();
 }, e => {
-    Logger.error(e);
+    Logger.error('Cannot enable plugins: ' + e);
+    Logger.log('Starting server in safe mode...');
+    startServer();
 });
 
 module.exports = app;

@@ -8,10 +8,11 @@ block content
             h2.error= error
         if success
             h2.success= success
-        p Create your administrator user here.
         if success
-            a.button.button-primary.no-margin(href='/' style='font-size: 20px;') Done
+            a.button.button-primary.no-margin(href='/admin' style='font-size: 20px;') Login
+            a.button.no-margin(href='/' style='font-size: 20px;') Done
         else
+            p Create your administrator user here.
             form.myaccount-form(method='POST' action='')
                 .form-row
                     label(for='setup-user-form-email-address') Email Address
@@ -110,6 +111,7 @@ block content
                     )
                     .invalid-feedback Invalid password
                 br
+                input(type='hidden' name='nonce' value=formNonce)
                 input(
                     type='submit'
                     value='Next'

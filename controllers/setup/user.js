@@ -16,41 +16,216 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const childProcess = require('child_process');
+const fs = require('fs');
+const { Sanitizer } = require('../../core/sanitizer');
 
 const { Logger } = require('../../core/logger');
 const { Nonce } = require('../../core/auth/nonce');
-const { AccessToken } = require('../../core/auth/access-token');
+const { User } = require('../../core/auth/user');
+const { Auth } = require('../../core/auth/auth');
 const { Util } = require('../../core/util');
 
-exports.showUserPage = (req, res) => {
-    if (res.locals.setupAction === 'initial') {
-        res.render('setup/install-user', {
-            stylesheets: [
-                res.locals.protocol + res.locals.mainDomain + '/stylesheets/my-account.css'
-            ],
-            title: 'Setup'
-        });
-    } else {
-        res.render('setup/no-action', {
-            title: 'Setup'
-        });
-    }
-}
+const renderPage = (req, res, error, invalidFields, email, firstName, lastName, username, dobDay,
+                    dobMonth, dobYear, success) => {
 
-exports.saveUser = (req, res) => {
-    if (res.locals.setupAction === 'initial') {
-        // TODO: Create user
+    Nonce.createNonce('setup-new-user-form', '/setup/user').then(nonce => {
         res.render('setup/install-user', {
             stylesheets: [
                 res.locals.protocol + res.locals.mainDomain + '/stylesheets/my-account.css'
             ],
             title: 'Setup',
-            success: 'Created user'
+            formNonce: nonce,
+            activeItem: 'users',
+            subtitle: 'New User',
+            showBack: true,
+            backUrl: '../users',
+            error: error,
+            success: success,
+            emailAddress: email,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            day: parseInt(dobDay),
+            month: dobMonth,
+            year: parseInt(dobYear),
+            emailAddressInvalid: invalidFields !== undefined ? invalidFields.includes('email') : false,
+            firstNameInvalid: invalidFields !== undefined ? invalidFields.includes('firstName') : false,
+            lastNameInvalid: invalidFields !== undefined ? invalidFields.includes('lastName') : false,
+            usernameInvalid: invalidFields !== undefined ? invalidFields.includes('username') : false,
+            dobDayInvalid: invalidFields !== undefined ? invalidFields.includes('dobDay') : false,
+            dobMonthInvalid: invalidFields !== undefined ? invalidFields.includes('dobMonth') : false,
+            dobYearInvalid: invalidFields !== undefined ? invalidFields.includes('dobYear') : false,
+            passwordInvalid: invalidFields !== undefined ? invalidFields.includes('password') : false,
+            confirmPasswordInvalid: invalidFields !== undefined ? invalidFields.includes('confirmPassword') : false
+        });
+    });
+};
+
+exports.showUserPage = (req, res, next) => {
+    if (res.locals.setupAction === 'initial') {
+        renderPage(req, res);
+    } else {
+        const err = new Error('404: Page not found');
+        err.status = 404;
+        next(err);
+    }
+};
+
+exports.saveUser = (req, res, next) => {
+    if (res.locals.setupAction === 'initial') {
+        let { emailAddress: email, firstName, lastName, username, day: dobDay, month: dobMonth, year: dobYear, password, confirmPassword, nonce } = req.body;
+
+        Nonce.verifyNonce('setup-new-user-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+            email = Sanitizer.email(Sanitizer.string(email));
+            firstName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(firstName)));
+            lastName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(lastName)));
+            username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
+            dobDay = Sanitizer.number(dobDay);
+            dobMonth = Sanitizer.number(dobMonth);
+            dobYear = Sanitizer.number(dobYear);
+            password = Sanitizer.string(password);
+            confirmPassword = Sanitizer.string(confirmPassword);
+
+            if (dobDay < 1 || dobDay > 31) {
+                dobDay = false;
+            }
+
+            if (dobMonth < 1 || dobMonth > 12) {
+                dobMonth = false;
+            }
+
+            if (dobYear < 1) {
+                dobYear = false;
+            }
+
+            let invalidFields = [];
+
+            if (!email) {
+                invalidFields.push('email');
+            }
+
+            if (!firstName) {
+                invalidFields.push('firstName');
+            }
+
+            if (!lastName) {
+                invalidFields.push('lastName');
+            }
+
+            if (!username) {
+                invalidFields.push('username');
+            }
+
+            if (!dobDay) {
+                invalidFields.push('dobDay');
+            }
+
+            if (!dobMonth) {
+                invalidFields.push('dobMonth');
+            }
+
+            if (!dobYear) {
+                invalidFields.push('dobYear');
+            }
+
+            if (!password) {
+                invalidFields.push('password');
+            }
+
+            if (!confirmPassword) {
+                invalidFields.push('confirmPassword');
+            }
+
+            const args = [
+                email,
+                firstName,
+                lastName,
+                username,
+                dobDay,
+                dobMonth,
+                dobYear
+            ];
+
+            if (invalidFields.length > 0) {
+                renderPage(req, res, invalidFields.length + ' fields are invalid', invalidFields, ...args);
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                renderPage(req, res, 'Passwords do not match', undefined, ...args);
+                return;
+            }
+            if (password.length < 4) {
+                renderPage(req, res, 'Password must be at least 4 characters long', undefined, ...args);
+                return;
+            }
+
+            const createUser = privileges => {
+                User.generateUserId().then(user_id => {
+                    let user = new User(user_id, username, email, firstName, lastName, new Date().setTimeToNow(),
+                        new Date(dobYear, dobMonth - 1, dobDay));
+                    user.saveUser().then(_ => {
+                        Auth.encryptPassword(confirmPassword).then(result => {
+                            result.push(user_id);
+                            Auth.savePasswordToDatabase({ all: result }).then(_ => {
+                                // Add privileges
+                                let privilegePromises = [];
+
+                                for (const privilege in privileges) {
+                                    privilegePromises.push(user.addPrivilege(privilege, privileges[privilege]));
+                                }
+
+                                // Save new package version to mark setup as complete
+                                const packageVersion = res.locals.setupPackageVersion;
+                                fs.writeFileSync(__approot + '/version.txt',
+                                    packageVersion.major + '.' + packageVersion.minor + '.' + packageVersion.patch);
+
+                                Promise.all(privilegePromises).then(_ => {
+                                    renderPage(req, res, undefined, undefined, undefined, undefined, undefined,
+                                        undefined, undefined, undefined, undefined, 'Created user');
+                                }, _ => {
+                                    renderPage(req, res, 'Error creating user. Please try again.', undefined,
+                                        ...args);
+                                });
+
+                            }, _ => {
+                                renderPage(req, res, 'Error creating user. Please try again.', undefined,
+                                    ...args);
+                            });
+                        }, _ => {
+                            renderPage(req, res, 'Error creating user. Please try again.', undefined,
+                                ...args);
+                        });
+                    }, _ => {
+                        renderPage(req, res, 'Error creating user. Please try again.', undefined, ...args);
+                    });
+                }, _ => {
+                    renderPage(req, res, 'Error creating user. Please try again.', undefined, ...args);
+                });
+            };
+
+            User.usernameTaken(username).then(result => {
+                if (result === true) {
+                    renderPage(req, res, '1 field is invalid', ['username'], ...args);
+                } else {
+                    createUser({
+                        // TODO: Set default admin privileges
+                        'admin.access_admin_panel': true,
+                        'admin.users.list': true,
+                        'admin.users.view': true,
+                        'admin.users.create': true,
+                        'admin.users.delete': true
+                    });
+                }
+            }, _ => {
+                renderPage(req, res, '1 field is invalid', ['username'], ...args);
+            });
+        }, _ => {
+            renderPage(req, res, 'Error creating user. Please try again.');
         });
     } else {
-        res.render('setup/no-action', {
-            title: 'Setup'
-        });
+        const err = new Error('404: Page not found');
+        err.status = 404;
+        next(err);
     }
-}
+};

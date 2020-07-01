@@ -23,7 +23,7 @@ const { Nonce } = require('../../core/auth/nonce');
 const { AccessToken } = require('../../core/auth/access-token');
 const { Util } = require('../../core/util');
 
-exports.showSetupPage = (req, res) => {
+exports.showSetupPage = (req, res, next) => {
     // Show setup page
     switch (res.locals.setupAction) {
         case 'initial':
@@ -43,8 +43,8 @@ exports.showSetupPage = (req, res) => {
             });
             break;
         default:
-            res.render('setup/no-action', {
-                title: 'Setup'
-            });
+            const err = new Error('404: Page not found');
+            err.status = 404;
+            next(err);
     }
 }
