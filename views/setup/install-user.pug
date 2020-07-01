@@ -1,0 +1,116 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../basic-layout
+
+block content
+    .container--center.basic-header-body-container
+        h1 Setup: Default user
+        if error
+            h2.error= error
+        if success
+            h2.success= success
+        p Create your administrator user here.
+        if success
+            a.button.button-primary.no-margin(href='/' style='font-size: 20px;') Done
+        else
+            form.myaccount-form(method='POST' action='')
+                .form-row
+                    label(for='setup-user-form-email-address') Email Address
+                    input#setup-user-form-email-address(
+                        class=(emailAddressInvalid ? 'is-invalid' : undefined)
+                        type='email'
+                        name='emailAddress'
+                        placeholder='Email Address'
+                        value= emailAddress
+                    )
+                    .invalid-feedback Enter a valid email address
+                br
+                .form-row
+                    label(for='setup-user-form-first-name') First name
+                    input#setup-user-form-first-name(
+                        class=(firstNameInvalid ? 'is-invalid' : undefined)
+                        type='text'
+                        name='firstName'
+                        placeholder='First name'
+                        value= firstName
+                    )
+                    .invalid-feedback Enter a valid first name
+                br
+                .form-row
+                    label(for='setup-user-form-last-name') Last name
+                    input#setup-user-form-last-name(
+                        class=(lastNameInvalid ? 'is-invalid' : undefined)
+                        type='text'
+                        name='lastName'
+                        placeholder='Last name'
+                        value= lastName
+                    )
+                    .invalid-feedback Enter a valid last name
+                br
+                .form-row
+                    label(for='setup-user-form-username') Username
+                    input#setup-user-form-username(
+                        class=(usernameInvalid ? 'is-invalid' : undefined)
+                        type='text'
+                        name='username'
+                        placeholder='Username'
+                        value= username
+                    )
+                    .invalid-feedback Enter a valid username
+                br
+                .form-row
+                    label Date of Birth
+                    br
+                    select#admin-user-form-day(
+                        class=(dayInvalid ? 'is-invalid' : undefined)
+                        name='day'
+                    )
+                        - for(let i = 1; i <= 31; i++)
+                            option(value=i selected=(day === i ? 'true' : undefined))= i
+                    select#admin-user-form-month(
+                        class=(monthInvalid ? 'is-invalid' : undefined)
+                        name='month'
+                    )
+                        option(value='1' selected=(month === '1' ? 'true' : undefined)) January
+                        option(value='2' selected=(month === '2' ? 'true' : undefined)) February
+                        option(value='3' selected=(month === '3' ? 'true' : undefined)) March
+                        option(value='4' selected=(month === '4' ? 'true' : undefined)) April
+                        option(value='5' selected=(month === '5' ? 'true' : undefined)) May
+                        option(value='6' selected=(month === '6' ? 'true' : undefined)) June
+                        option(value='7' selected=(month === '7' ? 'true' : undefined)) July
+                        option(value='8' selected=(month === '8' ? 'true' : undefined)) August
+                        option(value='9' selected=(month === '9' ? 'true' : undefined)) September
+                        option(value='10' selected=(month === '10' ? 'true' : undefined)) October
+                        option(value='11' selected=(month === '11' ? 'true' : undefined)) November
+                        option(value='12' selected=(month === '12' ? 'true' : undefined)) December
+                    select#admin-user-form-year(
+                        class=(yearInvalid ? 'is-invalid' : undefined)
+                        name='year'
+                    )
+                        - for(let i = (new Date()).getFullYear(); i >= 1890; i--)
+                            option(value=i selected=(year === i ? 'true' : undefined))= i
+                    .invalid-feedback Invalid date
+                br
+                .form-row
+                    label(for='setup-user-form-password') Password
+                    input#setup-user-form-password(
+                        class=(passwordInvalid ? 'is-invalid' : undefined)
+                        type='password'
+                        name='password'
+                        placeholder='Password'
+                    )
+                    .invalid-feedback Invalid password
+                br
+                .form-row
+                    label(for='setup-user-form-confirm-password') Confirm Password
+                    input#setup-user-form-confirm-password(
+                        class=(confirmPasswordInvalid ? 'is-invalid' : undefined)
+                        type='password'
+                        name='confirmPassword'
+                        placeholder='Confirm Password'
+                    )
+                    .invalid-feedback Invalid password
+                br
+                input(
+                    type='submit'
+                    value='Next'
+                )

@@ -1,0 +1,38 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../basic-layout
+
+block content
+    .container--center.basic-header-body-container
+        h1 Setup: Database
+        if error
+            h2.error= error
+        if success
+            h2.success= success
+        p Check the following database options below before continuing. If any are incorrect, change them in the ecosystem file and restart Comimant.
+        table
+            tr
+                td Host
+                td= host
+            tr
+                td Port
+                td= port
+            tr
+                td Database
+                td= database
+            tr
+                td User
+                td= user
+            tr
+                td Modify User
+                td= userModify
+            tr
+                td Delete User
+                td= userDelete
+        if success
+            a.button.button-primary.no-margin(href='/setup/user' style='font-size: 20px;') Next
+        else
+            form.myaccount-form(method='POST' action='')
+                input(
+                    type='submit'
+                    value='Next'
+                )

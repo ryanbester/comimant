@@ -14,7 +14,7 @@ Comimant requires the following to run:
 
 ## Installation
 
-At the moment, Comimant can only be installed manually, but an automatic installation script is in development.
+At the moment, Comimant can only be installed manually, but an automatic installation script is in development. See the [docs](https://docs.comimant.ryanbester.com/en/latest/comimant/installation.html) for more details.
 
 ### Automatic Installation
 
@@ -42,7 +42,7 @@ Below are some configuration file templates. For more details, see the docs.
 {
   "apps": [
     {
-      "script": "/pat/to/comimant/app.js",
+      "script": "/path/to/comimant/app.js",
       "name": "comimant",
       "env": {
         "NODE_ENV": "production",

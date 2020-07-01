@@ -1,0 +1,12 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../basic-layout
+
+block content
+    .container--center.basic-header-body-container
+        h1 Setup
+        p Welcome to Comimant. This page will take you through the steps to installing and setting up Comimant.
+        p= "It is assumed that you have already setup the configuration files and created a database with users. If not, please consult the "
+            a(href='https://docs.comimant.ryanbester.com/en/latest/comimant/installation.html') docs
+            |  for help.
+        p To begin, click the start button below.
+        a.button.button-primary.no-margin(href='/setup/database' style='font-size: 20px; width: 100%; max-width: 75px;') Start

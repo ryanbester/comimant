@@ -6,7 +6,5 @@ coverage
 .idea
 config.json
 jsdoc
-*.css
-*.css.map
 /public/help
 /public/offline-page.html

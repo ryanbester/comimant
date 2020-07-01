@@ -1,0 +1,21 @@
+.files-browser-header {
+  font-weight: 400;
+  font-size: 20px;
+}
+.files-browser-table {
+  width: 100%;
+  font-size: 18px;
+}
+.files-browser-table tr:hover {
+  background-color: #BBB;
+}
+.files-browser-table a {
+  text-decoration: none;
+  color: inherit;
+  padding: 15px;
+  display: inline-block;
+}
+.files-browser-table a:hover {
+  text-decoration: underline;
+}
+/*# sourceMappingURL=files.css.map */

@@ -28,6 +28,7 @@ const { AccessToken } = require('../core/auth/access-token');
 const app = require('../app');
 const router = express.Router();
 
+const setupRoutes = require('./setup');
 const accountRoutes = require('./accounts');
 const apiRoutes = require('./api');
 const homeRoutes = require('./home');
@@ -71,6 +72,9 @@ router.all('*', ((req, res, next) => {
 
     next();
 }));
+
+// Setup routes
+router.use('/setup', setupRoutes);
 
 // Extra security layer if things like JWT are enabled
 router.all('*', securityController.processLayers);

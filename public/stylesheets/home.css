@@ -1,0 +1,166 @@
+.widget-add-dialog-type-container {
+  display: grid;
+  border: 1px dashed #000;
+  border-radius: 7px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  overflow: hidden;
+}
+.widget-add-dialog-type-container__item {
+  display: inline-block;
+  text-align: center;
+  border-radius: 6px;
+}
+.widget-add-dialog-type-container__item:hover {
+  background-color: #CFDBFF;
+}
+.widget-add-dialog-type-container__item:active {
+  background-color: #002DB3;
+  color: #FFF;
+}
+.widget-add-dialog-type-container__item-image {
+  width: 50px;
+  height: 50px;
+}
+.widget-add-dialog-type-container__item-text {
+  margin: 0;
+}
+#widget-add-dialog-preview,
+#widget-edit-dialog-preview {
+  min-height: 100px;
+  border-radius: 7px;
+  background-color: #FFF;
+  color: #000;
+  box-shadow: 0 0 4px 0 #0000006E;
+  text-shadow: none;
+  padding: 15px;
+  overflow: visible;
+  animation: slide-up 0.4s ease;
+}
+.home-page-widget-news-container-item h2 {
+  font-size: 16px;
+}
+.home-page-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-gap: 10px;
+  grid-auto-rows: 20px;
+}
+.home-page-grid-container__widget {
+  height: calc(100% - 30px);
+  border-radius: 7px;
+  background-color: #FFF;
+  color: #000;
+  box-shadow: 0 0 4px 0 #0000006E;
+  text-shadow: none;
+  transition: box-shadow 0.25s;
+  -moz-transition: box-shadow 0.25s;
+  -webkit-transition: box-shadow 0.25s;
+  -ms-transition: box-shadow 0.25s;
+  -o-transition: box-shadow 0.25s;
+  padding: 15px;
+  overflow: visible;
+  animation: slide-up 0.4s ease;
+}
+.home-page-grid-container__widget:hover {
+  box-shadow: 0 0 17px 2px #0000006E;
+}
+.home-page-grid-container__widget.loading {
+  animation: placeHolderShimmer 1.8s linear infinite forwards, slide-up 0.4s ease;
+  background: #F6F7F8;
+  background: linear-gradient(to right, #FAFAFA 8%, #E4E4E4 38%, #FAFAFA 54%);
+}
+.home-page-grid-container__widget-content {
+  height: calc(100% - 30px);
+  overflow-y: auto;
+}
+.home-page-grid-container__widget-title {
+  position: relative;
+}
+.home-page-grid-container__widget-title h1,
+.home-page-grid-container__widget__full-link h1 {
+  margin: 0;
+}
+.home-page-grid-container__widget-menu-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 28px;
+  text-align: right;
+  font-weight: 900;
+  font-size: 23px;
+  cursor: pointer;
+}
+.home-page-grid-container__widget-menu-btn::after {
+  content: '\22EE';
+}
+.home-page-grid-container__widget-menu {
+  position: relative;
+}
+.home-page-grid-container__widget-menu-list {
+  display: none;
+  position: absolute;
+  right: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 7px;
+  background-color: #FFF;
+  box-shadow: 0 0 4px 0 #0000006E;
+  transition: box-shadow 0.25s;
+  -moz-transition: box-shadow 0.25s;
+  -webkit-transition: box-shadow 0.25s;
+  -ms-transition: box-shadow 0.25s;
+  -o-transition: box-shadow 0.25s;
+  z-index: 1;
+}
+.home-page-grid-container__widget-menu-item {
+  padding: 7px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+.home-page-grid-container__widget-menu-item:hover {
+  background-color: #E4E4E4;
+}
+.home-page-grid-container__widget-menu-item:first-child:hover {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  background-color: #E4E4E4;
+}
+.home-page-grid-container__widget-menu-item:last-child:hover {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  background-color: #E4E4E4;
+}
+.home-page-grid-container__widget-menu-item.delete:hover {
+  background-color: #AD1A1A;
+  color: #FFF;
+}
+.home-page-grid-container__widget-menu-item.delete:first-child:hover {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  background-color: #AD1A1A;
+  color: #FFF;
+}
+.home-page-grid-container__widget-menu-item.delete:last-child:hover {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  background-color: #AD1A1A;
+  color: #FFF;
+}
+.home-page-grid-container__widget--add {
+  background-color: transparent;
+  color: #FFF;
+  text-shadow: 0 0 20px #0000006E;
+}
+.home-page-grid-container__widget__full-link {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: #FFF;
+}
+/*# sourceMappingURL=home.css.map */

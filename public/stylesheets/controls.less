@@ -40,7 +40,7 @@ input, .button {
         #input-focus();
     }
 
-    &:hover:not(:disabled) {
+    &:hover:not(:disabled):not(.button-primary) {
         #input-hover();
     }
 
@@ -49,7 +49,7 @@ input, .button {
     }
 }
 
-input[type="submit"] {
+input[type="submit"], .button-primary {
     color: #FFF;
     background-color: @input-primary-color;
 
@@ -71,10 +71,14 @@ input.is-invalid ~ .invalid-feedback {
     font-size: 16px;
     display: inline-block;
     text-decoration: none;
-    color: #000;
+    text-align: center;
 
-    &:not(:only-child) {
+    &:not(:only-child):not(.no-margin) {
         margin-right: 15px;
+    }
+
+    &:not(.button-primary) {
+        color: #000;
     }
 }
 

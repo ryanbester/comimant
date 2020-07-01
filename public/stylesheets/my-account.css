@@ -1,0 +1,128 @@
+.myaccount-container h2 {
+  text-align: center;
+}
+.myaccount-container h3 {
+  text-align: left;
+}
+.myaccount-subtitle-container a {
+  position: absolute;
+  margin: 0;
+}
+.myaccount-subtitle-container h2 {
+  padding: 6px;
+}
+.myaccount-stack-view__box {
+  display: flex;
+  border: 1px solid #666;
+  border-radius: 7px;
+  margin-bottom: 15px;
+  padding: 15px;
+  color: #000;
+  text-decoration: none;
+  flex-wrap: wrap;
+}
+.myaccount-stack-view__box:last-child {
+  margin-bottom: 0;
+}
+.myaccount-stack-view__box:hover {
+  background-color: #CFDBFF;
+}
+.myaccount-stack-view__box span {
+  margin: 0 15px 0 0;
+}
+.myaccount-stack-view__box span:first-child {
+  flex-grow: 1;
+}
+.myaccount-stack-view__box-value {
+  color: #666;
+}
+.myaccount-stack-view__box-container {
+  flex: 0 0 100%;
+}
+.myaccount-stack-view__box--related {
+  margin: 0;
+}
+.myaccount-stack-view__box--related:not(:last-child) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+.myaccount-stack-view__box--related:not(:first-child) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.myaccount-table-view {
+  border-radius: 7px;
+  border: 1px solid #666;
+  overflow: hidden;
+}
+.myaccount-table {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-style: hidden;
+}
+.myaccount-table tr {
+  border-radius: 7px;
+  border: 1px solid #666;
+}
+.myaccount-table tr:hover {
+  background-color: #CFDBFF;
+}
+.myaccount-table td,
+.myaccount-table th {
+  padding: 15px;
+}
+.myaccount-table a {
+  text-decoration: none;
+  color: inherit;
+}
+.myaccount-table__cell--align-left {
+  text-align: left;
+}
+.myaccount-table__cell--align-right {
+  text-align: right;
+}
+.myaccount-form input[type='text'],
+.myaccount-form input[type='password'],
+.myaccount-form input[type='email'] {
+  width: calc(100% - 20px);
+}
+.myaccount-form input {
+  width: 100%;
+}
+#myaccount-data-usage-bar {
+  height: 20px;
+  position: relative;
+  margin-top: 15px;
+  background-color: #BBB;
+  border-radius: 7px;
+}
+.myaccount-data-usage-bar__used {
+  position: absolute;
+  height: 100%;
+  background-color: #002DB3;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+#myaccount-name-form-day,
+#admin-user-form-day {
+  width: 25%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#myaccount-name-form-month,
+#admin-user-form-month {
+  width: 50%;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+#myaccount-name-form-year,
+#admin-user-form-year {
+  width: 25%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/*# sourceMappingURL=my-account.css.map */
