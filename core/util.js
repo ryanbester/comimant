@@ -17,39 +17,12 @@
  */
 
 const { Config } = require('./config');
-//const { Domains } = require('./domains');
 
 /**
  * Class containing various helper methods.
  * @type {Util}
  */
 module.exports.Util = class Util {
-
-    /**
-     * Rewrites the URL to allow for different subdomains.
-     * @param host The host.
-     * @param url The URL.
-     * @return {string} The new URL.
-     */
-
-    /*static urlRewrite(host, url) {
-        let newUrl;
-
-        if (url.startsWith('/accounts/')) {
-            let domainObj = new Domains(host);
-            let accountsDomain = domainObj.getAccountsDomain();
-            if (host === accountsDomain) {
-                url = url.replace('/accounts', '');
-                newUrl = host + url;
-            }
-        }
-
-        if (newUrl === undefined) {
-            return host + url;
-        }
-
-        return newUrl;
-    }*/
 
     /**
      * Gets the full path including the mount point
@@ -101,6 +74,11 @@ module.exports.Util = class Util {
      */
     static getProtocol(domain) {
         const { security } = domain;
+
+        if (security === undefined) {
+            return 'https://';
+        }
+
         const { ssl_enabled } = security;
 
         return (ssl_enabled === false ? 'http://' : 'https://');
