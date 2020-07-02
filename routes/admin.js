@@ -31,6 +31,11 @@ const usersNew = require('../controllers/admin/users/new');
 const user = require('../controllers/admin/users/user');
 const usersDelete = require('../controllers/admin/users/delete');
 
+const usersName = require('../controllers/admin/users/name');
+const usersUsername = require('../controllers/admin/users/username');
+const usersEmail = require('../controllers/admin/users/email');
+const usersDob = require('../controllers/admin/users/dob');
+
 router.all('/*', status.userCheck);
 router.all('/*', main.userCheck);
 router.all('/*', (req, res, next) => {
@@ -41,7 +46,8 @@ router.all('/*', (req, res, next) => {
         ],
         scriptsAfter: [
             res.locals.protocol + res.locals.mainDomain + '/scripts/admin.js'
-        ]
+        ],
+        sendSw: false
     };
 
     next();
@@ -61,5 +67,17 @@ router.get('/users/:userId', user.showUserPage);
 
 router.get('/users/:userId/delete-user', usersDelete.showDeletePage);
 router.post('/users/:userId/delete-user', usersDelete.deleteUser);
+
+router.get('/users/:userId/name', usersName.showNamePage);
+router.post('/users/:userId/name', usersName.changeName);
+
+router.get('/users/:userId/username', usersUsername.showUsernamePage);
+router.post('/users/:userId/username', usersUsername.changeUsername);
+
+router.get('/users/:userId/email-address', usersEmail.showEmailPage);
+router.post('/users/:userId/email-address', usersEmail.changeEmailAddress);
+
+router.get('/users/:userId/dob', usersDob.showDobPage);
+router.post('/users/:userId/dob', usersDob.changeDob);
 
 module.exports = router;

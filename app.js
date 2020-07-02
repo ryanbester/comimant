@@ -103,8 +103,8 @@ Logger.log(LoggerColors.FG_GREEN + '-------------------');
 
 Logger.log(LoggerColors.DIM + 'Loading configuration...');
 
-// TODO: Add configuration scanner, that checks value and issues a warning (not error) if they are invalid. API for plugins
-// to register the configurationscanner event that allows them to receive the key and value of the current
+// TODO: Add configuration scanner, that checks value and issues a warning (not error) if they are invalid. API for
+// plugins to register the configurationscanner event that allows them to receive the key and value of the current
 // property to stop the warning.
 
 // e.g.
@@ -135,14 +135,20 @@ const subscriber = redis.getSubscriber();
 subscriber.subscribe('plugin-manager');
 redis.handleMessages(subscriber);
 
-PluginManager.getEnabledPlugins().then(_ => {
-    PluginManager.activateEnabledPlugins();
+if (!process.env.SAFE_MODE) {
+    PluginManager.getEnabledPlugins().then(_ => {
+        PluginManager.activateEnabledPlugins();
 
-    startServer();
-}, e => {
-    Logger.error('Cannot enable plugins: ' + e);
+        startServer();
+    }, e => {
+        Logger.error('Cannot enable plugins: ' + e);
+        Logger.log('Starting server in safe mode...');
+        startServer();
+    });
+} else {
     Logger.log('Starting server in safe mode...');
     startServer();
-});
+}
+
 
 module.exports = app;

@@ -172,7 +172,7 @@ exports.saveUser = (req, res, next) => {
                                 let privilegePromises = [];
 
                                 for (const privilege in privileges) {
-                                    privilegePromises.push(user.addPrivilege(privilege, privileges[privilege]));
+                                    privilegePromises.push(user.addPrivilege(privilege, true));
                                 }
 
                                 // Save new package version to mark setup as complete
@@ -208,14 +208,17 @@ exports.saveUser = (req, res, next) => {
                 if (result === true) {
                     renderPage(req, res, '1 field is invalid', ['username'], ...args);
                 } else {
-                    createUser({
+                    createUser([
                         // TODO: Set default admin privileges
-                        'admin.access_admin_panel': true,
-                        'admin.users.list': true,
-                        'admin.users.view': true,
-                        'admin.users.create': true,
-                        'admin.users.delete': true
-                    });
+                        'myaccount.info.change_name',
+                        'myaccount.info.change_username',
+                        'myaccount.info.change_dob',
+                        'admin.access_admin_panel',
+                        'admin.users.list',
+                        'admin.users.view',
+                        'admin.users.create',
+                        'admin.users.delete',
+                    ]);
                 }
             }, _ => {
                 renderPage(req, res, '1 field is invalid', ['username'], ...args);
