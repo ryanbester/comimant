@@ -38,6 +38,54 @@
     }
 }
 
+.myaccount-box {
+    border: 1px solid #666;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    padding: 15px;
+
+    h3 {
+        margin: 0 0 15px;
+    }
+
+    p {
+        margin: 3px 0;
+    }
+}
+
+.myaccount-toolbar {
+    .myaccount-toolbar__left {
+        float: left;
+    }
+
+    .myaccount-toolbar__right {
+        float: right;
+
+        .button:last-child {
+            margin-right: 0;
+        }
+    }
+
+    &.toolbar-top {
+        .button {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+    }
+
+    &.toolbar-bottom {
+        .button {
+            margin-top: 15px;
+            margin-bottom: 0;
+        }
+    }
+
+    p.inline {
+        display: inline-block;
+        margin-right: 15px;
+    }
+}
+
 .myaccount-stack-view__box {
     display: flex;
     border: 1px solid #666;

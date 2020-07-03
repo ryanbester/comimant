@@ -16,3 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+$(document).ready(function () {
+    $('#user-view-options-btn').click(function (e) {
+        e.preventDefault();
+        const viewOptionsEl = $('#user-view-options');
+        const viewOptionsBtn = $('#user-view-options-btn');
+
+        if ($('#user-view-options:visible').length === 0) {
+            viewOptionsBtn.addClass('active');
+            viewOptionsEl.stop().slideDown(250);
+        } else {
+            viewOptionsBtn.removeClass('active');
+            viewOptionsEl.stop().slideUp(250);
+        }
+    });
+
+    $('.view-options__checkbox').click(function (e) {
+        const checkbox = $(e.target).children('input').get(0);
+        if (checkbox === undefined) {
+            return;
+        }
+
+        // .checked returns false if it's checked for some reason
+        if (!checkbox.checked) {
+            $(e.target.previousSibling).attr('disabled', true);
+        } else {
+            $(e.target.previousSibling).removeAttr('disabled');
+        }
+    });
+});

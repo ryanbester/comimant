@@ -94,6 +94,38 @@ module.exports.Util = class Util {
     }
 
     /**
+     * Returns the variable if it is not undefined or null, otherwise returns a default value.
+     * @param {*} variable The variable to check.
+     * @param {*} defaultValue The default value.
+     * @returns {*} The variable or the default value.
+     */
+    static nullCoalesce(variable, defaultValue) {
+        if (variable === undefined) {
+            return defaultValue;
+        }
+
+        if (variable === null) {
+            return defaultValue;
+        }
+
+        return variable;
+    }
+
+    /**
+     * Returns the variable if if is not false, otherwise returns a default value.
+     * @param {*} variable The variable to check.
+     * @param {*} defaultValue The default value.
+     * @returns {*} The variable or the default value.
+     */
+    static falseCoalesce(variable, defaultValue) {
+        if (variable === false) {
+            return defaultValue;
+        }
+
+        return variable;
+    }
+
+    /**
      * Returns the string if it is not null or empty, otherwise returns a default value.
      * @param {string} string The string.
      * @param {string} defaultValue The default value.

@@ -16,10 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const querystring = require('querystring');
+const { ViewOptions } = require('../../../core/view-options');
+
 const { Logger } = require('../../../core/logger');
 const { AuthUtil } = require('../../../core/auth/auth-util');
 const { Nonce } = require('../../../core/auth/nonce');
 const { Util } = require('../../../core/util');
+const { Sanitizer } = require('../../../core/sanitizer');
 
 exports.showUsersPage = (req, res) => {
     Nonce.createNonce('user-logout', '/accounts/logout').then(nonce => {
@@ -38,21 +42,60 @@ exports.showUsersPage = (req, res) => {
                 return;
             }
 
-            AuthUtil.getUsers().then(users => {
-                const message = handleMessage(req.query.message);
+            AuthUtil.countUsers().then(userCount => {
+                let viewOptions = {
+                    columns: {
+                        "first_name": {
+                            title: 'First Name',
+                            sortable: true,
+                            filterable: true,
+                            visible: true
+                        },
+                        "last_name": {
+                            title: 'Last Name',
+                            sortable: true,
+                            filterable: true,
+                            visible: true
+                        },
+                        "email_address": {
+                            title: 'Email Address',
+                            sortable: true,
+                            filterable: true,
+                            visible: true
+                        },
+                        "locked": {
+                            title: 'Locked',
+                            sortable: true,
+                            filterable: true
+                        },
+                        "date_added": {
+                            title: 'Date Added',
+                            sortable: true,
+                            filterable: true
+                        }
+                    }
+                };
 
-                res.render('admin/users/index', {
-                    ...res.locals.stdArgs,
-                    title: 'Users | Admin',
-                    logoutNonce: nonce,
-                    activeItem: 'users',
-                    subtitle: 'Users',
-                    hasPermission: true,
-                    users: users,
-                    message: message
-                });
+                ViewOptions.processQueryParams(viewOptions, Util.getFullPath(req.originalUrl), req.query, 20,
+                    userCount);
+
+                AuthUtil.getUsers(viewOptions)
+                    .then(users => {
+                        const message = handleMessage(req.query.message);
+
+                        res.render('admin/users/index', {
+                            ...res.locals.stdArgs,
+                            title: 'Users | Admin',
+                            logoutNonce: nonce,
+                            activeItem: 'users',
+                            subtitle: 'Users',
+                            hasPermission: true,
+                            users: users,
+                            message: message,
+                            viewOptions: viewOptions
+                        });
+                    });
             });
-
         }, _ => {
             Logger.debug(
                 Util.getClientIP(req) + ' tried to list users on page admin.users but did not have permission.');
@@ -77,4 +120,4 @@ const handleMessage = (messageID) => {
     }
 
     return undefined;
-}
+};

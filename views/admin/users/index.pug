@@ -4,30 +4,47 @@ extends ../layout
 block admin-content
     if message
         h2.success= message
-    a.button(href='users/new') New user
+    .myaccount-toolbar.toolbar-top
+        .myaccount-toolbar__left
+            a.button(href='users/new') New user
+        .myaccount-toolbar__right
+            a.button#user-view-options-btn(href='#') View Options
+        .clear
     if hasPermission
+        include ../../view-options
+        +viewOptions
         if users
             if users.length > 0
                 .myaccount-table-view
                     table.myaccount-table
                         tr
-                            th.myaccount-table-view__cell--align-left First Name
-                            th.myaccount-table-view__cell--align-left Last Name
-                            th.myaccount-table-view__cell--align-left Email Address
-                            th.myaccount-table-view__cell--align-left Locked
-                            th.myaccount-table-view__cell--align-left Date Added
+                            for column in viewOptions.columns
+                                if column.visible
+                                    th.myaccount-table-view__cell--align-left= column.title
                         each user in users
                             tr
-                                td.myaccount-table-view__cell--align-left
-                                    a(href= '/admin/users/' + user.user_id.toLowerCase())= user.first_name
-                                td.myaccount-table-view__cell--align-left
-                                    a(href= '/admin/users/' + user.user_id.toLowerCase())= user.last_name
-                                td.myaccount-table-view__cell--align-left
-                                    a(href= '/admin/users/' + user.user_id.toLowerCase())= user.email_address
-                                td.myaccount-table-view__cell--align-left
-                                    a(href= '/admin/users/' + user.user_id.toLowerCase())= (user.locked ? 'Yes' : 'No')
-                                td.myaccount-table-view__cell--align-left
-                                    a(href= '/admin/users/' + user.user_id.toLowerCase()) #{user.date_added.getDate()}/#{user.date_added.getMonth() + 1}/#{user.date_added.getFullYear()}
+                                if viewOptions.columns.first_name.visible
+                                    td.myaccount-table-view__cell--align-left
+                                        a(href= '/admin/users/' + user.user_id.toLowerCase())= user.first_name
+                                if viewOptions.columns.last_name.visible
+                                    td.myaccount-table-view__cell--align-left
+                                        a(href= '/admin/users/' + user.user_id.toLowerCase())= user.last_name
+                                if viewOptions.columns.email_address.visible
+                                    td.myaccount-table-view__cell--align-left
+                                        a(href= '/admin/users/' + user.user_id.toLowerCase())= user.email_address
+                                if viewOptions.columns.locked.visible
+                                    td.myaccount-table-view__cell--align-left
+                                        a(href= '/admin/users/' + user.user_id.toLowerCase())= (user.locked ? 'Yes' : 'No')
+                                if viewOptions.columns.date_added.visible
+                                    td.myaccount-table-view__cell--align-left
+                                        a(href= '/admin/users/' + user.user_id.toLowerCase()) #{user.date_added.getDate()}/#{user.date_added.getMonth() + 1}/#{user.date_added.getFullYear()}
+                .myaccount-toolbar.toolbar-bottom
+                    .myaccount-toolbar__right
+                        if viewOptions
+                            a.button(href= viewOptions.prevPageUrl) Previous
+                            p.inline Page: #{viewOptions.page} of #{viewOptions.pages}
+                            a.button(href= viewOptions.nextPageUrl) Next
+                    .clear
             else
                 p No users
         else

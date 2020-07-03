@@ -1,0 +1,63 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+mixin viewOptions()
+    .myaccount-box.view-options#user-view-options(style='display: none;')
+        form.myaccount-form(method='GET' action='')
+            h3 View options
+            if viewOptions
+                .view-options-block
+                    label(for='view-options-page') Page
+                    input#view-options-page.view-options__pagination-page(
+                        type='number'
+                        name='page'
+                        value= viewOptions.page
+                        min='1'
+                        max= viewOptions.pages
+                    )
+                .view-options-block
+                    label(for='view-options-per-page') Users per Page
+                    input#view-options-per-page.view-options__pagination-per-page(
+                        type='number'
+                        name='per_page'
+                        value= viewOptions.perPage
+                        min='1'
+                    )
+                if viewOptions.columns
+                    p Sort
+                    select.view-options__sort-column(name='sort_column')
+                        for column, name in viewOptions.columns
+                            if column.sortable
+                                option(value= name selected= (viewOptions.sortColumn === name))= column.title
+                    select.view-options__sort-mode(name='sort_mode')
+                        option(value='asc' selected= (viewOptions.sortMode === 'asc')) Ascending
+                        option(value='desc' selected= (viewOptions.sortMode === 'desc')) Descending
+                    p Columns
+                    for column, name in viewOptions.columns
+                        input(type='hidden' name= name value='off' disabled= column.visible)
+                        label.view-options__checkbox.checkbox-container= column.title
+                            input(
+                                type='checkbox'
+                                name= name
+                                checked= column.visible
+                                tabindex='-1'
+                            )
+                            span.checkbox-checkmark
+                    p Filter
+                    select.view-options__filter-column(name='filter_column')
+                        for column, name in viewOptions.columns
+                            if column.filterable
+                                option(value= name selected= (viewOptions.filterColumn === name))= column.title
+                    select.view-options__filter-mode(name='filter_mode')
+                        option(value='contains' selected= (viewOptions.filterMode === 'contains')) Contains
+                        option(value='begins_with' selected= (viewOptions.filterMode === 'begins_with')) Begins with
+                        option(value='ends_with' selected= (viewOptions.filterMode === 'ends_with')) Ends with
+                        option(value='equal' selected= (viewOptions.filterMode === 'equal')) Equal to
+                    input.view-options__filter-term(
+                        type='text'
+                        name='filter_term'
+                        placeholder='Search'
+                        value= viewOptions.filterTerm
+                    )
+                input(
+                    type='submit'
+                    value='Apply'
+                )

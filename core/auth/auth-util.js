@@ -26,10 +26,10 @@ const { User } = require('./user');
 module.exports.AuthUtil = class AuthUtil {
 
     /**
-     * Gets all the users in the database.
-     * @return {Promise<User[]>|Promise<Error>} An array of users.
+     * Counts the users in the database.
+     * @return {Promise<Number>|Promise<Error>} The number of users.
      */
-    static getUsers() {
+    static countUsers() {
         return new Promise((resolve, reject) => {
             const connection = mysql.getConnection();
 
@@ -37,14 +37,78 @@ module.exports.AuthUtil = class AuthUtil {
             connection.connect();
 
             connection.query(
-                'SELECT HEX(user_id) AS user_id, username,' +
-                ' CONVERT(AES_DECRYPT(email_address, UNHEX(' + connection.escape(
-                process.env.DATABASE_KEY) + ')) USING utf8) AS email_address,' +
-                ' first_name, last_name, date_added, dob, image_url, locked FROM users',
+                'SELECT COUNT(*) AS UserCount FROM users',
                 (error, results) => {
                     // Close the connection
                     connection.end();
 
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(results[0].UserCount);
+                });
+        });
+    }
+
+    /**
+     * Gets all the users in the database.
+     * @return {Promise<User[]>|Promise<Error>} An array of users.
+     */
+    static getUsers(viewOptions) {
+        return new Promise((resolve, reject) => {
+            const connection = mysql.getConnection();
+
+            // Open the connection
+            connection.connect();
+
+            let query = 'SELECT HEX(user_id) AS user_id, username,' +
+                ' CONVERT(AES_DECRYPT(email_address, UNHEX(' + connection.escape(
+                    process.env.DATABASE_KEY) + ')) USING utf8) AS email_address,' +
+                ' first_name, last_name, date_added, dob, image_url, locked FROM users';
+
+            if (viewOptions.filterTerm !== undefined) {
+                if (viewOptions.filterColumn !== undefined) {
+                    query += ' WHERE ' + connection.escapeId(viewOptions.filterColumn);
+
+                    if (viewOptions.filterMode !== undefined) {
+                        switch (viewOptions.filterMode) {
+                            case 'contains':
+                                query += ' LIKE ' + connection.escape('%' + viewOptions.filterTerm + '%');
+                                break;
+                            case 'begins_with':
+                                query += ' LIKE ' + connection.escape(viewOptions.filterTerm + '%');
+                                break;
+                            case 'ends_with':
+                                query += ' LIKE ' + connection.escape('%' + viewOptions.filterTerm);
+                                break;
+                            case 'equal':
+                                query += ' = ' + connection.escape(viewOptions.filterTerm);
+                                break;
+                        }
+                    } else {
+                        query += ' LIKE ' + connection.escape('%' + viewOptions.filterTerm + '%');
+                    }
+                }
+            }
+
+            if (viewOptions.sortColumn !== undefined) {
+                query += ' ORDER BY ' + connection.escapeId(viewOptions.sortColumn);
+
+                if (viewOptions.sortMode !== undefined) {
+                    query += ' ' + (viewOptions === 'desc' ? 'DESC' : 'ASC');
+                }
+            }
+
+            query += ' LIMIT ' + connection.escape(
+                Number.parseInt(viewOptions.perPage)) + ' OFFSET ' + connection.escape(
+                Number.parseInt(viewOptions.offset));
+
+            connection.query(query,
+                (error, results) => {
+                    // Close the connection
+                    connection.end();
                     if (error) {
                         reject(error);
                         return;
@@ -70,4 +134,5 @@ module.exports.AuthUtil = class AuthUtil {
                 });
         });
     }
+
 };

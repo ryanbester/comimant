@@ -114,6 +114,9 @@ input.is-invalid ~ .invalid-feedback {
 .button:not(.button-primary) {
   color: #000;
 }
+.button.active {
+  background-color: #CFDBFF;
+}
 .form-button {
   font-size: 20px;
   width: calc(100% - 20px);
@@ -284,6 +287,72 @@ select:disabled {
   padding: 7px;
   text-decoration: none;
   color: #000;
+}
+.view-options select {
+  font-size: 16px;
+  padding: 7px;
+}
+.view-options select.view-options__sort-column {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.view-options select.view-options__sort-mode {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 0;
+}
+.view-options select.view-options__filter-column {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.view-options select.view-options__filter-mode {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}
+.view-options input {
+  font-size: 16px;
+  padding: 7px;
+}
+.view-options input.view-options__filter-term {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  display: inline-block;
+  width: calc(100% - 280px) !important;
+}
+.view-options input[type='number'] {
+  width: 50px;
+}
+.view-options input[type='submit'] {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.view-options label {
+  font-size: 16px;
+}
+.view-options .checkbox-container {
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 28px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+.view-options .checkbox-checkmark {
+  height: 16px;
+  width: 16px;
+}
+.view-options .checkbox-checkmark:after {
+  width: 3px;
+  height: 8px;
+}
+.view-options .view-options-block {
+  display: inline-block;
+  margin-right: 14px;
+}
+.view-options .view-options-block label {
+  display: block;
+  margin-bottom: 3px;
 }
 .modal {
   display: none;
