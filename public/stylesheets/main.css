@@ -232,6 +232,7 @@ select:disabled {
 .checkbox-container__input--table-cell {
   position: relative !important;
   display: block;
+  margin: 0;
 }
 .user-dropdown {
   position: relative;

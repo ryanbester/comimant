@@ -1,0 +1,53 @@
+//- Copyright (C) 2019 - 2020 Ryan Bester
+extends ../../layout
+
+block admin-content
+    if user.privileges.hasPrivilege('admin.users.manage_privileges')
+        if error
+            h2.error= error
+        if success
+            h2.success= success
+        .myaccount-toolbar.toolbar-top
+            .myaccount-toolbar__left
+                a.button(href='privileges/add-privilege') Add Privilege
+                a.button(href='privileges/apply-template') Apply Privilege Template
+            .clear
+        form.myacount-form(method='POST' action='')
+            .myaccount-table-view
+                table.myaccount-table
+                    tr
+                        th.myaccount-table-view__cell--align-left Privilege Name
+                        th.myaccount-table-view__cell--align-left Granted
+                        th.myaccount-table-view__cell--align-left Revoked
+                    if privileges
+                        each value, privilege in privileges
+                            tr
+                                td.myaccount-table-view__cell--align-left= privilege
+                                td.myaccount-table-view__cell--align-left
+                                    label.login-form__checkbox.checkbox-container.checkbox-container--table-cell
+                                        input.checkbox-container__input--table-cell(
+                                            type='radio'
+                                            name= privilege
+                                            value= 'granted'
+                                            checked= value === true
+                                            tabindex='-1'
+                                        )
+                                        span.checkbox-checkmark
+                                td.myaccount-table-view__cell--align-left
+                                    label.login-form__checkbox.checkbox-container.checkbox-container--table-cell
+                                        input.checkbox-container__input--table-cell(
+                                            type='radio'
+                                            name= privilege
+                                            value= 'revoked'
+                                            checked= value === false
+                                            tabindex='-1'
+                                        )
+                                        span.checkbox-checkmark
+            br
+            input(type='hidden' name='nonce' value=formNonce)
+            input(
+                type='submit'
+                value='Save'
+            )
+    else
+        p You do not have permission to manage a user's privileges.

@@ -22,7 +22,7 @@ const { Logger } = require('../../../core/logger');
 const { Nonce } = require('../../../core/auth/nonce');
 const { Util } = require('../../../core/util');
 
-const renderPage = (req, res, hasPermission, error, invalidFields, username, success) => {
+const renderPage = (req, res, error, invalidFields, username, success) => {
     let noncePromises = [
         Nonce.createNonce('user-logout', '/accounts/logout'),
         Nonce.createNonce('admin-users-user-username-form',
@@ -43,7 +43,6 @@ const renderPage = (req, res, hasPermission, error, invalidFields, username, suc
             backUrl: '../' + res.locals.targetUser.user_id.toLowerCase(),
             error: error,
             success: success,
-            hasPermission: hasPermission,
             username: username === undefined ? res.locals.targetUser.username : username,
             usernameInvalid: invalidFields !== undefined ? invalidFields.includes('username') : false
         });
@@ -51,89 +50,62 @@ const renderPage = (req, res, hasPermission, error, invalidFields, username, suc
 };
 
 exports.showUsernamePage = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_username').then(result => {
-        if (result === true) {
-            renderPage(req, res, true);
-        } else {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page admin.users.change_username but did not have permission.');
-            renderPage(req, res, false);
-        }
-    }, _ => {
-        Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_username but did not have permission.');
-        renderPage(req, res, false);
-    });
+    renderPage(req, res);
 };
 
 exports.changeUsername = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_username').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page admin.users.change_username but did not have permission.');
-            renderPage(req, res, false);
+    let targetUser = res.locals.targetUser;
+    let { username, nonce } = req.body;
+
+    Nonce.verifyNonce('admin-users-user-username-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+        username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
+
+        let invalidFields = [];
+        if (!username) {
+            invalidFields.push('username');
+        }
+
+        if (invalidFields.length > 0) {
+            renderPage(req, res, invalidFields.length + ' fields are invalid', invalidFields, username);
             return;
         }
 
-        let targetUser = res.locals.targetUser;
-        let { username, nonce } = req.body;
+        const performSave = () => {
+            targetUser.username = username;
 
-        Nonce.verifyNonce('admin-users-user-username-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
+            targetUser.saveUser().then(_ => {
+                renderPage(req, res, undefined, undefined, username, 'Successfully saved your username');
+            }, _ => {
+                Logger.debug(
+                    Util.getClientIP(
+                        req) + ' tried to save admin.users.change_username but failed to save to database.');
+                renderPage(req, res, 'Error saving the user\'s username. Please try again.', undefined,
+                    username);
+            });
+        };
 
-            let invalidFields = [];
-            if (!username) {
-                invalidFields.push('username');
-            }
-
-            if (invalidFields.length > 0) {
-                renderPage(req, res, true, invalidFields.length + ' fields are invalid', invalidFields, username);
-                return;
-            }
-
-            const performSave = () => {
-                targetUser.username = username;
-
-                targetUser.saveUser().then(_ => {
-                    renderPage(req, res, true, undefined, undefined, username, 'Successfully saved your username');
-                }, _ => {
+        // Check if username is taken
+        if (username !== targetUser.username) {
+            User.usernameTaken(username).then(result => {
+                if (result === true) {
                     Logger.debug(
                         Util.getClientIP(
-                            req) + ' tried to save admin.users.change_username but failed to save to database.');
-                    renderPage(req, res, true, 'Error saving the user\'s username. Please try again.', undefined,
+                            req) + ' tried to save admin.users.change_username but their username was taken.');
+                    renderPage(req, res, 'Please check the username and try again.', ['username'],
                         username);
-                });
-            };
+                    return;
+                }
 
-            // Check if username is taken
-            if (username !== targetUser.username) {
-                User.usernameTaken(username).then(result => {
-                    if (result === true) {
-                        Logger.debug(
-                            Util.getClientIP(
-                                req) + ' tried to save admin.users.change_username but their username was taken.');
-                        renderPage(req, res, true, 'Please check the username and try again.', ['username'],
-                            username);
-                        return;
-                    }
-
-                    performSave();
-                });
-            } else {
                 performSave();
-            }
-        }, _ => {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page admin.users.change_username but nonce verification failed.');
-            renderPage(req, res, true, 'Error saving the user\'s username. Please try again.');
-        });
+            });
+        } else {
+            performSave();
+        }
     }, _ => {
         Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_username but did not have permission.');
-        renderPage(req, res, false);
+            Util.getClientIP(
+                req) + ' tried to access page admin.users.change_username but nonce verification failed.');
+        renderPage(req, res, 'Error saving the user\'s username. Please try again.');
     });
 
 };

@@ -282,8 +282,7 @@ const createPrivilegesTable = (req, res, connection) => {
         '  `user_id` binary(16) NOT NULL,' +
         '  `privilege_name` varchar(255) NOT NULL,' +
         '  `granted` tinyint(1) DEFAULT NULL,' +
-        '  KEY `user_id` (`user_id`),' +
-        '  UNIQUE KEY `idx_privilege` (`privilege_name`),' +
+        '  PRIMARY KEY (`user_id`, `privilege_name`),' +
         '  CONSTRAINT `privileges_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE' +
         ')',
         (error) => {

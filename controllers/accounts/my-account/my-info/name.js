@@ -50,21 +50,9 @@ const renderPage = (req, res, error, invalidFields, firstName, lastName, success
 };
 
 exports.showNamePage = (req, res) => {
-    res.locals.user.hasPrivilege('account.info.change_name').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page account.info.change_name but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to change your name. Please contact your administrator.'
-                }
-            });
-        } else {
-            renderPage(req, res);
-        }
-    }, _ => {
+    if (res.locals.user.privileges.hasPrivilege('account.info.change_name')) {
+        renderPage(req, res);
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_name but did not have permission.');
         res.render('error-custom', {
@@ -74,27 +62,14 @@ exports.showNamePage = (req, res) => {
                 message: 'You do not have permission to change your name. Please contact your administrator.'
             }
         });
-    });
+    }
 };
 
 exports.saveName = (req, res) => {
     let user = res.locals.user;
     let { firstName, lastName, nonce } = req.body;
 
-    user.hasPrivilege('account.info.change_name').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page account.info.change_name but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to change your name. Please contact your administrator.'
-                }
-            });
-            return;
-        }
-
+    if (user.privileges.hasPrivilege('account.info.change_name')) {
         Nonce.verifyNonce('myaccount-my-info-name-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
             firstName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(firstName)));
             lastName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(lastName)));
@@ -128,7 +103,7 @@ exports.saveName = (req, res) => {
                 Util.getClientIP(req) + ' tried to save account.info.change_name but nonce verification failed.');
             renderPage(req, res, 'Error saving your name. Please try again.');
         });
-    }, _ => {
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_name but did not have permission.');
         res.render('error-custom', {
@@ -138,5 +113,5 @@ exports.saveName = (req, res) => {
                 message: 'You do not have permission to change your name. Please contact your administrator.'
             }
         });
-    });
+    }
 };

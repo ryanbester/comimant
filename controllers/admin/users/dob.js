@@ -22,7 +22,7 @@ const { Logger } = require('../../../core/logger');
 const { Nonce } = require('../../../core/auth/nonce');
 const { Util } = require('../../../core/util');
 
-const renderPage = (req, res, hasPermission, error, invalidFields, day, month, year, success) => {
+const renderPage = (req, res, error, invalidFields, day, month, year, success) => {
     let noncePromises = [
         Nonce.createNonce('user-logout', '/accounts/logout'),
         Nonce.createNonce('admin-users-user-dob-form',
@@ -43,7 +43,6 @@ const renderPage = (req, res, hasPermission, error, invalidFields, day, month, y
             backUrl: '../' + res.locals.targetUser.user_id.toLowerCase(),
             error: error,
             success: success,
-            hasPermission: hasPermission,
             day: day === undefined ? res.locals.targetUser.dob.getDate() : parseInt(day),
             month: month === undefined ? (res.locals.targetUser.dob.getMonth() + 1).toString() : month,
             year: year === undefined ? res.locals.targetUser.dob.getFullYear() : parseInt(year),
@@ -55,86 +54,62 @@ const renderPage = (req, res, hasPermission, error, invalidFields, day, month, y
 };
 
 exports.showDobPage = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_dob').then(result => {
-        if (result === true) {
-            renderPage(req, res, true);
-        } else {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_dob but did not have permission.');
-            renderPage(req, res, false);
-        }
-    }, _ => {
-        Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_dob but did not have permission.');
-        renderPage(req, res, false);
-    });
+    renderPage(req, res);
 };
 
 exports.changeDob = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_dob').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_dob but did not have permission.');
-            renderPage(req, res, false);
+    let targetUser = res.locals.targetUser;
+    let { day, month, year, nonce } = req.body;
+
+    Nonce.verifyNonce('admin-users-user-dob-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+        day = Sanitizer.number(day);
+        month = Sanitizer.number(month);
+        year = Sanitizer.number(year);
+
+        if (day < 1 || day > 31) {
+            day = false;
+        }
+
+        if (month < 1 || month > 12) {
+            month = false;
+        }
+
+        if (year < 1) {
+            year = false;
+        }
+
+        let invalidFields = [];
+        if (!day) {
+            invalidFields.push('day');
+        }
+
+        if (!month) {
+            invalidFields.push('month');
+        }
+
+        if (!year) {
+            invalidFields.push('year');
+        }
+
+        if (invalidFields.length > 0) {
+            renderPage(req, res, invalidFields.length + ' fields are invalid', invalidFields, day, month, year);
             return;
         }
 
-        let targetUser = res.locals.targetUser;
-        let { day, month, year, nonce } = req.body;
-
-        Nonce.verifyNonce('admin-users-user-dob-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            day = Sanitizer.number(day);
-            month = Sanitizer.number(month);
-            year = Sanitizer.number(year);
-
-            if (day < 1 || day > 31) {
-                day = false;
-            }
-
-            if (month < 1 || month > 12) {
-                month = false;
-            }
-
-            if (year < 1) {
-                year = false;
-            }
-
-            let invalidFields = [];
-            if (!day) {
-                invalidFields.push('day');
-            }
-
-            if (!month) {
-                invalidFields.push('month');
-            }
-
-            if (!year) {
-                invalidFields.push('year');
-            }
-
-            if (invalidFields.length > 0) {
-                renderPage(req, res, true, invalidFields.length + ' fields are invalid', invalidFields, day, month, year);
-                return;
-            }
-
-            targetUser.dob = new Date(year, month - 1, day);
-            targetUser.saveUser().then(_ => {
-                renderPage(req, res, true, undefined, undefined, day, month, year, 'Successfully saved the user\'s email address');
-            }, _ => {
-                Logger.debug(
-                    Util.getClientIP(
-                        req) + ' tried to access page admin.users.change_dob but failed to save to database.');
-                renderPage(req, res, true, 'Error saving the user\'s date of birth. Please try again.');
-            });
+        targetUser.dob = new Date(year, month - 1, day);
+        targetUser.saveUser().then(_ => {
+            renderPage(req, res, undefined, undefined, day, month, year,
+                'Successfully saved the user\'s email address');
         }, _ => {
             Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_dob but nonce verification failed.');
-            renderPage(req, res, true, 'Error saving the user\'s date of birth. Please try again.');
+                Util.getClientIP(
+                    req) + ' tried to access page admin.users.change_dob but failed to save to database.');
+            renderPage(req, res, 'Error saving the user\'s date of birth. Please try again.');
         });
     }, _ => {
         Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_dob but did not have permission.');
-        renderPage(req, res, false);
+            Util.getClientIP(req) + ' tried to access page admin.users.change_dob but nonce verification failed.');
+        renderPage(req, res, 'Error saving the user\'s date of birth. Please try again.');
     });
 
 };

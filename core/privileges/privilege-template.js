@@ -18,6 +18,8 @@
 
 const mysql = require('../../db/mysql');
 
+const { Privileges } = require('../privileges/privileges');
+
 /**
  * Class representing a privilege template.
  * @type {PrivilegeTemplate}
@@ -184,126 +186,69 @@ module.exports.PrivilegeTemplate = class PrivilegeTemplate {
     }
 
     /**
-     * Checks whether the privilege template contains the privilege or not.
-     * @param {string} name The privilege name.
-     * @return {boolean} True if the privilege is granted or false otherwise.
+     * Loads the privileges from the database into a Privileges object. This will not reload privileges if they've
+     * already been loaded.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
      */
-    hasPrivilege(name) {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        if (this.privileges.hasOwnProperty(name)) {
-            if (this.privileges[name] === 1) {
-                return true;
+    loadPrivileges() {
+        return new Promise((resolve, reject) => {
+            // Check if privilege template name is set
+            if (this.name === undefined) {
+                reject('Name not set');
+                return;
             }
-        }
 
-        return false;
-    }
+            this.privileges = Privileges.getInstance(this);
 
-    /**
-     * Adds a privilege to the privilege template.
-     * @param {string} name The privilege name.
-     * @param {boolean} granted Whether the privilege is granted or not.
-     * @return {boolean} True if the method succeeds or false on failure.
-     */
-    addPrivilege(name, granted = true) {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        this.privileges[name] = granted === true ? 1 : 0;
-
-        return true;
-    }
-
-    /**
-     * Deletes a privilege from the privilege template.
-     * @param {string} name The privilege name.
-     * @return {boolean} True on success or false on failure.
-     */
-    deletePrivilege(name) {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        delete this.privileges[name];
-
-        return true;
-    }
-
-    /**
-     * Revokes a privilege from the privilege template.
-     * @param {string} name The privilege name.
-     * @return {boolean} True on success or false on failure.
-     */
-    revokePrivilege(name) {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        if (this.privileges.hasOwnProperty(name)) {
-            this.privileges[name] = 0;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets the privileges in the privilege template
-     * @return {Object|boolean} An object containing the privileges or false on failure.
-     */
-    getPrivileges() {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        return this.privileges;
-    }
-
-    /**
-     * Counts the granted privileges in the privilege template.
-     * @return {number|boolean} The number of privileges granted or false on failure.
-     */
-    countGrantedPrivileges() {
-        if (this.name === undefined) {
-            return false;
-        }
-
-        if (this.privileges === undefined) {
-            return false;
-        }
-
-        let count = 0;
-        Object.keys(this.privileges).forEach(name => {
-            if (this.privileges[name] === 1) {
-                count++;
+            // Skip if they've already been loaded. In this case reload must be called.
+            if (typeof this.privileges.privileges === 'object') {
+                if (Object.keys(this.privileges.privileges).length > 0) {
+                    resolve(true);
+                    return;
+                }
             }
+
+            this.reloadPrivileges().then(result => resolve(result), err => reject(err));
         });
+    }
 
-        return count;
+    /**
+     * Loads the privileges from the database into a Privileges object.
+     * @return {Promise<boolean>|Promise<Error>} True on success.
+     */
+    reloadPrivileges() {
+        return new Promise((resolve, reject) => {
+            // Check if privilege template name is set
+            if (this.name === undefined) {
+                reject('Name not set');
+                return;
+            }
+
+            this.privileges = Privileges.getInstance(this);
+            this.privileges.privileges = {};
+
+            const connection = mysql.getConnection();
+            connection.connect();
+
+            connection.query('SELECT privileges FROM privilege_templates ' +
+                'WHERE name = ' + connection.escape(this.name),
+                (error, results) => {
+                    connection.end();
+
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    let privilegesJson = JSON.parse(results[0].privileges);
+                    for (const [name, granted] of Object.entries(privilegesJson)) {
+                        privilegesJson[name] = (granted === 1);
+                    }
+
+                    this.privileges.parsePrivileges(privilegesJson);
+                    resolve(true);
+                });
+        });
     }
 
 };

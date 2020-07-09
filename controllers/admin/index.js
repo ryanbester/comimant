@@ -24,30 +24,18 @@ const { AccessToken } = require('../../core/auth/access-token');
 const { Util } = require('../../core/util');
 
 exports.userCheck = (req, res, next) => {
-    res.locals.user.hasPrivilege('admin.access_admin_panel').then(result => {
-        if (result === true) {
-            // Get commit ID
-            childProcess.exec('cd ' + __approot + ' && git rev-parse HEAD', function (err, stdout) {
-                if (err) {
-                    res.locals.commitId = 'Not available';
-                } else {
-                    res.locals.commitId = stdout;
-                }
+    if (res.locals.user.privileges.hasPrivilege('admin.access_admin_panel')) {
+        // Get commit ID
+        childProcess.exec('cd ' + __approot + ' && git rev-parse HEAD', function (err, stdout) {
+            if (err) {
+                res.locals.commitId = 'Not available';
+            } else {
+                res.locals.commitId = stdout;
+            }
 
-                next();
-            });
-        } else {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access Admin page but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to access this page. Please contact your administrator.'
-                }
-            });
-        }
-    }, _ => {
+            next();
+        });
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access Admin page but did not have permission.');
         res.render('error-custom', {
@@ -57,7 +45,7 @@ exports.userCheck = (req, res, next) => {
                 message: 'You do not have permission to access this page. Please contact your administrator.'
             }
         });
-    });
+    }
 };
 
 exports.showAdminPage = (req, res) => {

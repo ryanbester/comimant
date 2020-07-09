@@ -22,7 +22,7 @@ const { Logger } = require('../../../core/logger');
 const { Nonce } = require('../../../core/auth/nonce');
 const { Util } = require('../../../core/util');
 
-const renderPage = (req, res, hasPermission, error, invalidFields, emailAddress, success) => {
+const renderPage = (req, res, error, invalidFields, emailAddress, success) => {
     let noncePromises = [
         Nonce.createNonce('user-logout', '/accounts/logout'),
         Nonce.createNonce('admin-users-user-email-form',
@@ -43,7 +43,6 @@ const renderPage = (req, res, hasPermission, error, invalidFields, emailAddress,
             backUrl: '../' + res.locals.targetUser.user_id.toLowerCase(),
             error: error,
             success: success,
-            hasPermission: hasPermission,
             email: emailAddress === undefined ? res.locals.targetUser.email_address : emailAddress,
             lastNameInvalid: invalidFields !== undefined ? invalidFields.includes('email') : false
         });
@@ -51,63 +50,40 @@ const renderPage = (req, res, hasPermission, error, invalidFields, emailAddress,
 };
 
 exports.showEmailPage = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_email').then(result => {
-        if (result === true) {
-            renderPage(req, res, true);
-        } else {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_email but did not have permission.');
-            renderPage(req, res, false);
-        }
-    }, _ => {
-        Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_email but did not have permission.');
-        renderPage(req, res, false);
-    });
+    renderPage(req, res);
 };
 
 exports.changeEmailAddress = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.change_email').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_email but did not have permission.');
-            renderPage(req, res, false);
+    let targetUser = res.locals.targetUser;
+    let { email, nonce } = req.body;
+
+    Nonce.verifyNonce('admin-users-user-email-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+        email = Sanitizer.email(Sanitizer.string(email));
+
+        let invalidFields = [];
+        if (!email) {
+            invalidFields.push('email');
+        }
+
+        if (invalidFields.length > 0) {
+            renderPage(req, res, invalidFields.length + ' fields are invalid', invalidFields, email);
             return;
         }
 
-        let targetUser = res.locals.targetUser;
-        let { email, nonce } = req.body;
-
-        Nonce.verifyNonce('admin-users-user-email-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            email = Sanitizer.email(Sanitizer.string(email));
-
-            let invalidFields = [];
-            if (!email) {
-                invalidFields.push('email');
-            }
-
-            if (invalidFields.length > 0) {
-                renderPage(req, res, true, invalidFields.length + ' fields are invalid', invalidFields, email);
-                return;
-            }
-
-            targetUser.email_address = email;
-            targetUser.saveUser().then(_ => {
-                renderPage(req, res, true, undefined, undefined, email, 'Successfully saved the user\'s email address');
-            }, _ => {
-                Logger.debug(
-                    Util.getClientIP(req) + ' tried to access page admin.users.change_email but failed to save to database.');
-                renderPage(req, res, true, 'Error saving the user\'s email address. Please try again.');
-            });
+        targetUser.email_address = email;
+        targetUser.saveUser().then(_ => {
+            renderPage(req, res, undefined, undefined, email, 'Successfully saved the user\'s email address');
         }, _ => {
             Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.change_email but nonce verification failed.');
-            renderPage(req, res, true, 'Error saving the user\'s email address. Please try again.');
+                Util.getClientIP(
+                    req) + ' tried to access page admin.users.change_email but failed to save to database.');
+            renderPage(req, res, 'Error saving the user\'s email address. Please try again.');
         });
     }, _ => {
         Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.change_email but did not have permission.');
-        renderPage(req, res, false);
+            Util.getClientIP(
+                req) + ' tried to access page admin.users.change_email but nonce verification failed.');
+        renderPage(req, res, 'Error saving the user\'s email address. Please try again.');
     });
 
 };

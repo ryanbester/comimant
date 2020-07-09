@@ -3,7 +3,7 @@ extends ../layout
 
 block admin-content
     if targetUser
-        if hasPermission
+        if user.privileges.hasPrivilege('admin.users.view')
             h3 General
             .myaccount-stack-view
                 a.myaccount-stack-view__box.myaccount-stack-view__box--related(href= targetUser.user_id.toLowerCase() + '/name')

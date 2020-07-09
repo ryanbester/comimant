@@ -27,8 +27,14 @@ exports.loadUserInfo = (req, res, next) => {
 
     const targetUser = new User(userId);
     targetUser.loadInfo().then(_ => {
-        res.locals.targetUser = targetUser;
-        next();
+        targetUser.reloadPrivileges().then(_ => {
+            res.locals.targetUser = targetUser;
+            next();
+        }, _ => {
+            targetUser.privileges.privileges = {};
+            res.locals.targetUser = targetUser;
+            next();
+        });
     }, _ => {
         Nonce.createNonce('user-logout', '/accounts/logout').then(nonce => {
             res.render('admin/users/user', {
@@ -48,37 +54,7 @@ exports.showUserPage = (req, res) => {
     const targetUser = res.locals.targetUser;
 
     Nonce.createNonce('user-logout', '/accounts/logout').then(nonce => {
-        res.locals.user.hasPrivilege('admin.users.view').then(result => {
-            if (!result) {
-                Logger.debug(
-                    Util.getClientIP(req) + ' tried to access page admin.users.user but did not have permission.');
-                res.render('admin/users/user', {
-                    ...res.locals.stdArgs,
-                    title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
-                    logoutNonce: nonce,
-                    activeItem: 'users',
-                    subtitle: targetUser.first_name + ' ' + targetUser.last_name,
-                    hasPermission: false,
-                    showBack: true,
-                    backUrl: '../users'
-                });
-                return;
-            }
-
-            targetUser.countGrantedPrivileges().then(privilegeCount => {
-                res.render('admin/users/user', {
-                    ...res.locals.stdArgs,
-                    title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
-                    logoutNonce: nonce,
-                    activeItem: 'users',
-                    subtitle: targetUser.first_name + ' ' + targetUser.last_name,
-                    hasPermission: true,
-                    showBack: true,
-                    backUrl: '../users',
-                    grantedPrivileges: privilegeCount
-                });
-            });
-        }, _ => {
+        if (!res.locals.user.privileges.hasPrivilege('admin.users.create')) {
             Logger.debug(
                 Util.getClientIP(req) + ' tried to access page admin.users.user but did not have permission.');
             res.render('admin/users/user', {
@@ -87,10 +63,21 @@ exports.showUserPage = (req, res) => {
                 logoutNonce: nonce,
                 activeItem: 'users',
                 subtitle: targetUser.first_name + ' ' + targetUser.last_name,
-                hasPermission: false,
                 showBack: true,
                 backUrl: '../users'
             });
+            return;
+        }
+
+        res.render('admin/users/user', {
+            ...res.locals.stdArgs,
+            title: targetUser.first_name + ' ' + targetUser.last_name + ' | Users | Admin',
+            logoutNonce: nonce,
+            activeItem: 'users',
+            subtitle: targetUser.first_name + ' ' + targetUser.last_name,
+            showBack: true,
+            backUrl: '../users',
+            grantedPrivileges: targetUser.privileges.countGrantedPrivileges()
         });
     });
 };

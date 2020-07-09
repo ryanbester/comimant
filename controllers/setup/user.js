@@ -171,9 +171,11 @@ exports.saveUser = (req, res, next) => {
                                 // Add privileges
                                 let privilegePromises = [];
 
-                                for (const privilege in privileges) {
-                                    privilegePromises.push(user.addPrivilege(privilege, true));
-                                }
+                                user.loadPrivileges().then(_ => {
+                                    for (const privilege in privileges) {
+                                        privilegePromises.push(user.privileges.setPrivilege(privilege, true));
+                                    }
+                                });
 
                                 // Save new package version to mark setup as complete
                                 const packageVersion = res.locals.setupPackageVersion;
@@ -217,7 +219,7 @@ exports.saveUser = (req, res, next) => {
                         'admin.users.list',
                         'admin.users.view',
                         'admin.users.create',
-                        'admin.users.delete',
+                        'admin.users.delete'
                     ]);
                 }
             }, _ => {

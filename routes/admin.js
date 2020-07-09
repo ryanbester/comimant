@@ -36,6 +36,8 @@ const usersUsername = require('../controllers/admin/users/username');
 const usersEmail = require('../controllers/admin/users/email');
 const usersDob = require('../controllers/admin/users/dob');
 
+const usersPrivileges = require('../controllers/admin/users/privileges/index');
+
 router.all('/*', status.userCheck);
 router.all('/*', main.userCheck);
 router.all('/*', (req, res, next) => {
@@ -79,5 +81,8 @@ router.post('/users/:userId/email-address', usersEmail.changeEmailAddress);
 
 router.get('/users/:userId/dob', usersDob.showDobPage);
 router.post('/users/:userId/dob', usersDob.changeDob);
+
+router.get('/users/:userId/security/privileges', usersPrivileges.showPrivilegesPage);
+router.post('/users/:userId/security/privileges', usersPrivileges.savePrivileges);
 
 module.exports = router;

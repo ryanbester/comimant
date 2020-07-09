@@ -43,8 +43,14 @@ exports.userCheck = (req, res, next) => {
                             res.locals.accountsProtocol + res.locals.accountsDomain + '/login?error=account_locked&continue=' + encodeURIComponent(
                             fullUrl));
                     } else {
-                        res.locals.user = user;
-                        next();
+                        user.loadPrivileges().then(_ => {
+                            res.locals.user = user;
+                            next();
+                        }, _ => {
+                            res.redirect(301,
+                                res.locals.accountsProtocol + res.locals.accountsDomain + '/login?continue=' + encodeURIComponent(
+                                fullUrl));
+                        });
                     }
                 }, _ => {
                     res.redirect(301,
@@ -53,11 +59,13 @@ exports.userCheck = (req, res, next) => {
                 });
             }, _ => {
                 res.redirect(301,
-                    res.locals.accountsProtocol + res.locals.accountsDomain + '/login?continue=' + encodeURIComponent(fullUrl));
+                    res.locals.accountsProtocol + res.locals.accountsDomain + '/login?continue=' + encodeURIComponent(
+                    fullUrl));
             });
         }, _ => {
             res.redirect(301,
-                res.locals.accountsProtocol + res.locals.accountsDomain + '/login?continue=' + encodeURIComponent(fullUrl));
+                res.locals.accountsProtocol + res.locals.accountsDomain + '/login?continue=' + encodeURIComponent(
+                fullUrl));
         });
     }
 };

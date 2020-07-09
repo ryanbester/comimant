@@ -25,7 +25,7 @@ const { Nonce } = require('../../../core/auth/nonce');
 const { Auth } = require('../../../core/auth/auth');
 const { Util } = require('../../../core/util');
 
-const renderPage = (req, res, hasPermission, error, success) => {
+const renderPage = (req, res, error, success) => {
     const targetUser = res.locals.targetUser;
 
     let noncePromises = [
@@ -47,57 +47,31 @@ const renderPage = (req, res, hasPermission, error, success) => {
             showBack: true,
             backUrl: '../users',
             error: error,
-            success: success,
-            hasPermission: hasPermission
+            success: success
         });
     });
 };
 
 exports.showDeletePage = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.delete').then(result => {
-        if (result === true) {
-            renderPage(req, res, true);
-        } else {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.delete but did not have permission.');
-            renderPage(req, res, false);
-        }
-    }, _ => {
-        Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.delete but did not have permission.');
-        renderPage(req, res, false);
-    });
+    renderPage(req, res);
 };
 
 exports.deleteUser = (req, res) => {
     let targetUser = res.locals.targetUser;
     let { nonce } = req.body;
 
-    res.locals.user.hasPrivilege('admin.users.delete').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to perform admin.users.delete but did not have permission.');
-            renderPage(req, res, false);
-            return;
-        }
-
-        Nonce.verifyNonce('admin-users-delete-user-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            targetUser.deleteUser().then(_ => {
-                res.redirect(301, '../../users?message=user_deleted');
-            }, _ => {
-                Logger.debug(
-                    Util.getClientIP(
-                        req) + ' tried to perform admin.users.delete but failed to delete user from database.');
-                renderPage(req, res, true, 'Error deleting user. Please try again.');
-            });
+    Nonce.verifyNonce('admin-users-delete-user-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+        targetUser.deleteUser().then(_ => {
+            res.redirect(301, '../../users?message=user_deleted');
         }, _ => {
             Logger.debug(
-                Util.getClientIP(req) + ' tried to perform admin.users.delete but nonce verification failed.');
-            renderPage(req, res, true, 'Error deleting user. Please try again.');
+                Util.getClientIP(
+                    req) + ' tried to perform admin.users.delete but failed to delete user from database.');
+            renderPage(req, res, 'Error deleting user. Please try again.');
         });
     }, _ => {
         Logger.debug(
-            Util.getClientIP(req) + ' tried to perform admin.users.delete but did not have permission.');
-        renderPage(req, res, false);
+            Util.getClientIP(req) + ' tried to perform admin.users.delete but nonce verification failed.');
+        renderPage(req, res, 'Error deleting user. Please try again.');
     });
 };

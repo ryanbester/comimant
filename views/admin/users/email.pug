@@ -2,7 +2,7 @@
 extends ../layout
 
 block admin-content
-    if hasPermission
+    if user.privileges.hasPrivilege('admin.user.change_email')
         if error
             h2.error= error
         if success

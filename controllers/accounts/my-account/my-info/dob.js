@@ -53,22 +53,9 @@ const renderPage = (req, res, error, invalidFields, day, month, year, success) =
 };
 
 exports.showDobPage = (req, res) => {
-    res.locals.user.hasPrivilege('account.info.change_dob').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page account.info.change_dob but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to change your date of birth. Please contact your administrator.'
-                }
-            });
-        } else {
-            renderPage(req, res);
-        }
-    }, _ => {
+    if (res.locals.user.privileges.hasPrivilege('account.info.change_dob')) {
+        renderPage(req, res);
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_dob but did not have permission.');
         res.render('error-custom', {
@@ -78,28 +65,14 @@ exports.showDobPage = (req, res) => {
                 message: 'You do not have permission to change your date of birth. Please contact your administrator.'
             }
         });
-    });
+    }
 };
 
 exports.saveDob = (req, res) => {
     let user = res.locals.user;
     let { day, month, year, nonce } = req.body;
 
-    user.hasPrivilege('account.info.change_dob').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page account.info.change_dob but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to change your date of birth. Please contact your administrator.'
-                }
-            });
-            return;
-        }
-
+    if (user.privileges.hasPrivilege('account.info.change_dob')) {
         Nonce.verifyNonce('myaccount-my-info-dob-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
             day = Sanitizer.number(day);
             month = Sanitizer.number(month);
@@ -150,7 +123,7 @@ exports.saveDob = (req, res) => {
                 Util.getClientIP(req) + ' tried to save account.info.change_dob but nonce verification failed.');
             renderPage(req, res, 'Error saving your date of birth. Please try again.');
         });
-    }, _ => {
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_dob but did not have permission.');
         res.render('error-custom', {
@@ -160,5 +133,5 @@ exports.saveDob = (req, res) => {
                 message: 'You do not have permission to change your date of birth. Please contact your administrator.'
             }
         });
-    });
+    }
 };

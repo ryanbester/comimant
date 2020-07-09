@@ -10,7 +10,7 @@ block admin-content
         .myaccount-toolbar__right
             a.button#user-view-options-btn(href='#') View Options
         .clear
-    if hasPermission
+    if user.privileges.hasPrivilege('admin.users.list')
         include ../../view-options
         +viewOptions
         if users

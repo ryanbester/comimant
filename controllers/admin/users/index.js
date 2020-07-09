@@ -27,76 +27,7 @@ const { Sanitizer } = require('../../../core/sanitizer');
 
 exports.showUsersPage = (req, res) => {
     Nonce.createNonce('user-logout', '/accounts/logout').then(nonce => {
-        res.locals.user.hasPrivilege('admin.users.list').then(result => {
-            if (!result) {
-                Logger.debug(
-                    Util.getClientIP(req) + ' tried to list users on page admin.users but did not have permission.');
-                res.render('admin/users/index', {
-                    ...res.locals.stdArgs,
-                    title: 'Users | Admin',
-                    logoutNonce: nonce,
-                    activeItem: 'users',
-                    subtitle: 'Users',
-                    hasPermission: false
-                });
-                return;
-            }
-
-            AuthUtil.countUsers().then(userCount => {
-                let viewOptions = {
-                    columns: {
-                        "first_name": {
-                            title: 'First Name',
-                            sortable: true,
-                            filterable: true,
-                            visible: true
-                        },
-                        "last_name": {
-                            title: 'Last Name',
-                            sortable: true,
-                            filterable: true,
-                            visible: true
-                        },
-                        "email_address": {
-                            title: 'Email Address',
-                            sortable: true,
-                            filterable: true,
-                            visible: true
-                        },
-                        "locked": {
-                            title: 'Locked',
-                            sortable: true,
-                            filterable: true
-                        },
-                        "date_added": {
-                            title: 'Date Added',
-                            sortable: true,
-                            filterable: true
-                        }
-                    }
-                };
-
-                ViewOptions.processQueryParams(viewOptions, Util.getFullPath(req.originalUrl), req.query, 20,
-                    userCount);
-
-                AuthUtil.getUsers(viewOptions)
-                    .then(users => {
-                        const message = handleMessage(req.query.message);
-
-                        res.render('admin/users/index', {
-                            ...res.locals.stdArgs,
-                            title: 'Users | Admin',
-                            logoutNonce: nonce,
-                            activeItem: 'users',
-                            subtitle: 'Users',
-                            hasPermission: true,
-                            users: users,
-                            message: message,
-                            viewOptions: viewOptions
-                        });
-                    });
-            });
-        }, _ => {
+        if (!res.locals.user.privileges.hasPrivilege('admin.users.list')) {
             Logger.debug(
                 Util.getClientIP(req) + ' tried to list users on page admin.users but did not have permission.');
             res.render('admin/users/index', {
@@ -104,9 +35,63 @@ exports.showUsersPage = (req, res) => {
                 title: 'Users | Admin',
                 logoutNonce: nonce,
                 activeItem: 'users',
-                subtitle: 'Users',
-                hasPermission: false
+                subtitle: 'Users'
             });
+            return;
+        }
+
+        AuthUtil.countUsers().then(userCount => {
+            let viewOptions = {
+                columns: {
+                    'first_name': {
+                        title: 'First Name',
+                        sortable: true,
+                        filterable: true,
+                        visible: true
+                    },
+                    'last_name': {
+                        title: 'Last Name',
+                        sortable: true,
+                        filterable: true,
+                        visible: true
+                    },
+                    'email_address': {
+                        title: 'Email Address',
+                        sortable: true,
+                        filterable: true,
+                        visible: true
+                    },
+                    'locked': {
+                        title: 'Locked',
+                        sortable: true,
+                        filterable: true
+                    },
+                    'date_added': {
+                        title: 'Date Added',
+                        sortable: true,
+                        filterable: true
+                    }
+                }
+            };
+
+            ViewOptions.processQueryParams(viewOptions, Util.getFullPath(req.originalUrl), req.query, 20,
+                userCount);
+
+            AuthUtil.getUsers(viewOptions)
+                .then(users => {
+                    const message = handleMessage(req.query.message);
+
+                    res.render('admin/users/index', {
+                        ...res.locals.stdArgs,
+                        title: 'Users | Admin',
+                        logoutNonce: nonce,
+                        activeItem: 'users',
+                        subtitle: 'Users',
+                        users: users,
+                        message: message,
+                        viewOptions: viewOptions
+                    });
+                });
         });
     });
 };

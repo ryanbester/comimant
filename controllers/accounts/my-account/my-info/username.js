@@ -49,7 +49,7 @@ const renderPage = (req, res, error, invalidFields, username, success) => {
 };
 
 exports.showUsernamePage = (req, res) => {
-    res.locals.user.hasPrivilege('account.info.change_username').then(result => {
+    if (res.locals.user.privileges.hasPrivilege('account.info.change_username')) {
         if (!result) {
             Logger.debug(
                 Util.getClientIP(
@@ -64,7 +64,7 @@ exports.showUsernamePage = (req, res) => {
         } else {
             renderPage(req, res);
         }
-    }, _ => {
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_username but did not have permission.');
         res.render('error-custom', {
@@ -74,28 +74,14 @@ exports.showUsernamePage = (req, res) => {
                 message: 'You do not have permission to change your username. Please contact your administrator.'
             }
         });
-    });
+    }
 };
 
 exports.saveUsername = (req, res) => {
     let user = res.locals.user;
     let { username, nonce } = req.body;
 
-    user.hasPrivilege('account.info.change_username').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(
-                    req) + ' tried to access page account.info.change_username but did not have permission.');
-            res.render('error-custom', {
-                title: 'Permission Denied',
-                error: {
-                    title: 'Permission Denied',
-                    message: 'You do not have permission to change your username. Please contact your administrator.'
-                }
-            });
-            return;
-        }
-
+    if (user.privileges.hasPrivilege('account.info.change_username')) {
         Nonce.verifyNonce('myaccount-my-info-username-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
             username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
 
@@ -143,7 +129,7 @@ exports.saveUsername = (req, res) => {
                 Util.getClientIP(req) + ' tried to save account.info.change_username but nonce verification failed.');
             renderPage(req, res, 'Error saving your username. Please try again.');
         });
-    }, _ => {
+    } else {
         Logger.debug(
             Util.getClientIP(req) + ' tried to access page account.info.change_username but did not have permission.');
         res.render('error-custom', {
@@ -153,5 +139,5 @@ exports.saveUsername = (req, res) => {
                 message: 'You do not have permission to change your username. Please contact your administrator.'
             }
         });
-    });
+    }
 };

@@ -25,7 +25,7 @@ const { Nonce } = require('../../../core/auth/nonce');
 const { Auth } = require('../../../core/auth/auth');
 const { Util } = require('../../../core/util');
 
-const renderPage = (req, res, hasPermission, error, invalidFields, email, firstName, lastName, username, dobDay,
+const renderPage = (req, res, error, invalidFields, email, firstName, lastName, username, dobDay,
                     dobMonth, dobYear, success) => {
     let noncePromises = [
         Nonce.createNonce('user-logout', '/accounts/logout'),
@@ -47,7 +47,6 @@ const renderPage = (req, res, hasPermission, error, invalidFields, email, firstN
             backUrl: '../users',
             error: error,
             success: success,
-            hasPermission: hasPermission,
             pt: pt,
             emailAddress: email,
             firstName: firstName,
@@ -70,215 +69,193 @@ const renderPage = (req, res, hasPermission, error, invalidFields, email, firstN
 };
 
 exports.showNewUserPage = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.create').then(result => {
-        if (result === true) {
-            renderPage(req, res, true);
-        } else {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.create but did not have permission.');
-            renderPage(req, res, false);
-        }
-    }, _ => {
-        Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.create but did not have permission.');
-        renderPage(req, res, false);
-    });
+    renderPage(req, res);
 };
 
 exports.saveNewUser = (req, res) => {
-    res.locals.user.hasPrivilege('admin.users.create').then(result => {
-        if (!result) {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.create but did not have permission.');
-            renderPage(req, res, false);
+    let { pt: ptName, emailAddress: email, firstName, lastName, username, day: dobDay, month: dobMonth, year: dobYear, password, confirmPassword, nonce } = req.body;
+
+    Nonce.verifyNonce('admin-users-new-user-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
+        ptName = Sanitizer.string(ptName);
+        email = Sanitizer.email(Sanitizer.string(email));
+        firstName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(firstName)));
+        lastName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(lastName)));
+        username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
+        dobDay = Sanitizer.number(dobDay);
+        dobMonth = Sanitizer.number(dobMonth);
+        dobYear = Sanitizer.number(dobYear);
+        password = Sanitizer.string(password);
+        confirmPassword = Sanitizer.string(confirmPassword);
+
+        if (dobDay < 1 || dobDay > 31) {
+            dobDay = false;
+        }
+
+        if (dobMonth < 1 || dobMonth > 12) {
+            dobMonth = false;
+        }
+
+        if (dobYear < 1) {
+            dobYear = false;
+        }
+
+        let invalidFields = [];
+        if (!ptName) {
+            ptName = 'none';
+        }
+
+        if (!email) {
+            invalidFields.push('email');
+        }
+
+        if (!firstName) {
+            invalidFields.push('firstName');
+        }
+
+        if (!lastName) {
+            invalidFields.push('lastName');
+        }
+
+        if (!username) {
+            invalidFields.push('username');
+        }
+
+        if (!dobDay) {
+            invalidFields.push('dobDay');
+        }
+
+        if (!dobMonth) {
+            invalidFields.push('dobMonth');
+        }
+
+        if (!dobYear) {
+            invalidFields.push('dobYear');
+        }
+
+        if (!password) {
+            invalidFields.push('password');
+        }
+
+        if (!confirmPassword) {
+            invalidFields.push('confirmPassword');
+        }
+
+        const args = [
+            email,
+            firstName,
+            lastName,
+            username,
+            dobDay,
+            dobMonth,
+            dobYear
+        ];
+
+        if (invalidFields.length > 0) {
+            renderPage(req, res, invalidFields.length + ' fields are invalid', invalidFields, ...args);
             return;
         }
 
-        let { pt: ptName, emailAddress: email, firstName, lastName, username, day: dobDay, month: dobMonth, year: dobYear, password, confirmPassword, nonce } = req.body;
+        if (password !== confirmPassword) {
+            renderPage(req, res, 'Passwords do not match', undefined, ...args);
+            return;
+        }
+        if (password.length < 4) {
+            renderPage(req, res, 'Password must be at least 4 characters long', undefined, ...args);
+            return;
+        }
 
-        Nonce.verifyNonce('admin-users-new-user-form', nonce, Util.getFullPath(req.originalUrl)).then(_ => {
-            ptName = Sanitizer.string(ptName);
-            email = Sanitizer.email(Sanitizer.string(email));
-            firstName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(firstName)));
-            lastName = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(lastName)));
-            username = Sanitizer.ascii(Sanitizer.whitespace(Sanitizer.string(username)));
-            dobDay = Sanitizer.number(dobDay);
-            dobMonth = Sanitizer.number(dobMonth);
-            dobYear = Sanitizer.number(dobYear);
-            password = Sanitizer.string(password);
-            confirmPassword = Sanitizer.string(confirmPassword);
+        const preparePrivileges = _ => {
+            User.generateUserId().then(user_id => {
+                const createNewUser = privileges => {
+                    let user = new User(user_id, username, email, firstName, lastName, new Date().setTimeToNow(),
+                        new Date(dobYear, dobMonth - 1, dobDay));
+                    user.saveUser().then(_ => {
+                        Auth.encryptPassword(confirmPassword).then(result => {
+                            result.push(user_id);
+                            Auth.savePasswordToDatabase({ all: result }).then(_ => {
+                                // Add privileges
+                                let privilegePromises = [];
 
-            if (dobDay < 1 || dobDay > 31) {
-                dobDay = false;
-            }
-
-            if (dobMonth < 1 || dobMonth > 12) {
-                dobMonth = false;
-            }
-
-            if (dobYear < 1) {
-                dobYear = false;
-            }
-
-            let invalidFields = [];
-            if (!ptName) {
-                ptName = 'none';
-            }
-
-            if (!email) {
-                invalidFields.push('email');
-            }
-
-            if (!firstName) {
-                invalidFields.push('firstName');
-            }
-
-            if (!lastName) {
-                invalidFields.push('lastName');
-            }
-
-            if (!username) {
-                invalidFields.push('username');
-            }
-
-            if (!dobDay) {
-                invalidFields.push('dobDay');
-            }
-
-            if (!dobMonth) {
-                invalidFields.push('dobMonth');
-            }
-
-            if (!dobYear) {
-                invalidFields.push('dobYear');
-            }
-
-            if (!password) {
-                invalidFields.push('password');
-            }
-
-            if (!confirmPassword) {
-                invalidFields.push('confirmPassword');
-            }
-
-            const args = [
-                email,
-                firstName,
-                lastName,
-                username,
-                dobDay,
-                dobMonth,
-                dobYear
-            ];
-
-            if (invalidFields.length > 0) {
-                renderPage(req, res, true, invalidFields.length + ' fields are invalid', invalidFields, ...args);
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                renderPage(req, res, true, 'Passwords do not match', undefined, ...args);
-                return;
-            }
-            if (password.length < 4) {
-                renderPage(req, res, true, 'Password must be at least 4 characters long', undefined, ...args);
-                return;
-            }
-
-            const preparePrivileges = _ => {
-                User.generateUserId().then(user_id => {
-                    const createNewUser = privileges => {
-                        let user = new User(user_id, username, email, firstName, lastName, new Date().setTimeToNow(), new Date(dobYear, dobMonth - 1, dobDay));
-                        user.saveUser().then(_ => {
-                            Auth.encryptPassword(confirmPassword).then(result => {
-                                result.push(user_id);
-                                Auth.savePasswordToDatabase({ all: result }).then(_ => {
-                                    // Add privileges
-                                    let privilegePromises = [];
-
+                                user.loadPrivileges().then(_ => {
                                     for (const privilege in privileges) {
-                                        privilegePromises.push(user.addPrivilege(privilege, (privileges[privilege] === 1)));
+                                        privilegePromises.push(
+                                            user.privileges.setPrivilege(privilege, (privileges[privilege] === 1)));
                                     }
+                                });
 
-                                    Promise.all(privilegePromises).then(_ => {
-                                        res.redirect(301, '../users/' + user.user_id.toLowerCase());
-                                    }, _ => {
-                                        Logger.debug(
-                                            Util.getClientIP(
-                                                req) + ' tried to access page admin.users.create but failed to save a privilege to the database.');
-                                        renderPage(req, res, true, 'Error creating user. Please try again.', undefined,
-                                            ...args);
-                                    });
-
+                                Promise.all(privilegePromises).then(_ => {
+                                    res.redirect(301, '../users/' + user.user_id.toLowerCase());
                                 }, _ => {
                                     Logger.debug(
                                         Util.getClientIP(
-                                            req) + ' tried to access page admin.users.create but failed to save the password to the database.');
-                                    renderPage(req, res, true, 'Error creating user. Please try again.', undefined,
+                                            req) + ' tried to access page admin.users.create but failed to save a privilege to the database.');
+                                    renderPage(req, res, 'Error creating user. Please try again.', undefined,
                                         ...args);
                                 });
+
                             }, _ => {
                                 Logger.debug(
                                     Util.getClientIP(
-                                        req) + ' tried to access page admin.users.create but failed to encrypt the password.');
-                                renderPage(req, res, true, 'Error creating user. Please try again.', undefined,
+                                        req) + ' tried to access page admin.users.create but failed to save the password to the database.');
+                                renderPage(req, res, 'Error creating user. Please try again.', undefined,
                                     ...args);
                             });
                         }, _ => {
                             Logger.debug(
                                 Util.getClientIP(
-                                    req) + ' tried to access page admin.users.create but failed to save the user to the database.');
-                            renderPage(req, res, true, 'Error creating user. Please try again.', undefined, ...args);
+                                    req) + ' tried to access page admin.users.create but failed to encrypt the password.');
+                            renderPage(req, res, 'Error creating user. Please try again.', undefined,
+                                ...args);
                         });
-                    };
+                    }, _ => {
+                        Logger.debug(
+                            Util.getClientIP(
+                                req) + ' tried to access page admin.users.create but failed to save the user to the database.');
+                        renderPage(req, res, 'Error creating user. Please try again.', undefined, ...args);
+                    });
+                };
 
-                    const pt = new PrivilegeTemplate(ptName);
+                const pt = new PrivilegeTemplate(ptName);
 
-                    // Check if user has selected a privilege template or is creating a user from a blank template.
-                    if (ptName !== 'none') {
-                        pt.loadInfo().then(_ => {
-                            let privileges = {};
+                // Check if user has selected a privilege template or is creating a user from a blank template.
+                if (ptName !== 'none') {
+                    pt.loadInfo().then(_ => {
+                        let privileges = {};
 
-                            if (pt.privileges !== undefined) {
-                                privileges = pt.privileges;
-                            }
+                        if (pt.privileges !== undefined) {
+                            privileges = pt.privileges;
+                        }
 
-                            createNewUser(privileges);
-                        }, _ => {
-                            Logger.debug(
-                                Util.getClientIP(
-                                    req) + ' tried to access page admin.users.create but failed to load privilege template information from the database.');
-                            renderPage(req, res, true, 'Error creating user. Please try again.', undefined, ...args);
-                        });
-                    } else {
-                        createNewUser({});
-                    }
-                }, _ => {
-                    Logger.debug(
-                        Util.getClientIP(
-                            req) + ' tried to access page admin.users.create but failed to generate a user ID.');
-                    renderPage(req, res, true, 'Error creating user. Please try again.', undefined, ...args);
-                });
-            };
-
-            User.usernameTaken(username).then(result => {
-                if (result === true) {
-                    renderPage(req, res, true, '1 field is invalid', ['username'], ...args);
+                        createNewUser(privileges);
+                    }, _ => {
+                        Logger.debug(
+                            Util.getClientIP(
+                                req) + ' tried to access page admin.users.create but failed to load privilege template information from the database.');
+                        renderPage(req, res, 'Error creating user. Please try again.', undefined, ...args);
+                    });
                 } else {
-                    preparePrivileges();
+                    createNewUser({});
                 }
             }, _ => {
-                renderPage(req, res, true, '1 field is invalid', ['username'], ...args);
+                Logger.debug(
+                    Util.getClientIP(
+                        req) + ' tried to access page admin.users.create but failed to generate a user ID.');
+                renderPage(req, res, 'Error creating user. Please try again.', undefined, ...args);
             });
+        };
+
+        User.usernameTaken(username).then(result => {
+            if (result === true) {
+                renderPage(req, res, '1 field is invalid', ['username'], ...args);
+            } else {
+                preparePrivileges();
+            }
         }, _ => {
-            Logger.debug(
-                Util.getClientIP(req) + ' tried to access page admin.users.create but nonce verification failed.');
-            renderPage(req, res, true, 'Error creating new user. Please try again.');
+            renderPage(req, res, '1 field is invalid', ['username'], ...args);
         });
     }, _ => {
         Logger.debug(
-            Util.getClientIP(req) + ' tried to access page admin.users.create but did not have permission.');
-        renderPage(req, res, false);
+            Util.getClientIP(req) + ' tried to access page admin.users.create but nonce verification failed.');
+        renderPage(req, res, 'Error creating new user. Please try again.');
     });
-
 };
