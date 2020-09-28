@@ -21,11 +21,24 @@ const express = require('express');
 const { Util } = require('../core/util');
 const { Domains } = require('../core/domains');
 
+const internalAPIMain = require('../controllers/api/internal/main');
+const internalAPIWidgets = require('../controllers/api/internal/widgets');
+
 const app = require('../app');
 const router = express.Router();
 
+router.all('/internal/widgets', internalAPIMain.userCheck);
+router.all('/internal/widgets/*', internalAPIMain.userCheck);
+
+router.get('/internal/widgets', internalAPIWidgets.getAllWidgets);
+router.post('/internal/widgets', internalAPIWidgets.addWidget);
+
+router.get('/internal/widgets/:widgetId', internalAPIWidgets.getWidget);
+router.delete('/internal/widgets/:widgetId', internalAPIWidgets.deleteWidget);
+router.put('/internal/widgets/:widgetId', internalAPIWidgets.updateWidget);
+
 router.get('/internal', (req, res, next) => {
-    res.send("API").end();
+    res.send('API').end();
 });
 
 module.exports = router;

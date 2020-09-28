@@ -200,7 +200,7 @@ module.exports.User = class User {
                                     resolve(true);
                                 });
                         } else {
-                            // Execute the query to update the user information
+                            // Execute the query add a new user
                             connection.query('INSERT INTO users VALUES('
                                 + 'UNHEX(' + connection.escape(this.user_id) + '), '
                                 + connection.escape(this.username) + ', '

@@ -16,130 +16,123 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-class NotificationManager {
-    static notifications = [];
-    static nextId = 1;
-
-    static addNotification = () => {
+const NotificationManager = {
+    notifications: [],
+    nextId: 1,
+    addNotification: function () {
         this.notifications.push({
-            'id': this.nextId,
-            'visible': true
+            id: this.nextId,
+            visible: true
         });
-
-        this.nextId = this.nextId + 1;
-        return this.nextId - 1;
-    };
-
-    static setVisibility = (id, visible) => {
-        this.notifications.forEach(notification => {
+        return this.nextId++;
+    },
+    setVisibility: function (id, visible) {
+        this.notifications.forEach(function (notification) {
             if (notification.id === id) {
                 notification.visible = visible;
             }
         });
-    };
+    }
+};
+
+function ComimantNotification(type, title, message, buttons) {
+    if (type !== undefined) {
+        this.type = type;
+    }
+
+    if (title !== undefined) {
+        this.title = title;
+    }
+
+    if (message !== undefined) {
+        this.message = message;
+    }
+
+    if (buttons !== undefined) {
+        this.buttons = buttons;
+    }
 }
 
-class ComimantNotification {
-    constructor(type, title, message, buttons) {
-        if (type !== undefined) {
-            this.type = type;
-        }
+ComimantNotification.deleteNotification = function (id) {
+    const container = document.getElementById('notification-container');
+    const notifications = container.childNodes;
 
-        if (title !== undefined) {
-            this.title = title;
+    notifications.forEach(function (notification) {
+        if (notification.getAttribute('data-id') === id.toString()) {
+            $(notification).fadeOut(250);
+            NotificationManager.setVisibility(id, false);
         }
+    });
+};
 
-        if (message !== undefined) {
-            this.message = message;
-        }
+ComimantNotification.prototype.showNotification = function (callback) {
+    const container = document.getElementById('notification-container');
 
-        if (buttons !== undefined) {
-            this.buttons = buttons;
-        }
+    const notification = document.createElement('div');
+    notification.setAttribute('class', 'notification-container__notification');
+
+    if (this.type === 'error') {
+        notification.classList.add('notification-container__notification--error');
+    } else if (this.type === 'warning') {
+        notification.classList.add('notification-container__notification--warning');
+    } else if (this.type === 'success') {
+        notification.classList.add('notification-container__notification--success');
     }
 
-    static deleteNotification(id) {
-        const container = document.getElementById('notification-container');
-        const notifications = container.childNodes;
+    const id = NotificationManager.addNotification();
+    notification.setAttribute('data-id', id);
 
-        for (let i = 0; i < notifications.length; i++) {
-            if (notifications[i].getAttribute('data-id') === id) {
-                $(notifications[i]).fadeOut(250);
+    const notificationContent = document.createElement('div');
+    notificationContent.setAttribute('class', 'notification-container__notification-content');
 
-                NotificationManager.setVisibility(id, false);
-            }
-        }
+    const notificationTitle = document.createElement('div');
+    notificationTitle.setAttribute('class', 'notification-container__notification-title');
+    const notificationTitleText = document.createElement('h1');
+    notificationTitleText.appendChild(document.createTextNode(this.title));
+    notificationTitle.appendChild(notificationTitleText);
+
+    const notificationCloseContainer = document.createElement('div');
+    notificationCloseContainer.setAttribute('class', 'notification-container__notification-close-container');
+    const notificationCloseBtn = document.createElement('div');
+    notificationCloseBtn.setAttribute('class', 'notification-container__notification-close');
+    notificationCloseBtn.addEventListener('click', function (e) {
+        ComimantNotification.deleteNotification(id);
+        callback(id, 'close', e);
+    });
+    notificationCloseContainer.appendChild(notificationCloseBtn);
+    notificationTitle.appendChild(notificationCloseContainer);
+
+    notificationContent.appendChild(notificationTitle);
+
+    if (this.message !== undefined) {
+        const notificationMessage = document.createElement('p');
+        notificationMessage.appendChild(document.createTextNode(this.message));
+        notificationContent.appendChild(notificationMessage);
     }
 
-    showNotification(callback) {
-        const container = document.getElementById('notification-container');
+    notification.appendChild(notificationContent);
 
-        const notification = document.createElement('div');
-        notification.setAttribute('class', 'notification-container__notification');
+    if (this.buttons !== undefined) {
+        const buttons = document.createElement('div');
+        buttons.setAttribute('class', 'notification-container__notification-buttons');
 
-        if (this.type === 'error') {
-            notification.classList.add('notification-container__notification--error');
-        } else if (this.type === 'warning') {
-            notification.classList.add('notification-container__notification--warning');
-        } else if (this.type === 'success') {
-            notification.classList.add('notification-container__notification--success');
-        }
+        this.buttons.forEach(function (button) {
+            const buttonElement = document.createElement('div');
+            buttonElement.setAttribute('class', 'notification-container__notification-button');
 
-        const id = NotificationManager.addNotification();
-        notification.setAttribute('data-id', id);
+            const buttonText = document.createElement('p');
+            buttonText.appendChild(document.createTextNode(button.title));
 
-        const notificationContent = document.createElement('div');
-        notificationContent.setAttribute('class', 'notification-container__notification-content');
+            buttonElement.appendChild(buttonText);
 
-        const notificationTitle = document.createElement('div');
-        notificationTitle.setAttribute('class', 'notification-container__notification-title');
-        const notificationTitleText = document.createElement('h1');
-        notificationTitleText.appendChild(document.createTextNode(this.title));
-        notificationTitle.appendChild(notificationTitleText);
-
-        const notificationCloseContainer = document.createElement('div');
-        notificationCloseContainer.setAttribute('class', 'notification-container__notification-close-container');
-        const notificationCloseBtn = document.createElement('div');
-        notificationCloseBtn.setAttribute('class', 'notification-container__notification-close');
-        notificationCloseBtn.addEventListener('click', (e) => {
-            ComimantNotification.deleteNotification(id);
-            callback(id, 'close', e);
-        });
-        notificationCloseContainer.appendChild(notificationCloseBtn);
-        notificationTitle.appendChild(notificationCloseContainer);
-
-        notificationContent.appendChild(notificationTitle);
-
-        if (this.message !== undefined) {
-            const notificationMessage = document.createElement('p');
-            notificationMessage.appendChild(document.createTextNode(this.message));
-            notificationContent.appendChild(notificationMessage);
-        }
-
-        notification.appendChild(notificationContent);
-
-        if (this.buttons !== undefined) {
-            const buttons = document.createElement('div');
-            buttons.setAttribute('class', 'notification-container__notification-buttons');
-
-            this.buttons.forEach(button => {
-                const buttonElement = document.createElement('div');
-                buttonElement.setAttribute('class', 'notification-container__notification-button');
-
-                const buttonText = document.createElement('p');
-                buttonText.appendChild(document.createTextNode(button.title));
-
-                buttonElement.appendChild(buttonText);
-
-                buttonElement.addEventListener('click', (e) => {
-                    callback(id, button.action, e);
-                });
-
-                buttons.appendChild(buttonElement);
-                notification.appendChild(buttons);
+            buttonElement.addEventListener('click', function (e) {
+                callback(id, button.action, e);
             });
-        }
 
-        container.appendChild(notification);
+            buttons.appendChild(buttonElement);
+            notification.appendChild(buttons);
+        });
     }
-}
+
+    container.appendChild(notification);
+};

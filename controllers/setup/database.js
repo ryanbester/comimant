@@ -375,3 +375,5 @@ const createWidgetsTable = (req, res, connection) => {
             renderPage(req, res, undefined, 'Created database tables');
         });
 };
+
+// TODO: Update to add Comimant Server tables

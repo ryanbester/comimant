@@ -643,6 +643,7 @@ const showAddWidgetDialog = _ => {
         }
     ]);
 
+    const mainContainer = document.getElementsByClassName('main-container')[0];
     addWidgetDlg.createModal(mainContainer, [
         {
             'id': 'widget-add-dialog-title',

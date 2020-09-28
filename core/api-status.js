@@ -16,25 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const timeout = function (ms, promise) {
-    return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            reject(new Error('timeout'));
-        }, ms);
-
-        promise.then(resolve, reject);
-    });
-};
-
-const navigateWithoutRefresh = function (url, title, state) {
-    if (window.history.pushState) {
-        window.history.pushState(state, title, url);
-    } else {
-        if (state !== undefined) {
-            let params = new URLSearchParams(state).toString();
-            window.location.href = url + '?' + params;
-        } else {
-            window.location.href = url;
-        }
+module.exports.returnError = (res, code, message) => {
+    let status = 'Error';
+    switch (code) {
+        case 400:
+            status = 'Bad Request';
+            break;
+        case 401:
+            status = 'Unauthorised';
+            break;
+        case 404:
+            status = 'Not Found';
+            break;
+        case 500:
+            status = 'Internal Server Error';
+            break;
     }
+
+    res.status(code).json({
+        error: {
+            code: code,
+            status: status,
+            message: message
+        }
+    });
 };

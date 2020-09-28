@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const getWidgetContent = (type, data, container) => {
+// TODO: Move each widget type to a separate file
+// These files are in a directory, and plugins can add new files
+// Each widget type has a getContent and parseProperties method.
+const getWidgetContent = function(type, data, container) {
     switch (type) {
         case 'weather':
             weatherWidget(data, container);
