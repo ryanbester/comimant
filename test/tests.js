@@ -16,5 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require('./config');
-
+require('./core/config');
+require('./core/util');
+require('./core/version');
+require('./core/sanitizer');
