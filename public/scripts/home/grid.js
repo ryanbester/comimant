@@ -157,14 +157,14 @@ const widgetGrid = (function () {
                 addWidgetBtnCallback(e);
             });
         },
-        loadWidgets: function (widgetMenuItemCallback) {
+        loadWidgets: function (widgetTypesPromise, widgetMenuItemCallback) {
             const container = document.getElementsByClassName('home-page-grid-container')[0];
 
             const widgets = container.childNodes;
 
-            widgets.forEach(widget => {
-                if (!widget.classList.contains('home-page-grid-container__widget--add')) {
-                    const widget_id = widget.getAttribute('data-id');
+            widgets.forEach(widgetNode => {
+                if (!widgetNode.classList.contains('home-page-grid-container__widget--add')) {
+                    const widget_id = widgetNode.getAttribute('data-id');
 
                     fetch('/api/internal/widgets/' + widget_id).then(res => {
                         if (res.ok) {
@@ -194,11 +194,11 @@ const widgetGrid = (function () {
                                 const widgetContent = document.createElement('div');
                                 widgetContent.setAttribute('class', 'home-page-grid-container__widget-content');
 
-                                getWidgetContent(json.widget.type, json.widget.data, widgetContent);
+                                widget.getContent(json.widget.type, json.widget.data, widgetContent, widgetTypesPromise);
 
-                                widget.setAttribute('class', 'home-page-grid-container__widget');
-                                widget.appendChild(titleContainer);
-                                widget.appendChild(widgetContent);
+                                widgetNode.setAttribute('class', 'home-page-grid-container__widget');
+                                widgetNode.appendChild(titleContainer);
+                                widgetNode.appendChild(widgetContent);
                             });
                         } else {
                             new ComimantNotification('error', 'Error loading widget').showNotification();

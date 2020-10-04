@@ -5,6 +5,10 @@
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   overflow: hidden;
 }
+#widget-add-dialog-type-container__loading {
+  padding: 7px;
+  margin: auto;
+}
 .widget-add-dialog-type-container__item {
   display: inline-block;
   text-align: center;
@@ -13,7 +17,7 @@
 .widget-add-dialog-type-container__item:hover {
   background-color: #CFDBFF;
 }
-.widget-add-dialog-type-container__item:active {
+.widget-add-dialog-type-container__item.active {
   background-color: #002DB3;
   color: #FFF;
 }

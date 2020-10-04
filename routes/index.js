@@ -21,9 +21,7 @@ const express = require('express');
 const { Util } = require('../core/util');
 const { Domains } = require('../core/domains');
 const { Config } = require('../core/config');
-const { Nonce } = require('../core/auth/nonce');
-const { User } = require('../core/auth/user');
-const { AccessToken } = require('../core/auth/access-token');
+const { PluginManager } = require('../core/plugins/pluginmanager');
 
 const app = require('../app');
 const router = express.Router();
@@ -37,6 +35,7 @@ const adminRoutes = require('./admin');
 const securityController = require('../controllers/security');
 const manifestController = require('../controllers/manifest');
 const accountStatus = require('../controllers/accounts/status');
+
 
 // Load domains and other metadata from configuration
 router.all('*', ((req, res, next) => {
@@ -84,6 +83,11 @@ router.use('/api', apiRoutes);
 
 // Register manifest controller
 router.get('/manifest.webmanifest', manifestController.loadManifest);
+
+// Register plugin resource paths
+router.use('/scripts/plugins/:plugin/:script', PluginManager.handleScriptRequest);
+router.use('/stylesheets/plugins/:plugin/:stylesheet', PluginManager.handleStylesheetRequest);
+router.use('/assets/plugins/:plugin/:resource', PluginManager.handleResourceRequest);
 
 // Accounts routes
 router.use('/accounts', accountRoutes);

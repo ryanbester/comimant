@@ -133,7 +133,13 @@ Logger.log(LoggerColors.DIM + 'Activating plugins...');
 const subscriber = redis.getSubscriber();
 
 subscriber.subscribe('plugin-manager');
-redis.handleMessages(subscriber);
+subscriber.on('message', (channel, message) => {
+    switch (channel) {
+        case 'plugin-manager':
+            PluginManager.handleMessage(message);
+            break;
+    }
+});
 
 if (!process.env.SAFE_MODE) {
     PluginManager.getEnabledPlugins().then(_ => {

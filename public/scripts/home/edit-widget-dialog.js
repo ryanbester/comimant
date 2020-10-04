@@ -24,84 +24,43 @@ const editWidgetDialog = function () {
 
             this.setPreviewTitle(dialogTitle.val());
 
-            dialogTitle.keyup($.debounce(250, _ => {
+            dialogTitle.keyup($.debounce(250, function () {
                 this.setPreviewTitle(dialogTitle.val());
             }));
         },
-        getProperties: function (widget) {
+        getProperties: function (widgetObj) {
             const container = document.getElementById('widget-edit-dialog-properties-container');
 
-            switch (widget.type) {
-                case 'weather':
-                    this.weatherProperties(container, widget);
-                    break;
-                case 'news':
-                    this.newsProperties(container, widget);
-                    break;
-                default:
-                    container.innerHTML = '<p id="widget-edit-dialog-properties-message">Unknown widget type</p>';
-            }
-        },
-        weatherProperties: function (container, widget) {
-            const updateWidgetContent = _ => {
-                getWidgetContent('weather', {
-                    location: $('#widget-edit-dialog-weather-location').val(),
-                    units: $('input[name=widget-edit-dialog-weather-temperature]:checked').val(),
-                    source: $('#widget-edit-dialog-weather-source').val()
-                }, $('#widget-edit-dialog-preview .home-page-grid-container__widget-content').get(0));
-            };
+            fetch('/api/internal/widgets/types').then(async function (res) {
+                if (res.ok) {
+                    await res.json().then(function (json) {
+                        let typeFound = false;
+                        for (let i = 0; i < json.widget_types.length; i++) {
+                            const widgetType = json.widget_types[i];
+                            if (widgetType.name === widgetObj.type) {
+                                typeFound = true;
 
-            container.innerHTML = `
-                <label for="widget-edit-dialog-weather-source">Source</label>
-                <select id="widget-edit-dialog-weather-source">
-                    <option ` + (widget.data.source === 'openweathermap' ? 'selected' : '') + ` value="openweathermap">OpenWeatherMap</option>
-                </select>
-                <br />
-                <label for="widget-edit-dialog-weather-location">Location</label>
-                <input id="widget-edit-dialog-weather-location" type="text" placeholder="Location" class="inline" value="` + widget.data.location + `" />
-                <br />
-                <label class="radio-container inline">&deg;C
-                    <input ` + (widget.data.units === 'c' ? 'checked' : '') + ` type="radio" id="widget-edit-dialog-weather-temperature-celsius" name="widget-edit-dialog-weather-temperature" value="c" checked>
-                    <span class="radio-checkmark"></span>
-                </label>
-                <label class="radio-container inline">&deg;F
-                    <input ` + (widget.data.units === 'f' ? 'checked' : '') + ` type="radio" id="widget-edit-dialog-weather-temperature-fahrenheit" name="widget-edit-dialog-weather-temperature" value="f">
-                    <span class="radio-checkmark"></span>
-                </label>
-            `;
+                                if (!widgetType.hasOwnProperty('methods')) {
+                                    container.innerHTML = '<p id="widget-edit-dialog-properties-message">Unknown widget type</p>';
+                                    return;
+                                }
 
-            updateWidgetContent();
+                                if (!widgetType.methods.hasOwnProperty('get_properties')) {
+                                    container.innerHTML = '<p id="widget-edit-dialog-properties-message">Unknown widget type</p>';
+                                    return;
+                                }
 
-            $('#widget-edit-dialog-weather-source').change(e => {
-                updateWidgetContent();
-            });
+                                if (!widget.widgetMethods.hasOwnProperty(widgetType.methods.get_properties)) {
+                                    container.innerHTML = '<p id="widget-edit-dialog-properties-message">Unknown widget type</p>';
+                                    return;
+                                }
 
-            $('#widget-edit-dialog-weather-location').keyup($.debounce(250, _ => {
-                updateWidgetContent();
-            }));
-
-            $('input[name=widget-edit-dialog-weather-temperature]').change(e => {
-                updateWidgetContent();
-            });
-        },
-        newsProperties: function (container, widget) {
-            const updateWidgetContent = _ => {
-                getWidgetContent('news', {
-                    source: $('#widget-edit-dialog-news-source').val()
-                }, $('#widget-edit-dialog-preview .home-page-grid-container__widget-content').get(0));
-            };
-
-            container.innerHTML = `
-                <label for="widget-edit-dialog-news-source">Source</label>
-                <select id="widget-edit-dialog-news-source">
-                    <option ` + (widget.data.source === 'google-news' ? 'selected' : '') + ` value="google-news">Google News</option>
-                </select>
-            `;
-
-            updateWidgetContent();
-
-            $('#widget-edit-dialog-news-source').change(e => {
-                updateWidgetContent();
+                                widget.widgetMethods[widgetType.methods.get_properties](container, 'edit', widgetObj);
+                                break;
+                            }
+                        }
+                    });
+                }
             });
         },
         setPreviewTitle: function (title) {

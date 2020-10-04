@@ -22,13 +22,19 @@ const { Util } = require('../core/util');
 const { Domains } = require('../core/domains');
 
 const internalAPIMain = require('../controllers/api/internal/main');
+const internalAPIConfig = require('../controllers/api/internal/config');
 const internalAPIWidgets = require('../controllers/api/internal/widgets');
 
 const app = require('../app');
 const router = express.Router();
 
+// Authorization
+router.all('/internal/config', internalAPIMain.userCheck);
+router.all('/internal/config/*', internalAPIMain.userCheck);
 router.all('/internal/widgets', internalAPIMain.userCheck);
 router.all('/internal/widgets/*', internalAPIMain.userCheck);
+
+router.get('/internal/config/domains.js', internalAPIConfig.getDomains);
 
 router.get('/internal/widgets', internalAPIWidgets.getAllWidgets);
 router.post('/internal/widgets', internalAPIWidgets.addWidget);

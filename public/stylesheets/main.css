@@ -395,7 +395,11 @@ select:disabled {
 }
 @media screen and (max-width: 940px) {
   .modal-content {
+    margin-top: 0;
+    max-height: 100vh;
+    height: 100vh;
     width: 75%;
+    border-radius: 0;
   }
 }
 @media screen and (max-width: 560px) {

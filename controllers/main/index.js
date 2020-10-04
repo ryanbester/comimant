@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const { WidgetTypes } = require('../../core/widgets/widget-types');
 const { Nonce } = require('../../core/auth/nonce');
 const { AccessToken } = require('../../core/auth/access-token');
 const { User } = require('../../core/auth/user');
@@ -23,6 +24,8 @@ const { Util } = require('../../core/util');
 
 exports.showHomePage = (req, res) => {
     const renderHomePage = (nonce) => {
+        const widgetScripts = WidgetTypes.getWidgetScripts();
+
         res.render('home', {
             logoutNonce: nonce,
             stylesheets: [
@@ -33,7 +36,12 @@ exports.showHomePage = (req, res) => {
                 res.locals.protocol + res.locals.mainDomain + '/scripts/home/widget.js',
                 res.locals.protocol + res.locals.mainDomain + '/scripts/home/add-widget-dialog.js',
                 res.locals.protocol + res.locals.mainDomain + '/scripts/home/edit-widget-dialog.js',
-                res.locals.protocol + res.locals.mainDomain + '/scripts/home/home.js'
+            ],
+            scriptsAfter: [
+                res.locals.protocol + res.locals.mainDomain + '/scripts/home/home.js',
+                ...widgetScripts.map(script => {
+                    return res.locals.protocol + res.locals.mainDomain + script;
+                })
             ]
         });
     };

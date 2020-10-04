@@ -19,6 +19,7 @@
 const { Sanitizer } = require('../../../core/sanitizer');
 const { WidgetManager } = require('../../../core/widgets/widgetmanager');
 const { Widget } = require('../../../core/widgets/widget');
+const { WidgetTypes } = require('../../../core/widgets/widget-types');
 const { returnError } = require('../../../core/api-status');
 
 exports.getAllWidgets = (req, res) => {
@@ -60,6 +61,14 @@ exports.getWidget = (req, res) => {
 
     if (!widgetId) {
         returnError(res, 400, 'Widget ID is not valid');
+        return;
+    }
+
+    if (widgetId === 'TYPES') {
+        // List types instead of getting details about a widget.
+        res.status(200).json({
+            widget_types: WidgetTypes.getWidgetTypes(res.locals.staticProtocol, res.locals.staticDomain)
+        });
         return;
     }
 

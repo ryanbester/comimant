@@ -16,17 +16,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express = require('express');
+require('./config');
 
-const { Util } = require('../core/util');
-
-const app = require('../app');
-const router = express.Router();
-
-const home = require('../controllers/main/index');
-
-router.get('/', home.showHomePage);
-router.get('/add', home.showHomePage);
-
-
-module.exports = router;

@@ -8,3 +8,4 @@ config.json
 jsdoc
 /public/help
 /public/offline-page.html
+/.nyc_output/

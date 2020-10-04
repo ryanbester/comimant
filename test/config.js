@@ -16,17 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express = require('express');
+const { Config } = require('../core/config');
+const assert = require('chai').assert;
 
-const { Util } = require('../core/util');
-
-const app = require('../app');
-const router = express.Router();
-
-const home = require('../controllers/main/index');
-
-router.get('/', home.showHomePage);
-router.get('/add', home.showHomePage);
-
-
-module.exports = router;
+describe('Config', function () {
+    describe('#getInstance()', function () {
+        it('should return an object', function () {
+            assert.isNotEmpty(Config.getInstance());
+        });
+    });
+});

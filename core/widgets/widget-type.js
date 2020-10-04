@@ -16,17 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express = require('express');
+const mysql = require('../../db/mysql');
+const { Widget } = require('./widget');
 
-const { Util } = require('../core/util');
-
-const app = require('../app');
-const router = express.Router();
-
-const home = require('../controllers/main/index');
-
-router.get('/', home.showHomePage);
-router.get('/add', home.showHomePage);
-
-
-module.exports = router;
+/**
+ * `WidgetType` class.
+ * @type {WidgetType}
+ */
+module.exports.WidgetType = class WidgetType {
+    constructor(name, title, script_url, icon_url, get_content, get_properties, parse_properties) {
+        this.name = name;
+        this.title = title;
+        this.script_url = script_url;
+        this.icon_url = icon_url;
+        this.methods = {
+            get_content: get_content,
+            get_properties: get_properties,
+            parse_properties: parse_properties
+        };
+    }
+};

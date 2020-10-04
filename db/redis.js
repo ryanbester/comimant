@@ -17,8 +17,6 @@
  */
 
 const redis = require('redis');
-const { PluginManager } = require('../core/plugins/pluginmanager');
-//const { PluginManager } = require('../core/plugins');
 
 let client;
 let subscriber;
@@ -59,12 +57,3 @@ module.exports.getSubscriber = () => {
     return subscriber;
 };
 
-module.exports.handleMessages = (subscriber) => {
-    subscriber.on('message', (channel, message) => {
-        switch (channel) {
-            case 'plugin-manager':
-                PluginManager.handleMessage(message);
-                break;
-        }
-    });
-};

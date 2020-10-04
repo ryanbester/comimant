@@ -482,7 +482,7 @@ module.exports.PluginManager = class PluginManager {
      * @param {string} url The URL.
      * @param {string} src The source file.
      * @param {boolean} async Whether the script is loading asynchronously.
-     * @return {boolean} True on success or false on failure.
+     * @return {string|boolean} The script URL on success or false on failure.
      */
     static enqueueScript(pos, plugin, page, url, src, async = true) {
         const listName = 'enqueuedScripts' + pos;
@@ -494,7 +494,7 @@ module.exports.PluginManager = class PluginManager {
             PluginManager[listName][page] = [];
         }
 
-        if (!PluginManager.registeredPlugins === undefined) {
+        if (PluginManager.registeredPlugins === undefined) {
             PluginManager.registeredPlugins = [];
             return false;
         }
@@ -510,6 +510,8 @@ module.exports.PluginManager = class PluginManager {
                 process.env.PLUGINS_DIR + '/' + PluginManager.registeredPlugins[plugin.name] + '/' + src),
             async: async
         });
+
+        return '/scripts/plugins/' + plugin.name + '/' + url;
     }
 
     /**
@@ -519,7 +521,7 @@ module.exports.PluginManager = class PluginManager {
      * @param {string} url The URL the script is accessible at.
      * @param {string} src The path to the script file.
      * @param {boolean} async Whether the script should be loaded asynchronously.
-     * @return {boolean} True on success or false on failure.
+     * @return {string|boolean} The script URL on success or false on failure.
      */
     static enqueueScriptBefore(plugin, page, url, src, async = true) {
         return PluginManager.enqueueScript('Before', plugin, page, url, src, async);
@@ -532,7 +534,7 @@ module.exports.PluginManager = class PluginManager {
      * @param {string} url The URL the script is accessible at.
      * @param {string} src The path to the script file.
      * @param {boolean} async Whether the script should be loaded asynchronously.
-     * @return {boolean} True on success or false on failure.
+     * @return {string|boolean} The script URL on success or false on failure.
      */
     static enqueueScriptAfter(plugin, page, url, src, async = true) {
         return PluginManager.enqueueScript('After', plugin, page, url, src, async);
@@ -601,37 +603,164 @@ module.exports.PluginManager = class PluginManager {
     }
 
     /**
-     * Remove items from a list.
-     * @param {[]} list The list.
-     * @param {Plugin} plugin The plugin.
+     * Internal method to enqueue a stylesheet.
+     * @param pos The position of the stylesheet.
+     * @param plugin The plugin.
+     * @param url The URL.
+     * @param src The source file.
+     * @returns {string|boolean} The stylesheet URL on success or false on failure.
      */
-    static removeItems(list, plugin) {
-        let indexesToRemove = [];
-
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].plugin === plugin.name) {
-                indexesToRemove.push(i);
-            }
+    static enqueueStylesheet(pos, plugin, url, src) {
+        const listName = 'enqueuedStylesheets' + pos;
+        if (PluginManager[listName] === undefined) {
+            PluginManager[listName] = [];
         }
 
-        for (let i = 0; i < indexesToRemove.length; i++) {
-            let index = indexesToRemove[i] - i;
-            list.splice(index, 1);
+        if (PluginManager.registeredPlugins === undefined) {
+            PluginManager.registeredPlugins = [];
+            return false;
         }
+
+        if (!PluginManager.registeredPlugins.hasOwnProperty(plugin.name)) {
+            return false;
+        }
+
+        PluginManager[listName].push({
+            plugin: plugin.name,
+            url: url,
+            src: path.normalize(
+                process.env.PLUGINS_DIR + '/' + PluginManager.registeredPlugins[plugin.name] + '/' + src)
+        });
+
+        return '/stylesheets/plugins/' + plugin.name + '/' + url;
     }
 
     /**
-     * Returns the contents of the JavaScript file.
-     * @param {string} src The location of the file.
-     * @return {string|boolean} Returns the file contents or false on failure.
+     * Enqueues a stylesheet to be loaded before other stylesheets.
+     * @param plugin The plugin.
+     * @param url The URL.
+     * @param src The source file.
+     * @returns {string|boolean} The stylesheet URL on success or false on failure.
      */
-    static readScriptFile(src) {
-        try {
-            return fs.readFileSync(path.normalize(src), 'utf8');
-        } catch (e) {
-            Logger.error(e);
+    static enqueueStylesheetBefore(plugin, url, src) {
+        return PluginManager.enqueueStylesheet('Before', plugin, url, src);
+    }
+
+    /**
+     * Enqueues a stylesheet to be loaded after other stylesheets.
+     * @param plugin The plugin.
+     * @param url The URL.
+     * @param src The source file.
+     * @returns {string|boolean} The stylesheet URL on success or false on failure.
+     */
+    static enqueueStylesheetAfter(plugin, url, src) {
+        return PluginManager.enqueueStylesheet('After', plugin, url, src);
+    }
+
+    /**
+     * Internal method to get a list of enqueued stylesheets.
+     * @param pos The position.
+     * @returns {[]} The list of stylesheets.
+     */
+    static getEnqueuedStylesheets(pos) {
+        const listName = 'enqueuedStylesheets' + pos;
+        if (PluginManager[listName] === undefined) {
+            PluginManager[listName] = [];
+            return [];
+        }
+
+        return PluginManager[listName];
+    }
+
+    /**
+     * Gets all enqueued stylesheets that are loaded before other stylesheets.
+     * @returns {*[]|*} The list of stylesheets.
+     */
+    static getEnqueuedStylesheetsBefore() {
+        return this.getEnqueuedStylesheets('Before');
+    }
+
+    /**
+     * Gets all enqueued stylesheets that are loaded after other stylesheets.
+     * @returns {*[]|*} The list of stylesheets.
+     */
+    static getEnqueuedStylesheetsAfter() {
+        return this.getEnqueuedStylesheets('After');
+    }
+
+    /**
+     * Remove all enqueued stylesheets for the plugin.
+     * @param {Plugin} plugin The plugin.
+     */
+    static removePluginEnqueuedStylesheets(plugin) {
+        if (PluginManager.enqueuedStylesheetsBefore === undefined) {
+            PluginManager.enqueuedStylesheetsBefore = [];
+        }
+
+        if (PluginManager.enqueuedStylesheetsAfter === undefined) {
+            PluginManager.enqueuedStylesheetsAfter = [];
+        }
+
+        PluginManager.removeItems(PluginManager.enqueuedStylesheetsBefore, plugin);
+        PluginManager.removeItems(PluginManager.enqueuedStylesheetsAfter, plugin);
+    }
+
+    /**
+     * Register a resource for the plugin.
+     * @param plugin The plugin.
+     * @param url The resource URL.
+     * @param src The resource source file.
+     * @param mime_type The MIME type.
+     * @returns {string|boolean} The resource URL or false on failure.
+     */
+    static addResource(plugin, url, src, mime_type) {
+        if (PluginManager.resources === undefined) {
+            PluginManager.resources = [];
+        }
+
+        if (PluginManager.registeredPlugins === undefined) {
+            PluginManager.registeredPlugins = [];
             return false;
         }
+
+        if (!PluginManager.registeredPlugins.hasOwnProperty(plugin.name)) {
+            return false;
+        }
+
+        PluginManager.resources.push({
+            plugin: plugin.name,
+            url: url,
+            src: path.normalize(
+                process.env.PLUGINS_DIR + '/' + PluginManager.registeredPlugins[plugin.name] + '/' + src),
+            mime_type: mime_type
+        });
+
+        return '/assets/plugins/' + plugin.name + '/' + url;
+    }
+
+    /**
+     * Gets all plugin resources.
+     * @returns {[]} The list of resources
+     */
+    static getResources() {
+        if (PluginManager.resources === undefined) {
+            PluginManager.resources = [];
+            return [];
+        }
+
+        return PluginManager.resources;
+    }
+
+    /**
+     * Remove all resources for the plugin.
+     * @param {Plugin} plugin The plugin.
+     */
+    static removePluginResources(plugin) {
+        if (PluginManager.resources === undefined) {
+            PluginManager.resources = [];
+        }
+
+        PluginManager.removeItems(PluginManager.resources, plugin);
     }
 
     /**
@@ -653,7 +782,7 @@ module.exports.PluginManager = class PluginManager {
 
         let scriptFound = false;
 
-        const searchScripts = (pos) => {
+        const searchScripts = pos => {
             const listName = 'enqueuedScripts' + pos;
             Object.keys(PluginManager[listName]).forEach(key => {
                 let scripts = PluginManager[listName][key];
@@ -662,7 +791,7 @@ module.exports.PluginManager = class PluginManager {
                     if (scripts[i].plugin === plugin && scripts[i].url === script) {
                         scriptFound = true;
 
-                        const data = PluginManager.readScriptFile(scripts[i].src);
+                        const data = PluginManager.readTextFile(scripts[i].src);
 
                         if (!data) {
                             res.status(404).json({
@@ -686,6 +815,125 @@ module.exports.PluginManager = class PluginManager {
             res.status(404).json({
                 message: 'Script not found'
             });
+        }
+    }
+
+    /**
+     * Express middleware to handle sending stylesheet content for a URL.
+     * @param req
+     * @param res
+     */
+    static handleStylesheetRequest(req, res) {
+        const plugin = req.params.plugin;
+        const url = req.params.stylesheet;
+
+        if (PluginManager.enqueuedStylesheetsBefore === undefined) {
+            PluginManager.enqueuedStylesheetsBefore = [];
+        }
+
+        if (PluginManager.enqueuedStylesheetsAfter === undefined) {
+            PluginManager.enqueuedStylesheetsAfter = [];
+        }
+
+        let stylesheetFound = false;
+        const searchStylesheets = pos => {
+            const listName = 'enqueuedStylesheets' + pos;
+            for (let i = 0; i < PluginManager[listName].length; i++) {
+                const stylesheet = PluginManager[listName][i];
+                if (stylesheet.plugin === plugin && stylesheet.url === url) {
+                    stylesheetFound = true;
+                    const data = PluginManager.readTextFile(stylesheet.src);
+
+                    if (!data) {
+                        res.status(404).json({
+                            message: 'Stylesheet not found'
+                        });
+                    } else {
+                        res.status(200).type('text/css').send(data);
+                    }
+                }
+            }
+        };
+
+        searchStylesheets('Before');
+
+        if (!stylesheetFound) {
+            searchStylesheets('After');
+        }
+
+        if (!stylesheetFound) {
+            res.status(404).json({
+                message: 'Stylesheet not found'
+            });
+        }
+    }
+
+    /**
+     * Express middleware to handle sending resource content for a URL.
+     * @param req
+     * @param res
+     */
+    static handleResourceRequest(req, res) {
+        const plugin = req.params.plugin;
+        const resourceUrl = req.params.resource;
+
+        if (PluginManager.resources === undefined) {
+            PluginManager.resources = [];
+        }
+
+        let resourceFound = false;
+        for (let i = 0; i < PluginManager.resources.length; i++) {
+            const resource = PluginManager.resources[i];
+            if (resource.plugin === plugin && resource.url === resourceUrl) {
+                resourceFound = true;
+
+                let mimeType = 'text/plain';
+                if (resource.mime_type !== undefined) {
+                    mimeType = resource.mime_type;
+                }
+
+                res.status(200).type(mimeType).sendFile(path.normalize(resource.src));
+            }
+        }
+
+        if (!resourceFound) {
+            res.status(404).json({
+                message: 'Resource not found'
+            });
+        }
+    }
+
+    /**
+     * Returns the contents of the text file.
+     * @param {string} src The location of the file.
+     * @return {string|boolean} Returns the file contents or false on failure.
+     */
+    static readTextFile(src) {
+        try {
+            return fs.readFileSync(path.normalize(src), 'utf8');
+        } catch (e) {
+            Logger.error(e);
+            return false;
+        }
+    }
+
+    /**
+     * Remove items from a list.
+     * @param {[]} list The list.
+     * @param {Plugin} plugin The plugin.
+     */
+    static removeItems(list, plugin) {
+        let indexesToRemove = [];
+
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].plugin === plugin.name) {
+                indexesToRemove.push(i);
+            }
+        }
+
+        for (let i = 0; i < indexesToRemove.length; i++) {
+            let index = indexesToRemove[i] - i;
+            list.splice(index, 1);
         }
     }
 
