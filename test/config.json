@@ -1,0 +1,37 @@
+{
+  "debug_mode": true,
+  "email_domains": [
+    "@gmail.com"
+  ],
+  "domains": [
+    {
+      "root": {
+        "domain": "comimant.com"
+      },
+      "main": {
+        "domain": "www.comimant.com",
+        "security": {
+          "ssl_enabled": true
+        }
+      },
+      "static": {
+        "domain": "static.comimant.com",
+        "security": {
+          "ssl_enabled": true
+        }
+      },
+      "accounts": {
+        "domain": "accounts.comimant.com",
+        "security": {
+          "ssl_enabled": true
+        }
+      },
+      "auth": {
+        "domain": "auth.comimant.com",
+        "security": {
+          "ssl_enabled": true
+        }
+      }
+    }
+  ]
+}
